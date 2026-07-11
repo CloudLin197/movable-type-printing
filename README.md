@@ -1,2 +1,2 @@
 # movable-type-printing
-demonstration web for movable type printing
+demonstration website for movable type printing

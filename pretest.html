@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活板初探馆 · 课前预习</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"KaiTi","Noto Serif SC",serif;background:#f5efe6;min-height:100vh;color:#3b281c;}
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:2s;}
+.hero-mask{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:16px;margin-top:6px;}
+.nav-menu{margin-top:12px;}
+.nav-menu a{display:inline-block;padding:8px 16px;margin:4px;border-radius:24px;background:rgba(255,255,255,.15);color:white;text-decoration:none;font-size:15px;transition:.25s;}
+.nav-menu a:hover,.nav-menu a.active{background:rgba(255,255,255,.36);transform:translateY(-1px);}
+.exhibit-hall{max-width:1200px;width:calc(100% - 40px);margin:22px auto 36px;background:#fcf8f0;border-radius:40px;padding:30px 28px 40px;border:1px solid #e6d6bd;box-shadow:0 20px 40px rgba(100,70,40,.22);}
+.museum-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-bottom:2px solid #dacfbb;padding-bottom:18px;margin-bottom:28px;gap:12px;}
+.museum-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.museum-title h1{font-size:2rem;color:#4d2e1b;letter-spacing:4px;}
+.sub{background:#a67b5c;color:#fff7ed;padding:6px 18px;border-radius:30px;}
+
+/* 探展通行证容器 */
+.badge-fujian{
+  background: rgba(166,123,92,0.9);
+  color: #fff7ed;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+}
+.pass-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.pass-name{ font-weight: bold; }
+.pass-badge-icon{
+  font-size: 18px;
+  filter: grayscale(1);
+  opacity: 0.4;
+  transition: 0.3s;
+}
+.pass-badge-icon.unlocked{
+  filter: grayscale(0);
+  opacity: 1;
+  text-shadow: 0 0 6px gold;
+}
+
+.panel,.intro-box,.section-box{background:#f3ede4;border:1px solid #e2d4c0;border-radius:30px;padding:24px;margin-bottom:24px;}
+.panel-title{font-size:1.5rem;font-weight:bold;color:#3b281c;border-left:8px solid #a67b5c;padding-left:14px;margin-bottom:18px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:900px){
+.grid-2,.grid-3{grid-template-columns:1fr;}
+.hero{height:190px}
+.hero-content h1{font-size:32px}
+.exhibit-hall{width:calc(100% - 22px);padding:22px 16px;}
+}
+input,select,textarea{width:100%;border:1px solid #cbb79e;border-radius:18px;padding:12px 14px;font-family:inherit;font-size:16px;background:#fffaf3;}
+textarea{resize:vertical;line-height:1.8;}
+label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
+.btn{font-family:inherit;background:#e8ddd0;border:1px solid #cbb79e;padding:10px 22px;border-radius:30px;font-size:1rem;font-weight:bold;cursor:pointer;margin:6px 4px 0 0;box-shadow:0 4px 0 #9b846b;transition:.15s;}
+.btn:hover{filter:brightness(1.02);transform:translateY(-1px);}
+.btn:active{transform:translateY(4px);box-shadow:none;}
+.btn-primary{background:#a67b5c;color:white;border-color:#8b6549;box-shadow:0 4px 0 #624b36;}
+.footer-note{text-align:center;color:#7d644b;border-top:1px solid #ddcfbb;padding-top:20px;margin-top:28px;}
+.success{color:#5f8a4a}
+.error{color:#b35a4a}
+.muted{color:#7d644b}
+.feedback{min-height:24px;margin-top:10px;font-weight:bold;}
+.card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:24px;padding:18px;box-shadow:0 6px 0 #d1c0ab;}
+.table{width:100%;border-collapse:collapse;background:#fcf8f0;border-radius:18px;overflow:hidden;}
+.table th,.table td{border:1px solid #decfbb;padding:10px;text-align:left;line-height:1.6;vertical-align:top;}
+.table th{background:#a67b5c;color:white;}
+.empty{text-align:center;padding:28px;color:#7d644b;background:#fcf8f0;border:1px dashed #cbb79e;border-radius:20px;}
+
+.text{background:#fffaf3;border:1px solid #dacbbc;border-radius:18px;padding:16px;line-height:2;max-height:270px;overflow:auto;}
+.read-box{background:#1e1b16;color:#b7ff9d;padding:10px;border-radius:14px;margin-top:10px;min-height:42px;font-family:monospace;}
+.option{background:#fffaf3;padding:10px;margin:7px 0;border-radius:12px;cursor:pointer;border:1px solid #dacbbc;}
+.option.active{background:#f0d9b5;border-color:#a67b5c;}
+.qitem{margin-bottom:16px;line-height:1.7;}
+
+.reading-rubric{
+background:#fffaf2;
+border:1px solid #dacbbc;
+border-radius:18px;
+padding:16px;
+margin-top:16px;
+}
+
+.reading-rubric h3{
+color:#6a3f18;
+margin-bottom:12px;
+}
+
+.rubric-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 12px;
+margin:8px 0;
+border-radius:14px;
+background:#f5ead8;
+font-weight:bold;
+color:#4d3422;
+}
+
+.stars{
+font-size:24px;
+letter-spacing:3px;
+color:#c8aa76;
+}
+
+.rubric-tip{
+margin-top:12px;
+line-height:1.7;
+color:#6a4b2f;
+background:#f3e4cc;
+border-radius:14px;
+padding:10px;
+}
+</style>
+
+<script>
+const SITE_PAGES=[
+['index.html','首页'],
+['pretest.html','活板初探馆'],
+['inquiry.html','研学探究馆'],
+['speech.html','活字解说馆'],
+['heritage.html','非遗传承馆'],
+['teacher.html','教师数据中心']
+];
+
+function renderHero(active){
+document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+}
+
+function startHero(){
+let imgs=document.querySelectorAll('.hero-bg img');
+let i=0;
+if(imgs.length){
+imgs[0].style.opacity=1;
+setInterval(()=>{
+imgs.forEach(x=>x.style.opacity=0);
+i=(i+1)%imgs.length;
+imgs[i].style.opacity=1;
+},3000);
+}
+}
+
+function getStudent(){
+return JSON.parse(
+localStorage.getItem('currentStudent') ||
+localStorage.getItem('studentInfo') ||
+localStorage.getItem('activeStudent') ||
+localStorage.getItem('loginStudent') ||
+'null'
+);
+}
+
+function setStudent(st){
+localStorage.setItem('currentStudent',JSON.stringify(st));
+localStorage.setItem('studentInfo',JSON.stringify(st));
+localStorage.setItem('activeStudent',JSON.stringify(st));
+localStorage.setItem('loginStudent',JSON.stringify(st));
+
+let all=JSON.parse(localStorage.getItem('students')||'[]');
+let key=st.cls+'-'+st.seat+'-'+st.name;
+let idx=all.findIndex(x=>x.key===key);
+let item={...st,key,time:new Date().toLocaleString()};
+
+if(idx>=0)all[idx]=item;
+else all.push(item);
+
+localStorage.setItem('students',JSON.stringify(all));
+}
+
+function studentKey(){
+let s=getStudent();
+return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';
+}
+
+function ensureStudentTip(){
+let s=getStudent();
+return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';
+}
+
+function saveProgress(page,detail={}){
+let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');
+list.push({
+id:Date.now(),
+studentKey:studentKey(),
+student:getStudent(),
+page,
+detail,
+time:new Date().toLocaleString()
+});
+localStorage.setItem('progressRecords',JSON.stringify(list));
+}
+
+function esc(s){
+return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+</script>
+</head>
+
+<body>
+<script>renderHero('pretest.html');</script>
+
+<div class="exhibit-hall">
+
+<header class="museum-header">
+<div class="museum-title">
+<h1>📖 活板初探馆</h1>
+<span class="sub">AI范读 · 朗读测评 · 内容测评</span>
+</div>
+<div class="badge-fujian" id="studentBadge">学生信息</div>
+</header>
+
+<section class="intro-box">
+<div class="panel-title">欢迎来到“活板初探馆”</div>
+<p style="line-height:1.9;font-size:17px;color:#4d3422;">
+这里是进入活字印刷云展馆的第一站。请先聆听AI范读，熟悉《活板》的字音、节奏与重点语句；再完成朗读测评和内容测评，为后续建设云展馆做好知识准备。
+</p>
+</section>
+
+<section class="panel">
+<div class="panel-title">🤖 AI范读《活板》</div>
+<p class="muted" style="line-height:1.8;margin-bottom:10px;">
+点击播放，跟随范读感受文言节奏，重点关注“毕昇、炀、砥、镕、拂”等字音。
+</p>
+<audio controls src="audio/huoban.mp3" style="width:100%;"></audio>
+</section>
+
+<div class="grid-2">
+
+<section class="panel">
+<div class="panel-title">🎧 朗读测评</div>
+
+<div class="text" id="readText"></div>
+
+<div>
+<button class="btn btn-primary" id="recStart">● 开始录音</button>
+<button class="btn" id="recStop" disabled>■ 停止录音</button>
+<button class="btn" onclick="submitReading()">提交评分</button>
+</div>
+
+<audio id="audioPlayback" controls style="width:100%;margin-top:12px"></audio>
+
+<div id="speechText" class="read-box">识别文本：等待录音……</div>
+
+<div id="readResult" class="feedback"></div>
+
+<div class="reading-rubric" id="readingRubric">
+<h3>🌟 朗读评价量表</h3>
+
+<div class="rubric-item">
+<span>字音准确</span>
+<div class="stars" id="star-accuracy">☆☆☆☆☆</div>
+</div>
+
+<div class="rubric-item">
+<span>朗读流利</span>
+<div class="stars" id="star-fluency">☆☆☆☆☆</div>
+</div>
+
+<div class="rubric-item">
+<span>停顿节奏</span>
+<div class="stars" id="star-pause">☆☆☆☆☆</div>
+</div>
+
+<div class="rubric-item">
+<span>情感表达</span>
+<div class="stars" id="star-expression">☆☆☆☆☆</div>
+</div>
+
+<div class="rubric-tip" id="rubricTip">
+提交朗读后，系统将根据录音时长、识别关键词和朗读完整度点亮星级。
+</div>
+</div>
+</section>
+
+<section class="panel">
+<div class="panel-title">📚 内容测评（10题）</div>
+<div id="quiz"></div>
+<button class="btn btn-primary" onclick="submitQuiz()">提交测试</button>
+<button class="btn" onclick="resetQuiz()">重测</button>
+<div id="quizResult" class="feedback"></div>
+</section>
+
+</div>
+
+<div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
+</div>
+
+<script>
+startHero();
+
+// 渲染探展通行证（替代原来的 studentBadge.textContent）
+renderStudentPass();
+
+const TEXT=`活板（沈括）
+板印书籍，唐人尚未盛为之。自冯瀛王始印五经，已后典籍皆为板本。
+庆历中，有布衣毕昇，又为活板。其法：用胶泥刻字，薄如钱唇，每字为一印，火烧令坚。先设一铁板，其上以松脂、蜡和纸灰之类冒之。欲印，则以一铁范置铁板上，乃密布字印。满铁范为一板，持就火炀之，药稍镕。则以一平板按其面，则字平如砥。
+若止印三二本，未为简易；若印数十百千本，则极为神速。常作二铁板，一板印刷，一板已自布字。此印者才毕，则第二板已具，更互用之，瞬息可就。
+不用，则以纸帖之，每韵为一帖，木格贮之。有奇字素无备者，旋刻之，以草火烧，瞬息可成。用讫再火令药镕，以手拂之，其印自落，殊不沾污。`;
+
+readText.innerText=TEXT;
+
+let mediaRecorder,
+chunks=[],
+audioBlob=null,
+recStartTime=0,
+recEndTime=0,
+recognitionText='',
+currentStream=null;
+
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+let recog=null;
+
+if(SpeechRecognition){
+recog=new SpeechRecognition();
+recog.lang='zh-CN';
+recog.continuous=true;
+recog.interimResults=true;
+recog.onresult=e=>{
+recognitionText=Array.from(e.results).map(r=>r[0].transcript).join('');
+speechText.innerText='识别文本：'+recognitionText;
+};
+}
+
+function setRecButtons(r){
+recStart.disabled=r;
+recStop.disabled=!r;
+}
+
+function buildAudioBlob(){
+if(!chunks.length)return null;
+audioBlob=new Blob(chunks,{type:'audio/webm'});
+audioPlayback.src=URL.createObjectURL(audioBlob);
+return audioBlob;
+}
+
+recStart.onclick=async()=>{
+try{
+currentStream=await navigator.mediaDevices.getUserMedia({audio:true});
+chunks=[];
+audioBlob=null;
+recognitionText='';
+speechText.innerText='识别文本：正在录音……';
+readResult.innerText='';
+resetRubric();
+
+mediaRecorder=new MediaRecorder(currentStream);
+
+mediaRecorder.ondataavailable=e=>{
+if(e.data&&e.data.size>0)chunks.push(e.data);
+};
+
+mediaRecorder.onstop=()=>{
+recEndTime=Date.now();
+buildAudioBlob();
+
+if(currentStream){
+currentStream.getTracks().forEach(t=>t.stop());
+currentStream=null;
+}
+
+setRecButtons(false);
+};
+
+recStartTime=Date.now();
+mediaRecorder.start();
+
+try{
+recog&&recog.start();
+}catch(e){}
+
+setRecButtons(true);
+}catch(e){
+alert('无法启动麦克风，请检查浏览器权限。');
+}
+};
+
+recStop.onclick=()=>{
+if(mediaRecorder&&mediaRecorder.state==='recording'){
+mediaRecorder.stop();
+
+try{
+recog&&recog.stop();
+}catch(e){}
+}
+};
+
+function submitReading(){
+if(mediaRecorder&&mediaRecorder.state==='recording'){
+mediaRecorder.addEventListener('stop',calcReadingScore,{once:true});
+mediaRecorder.stop();
+
+try{
+recog&&recog.stop();
+}catch(e){}
+
+return;
+}
+
+if(!audioBlob&&chunks.length)buildAudioBlob();
+
+if(!audioBlob){
+alert('请先录音');
+return;
+}
+
+calcReadingScore();
+}
+
+function setStars(id,count){
+let full="★★★★★".slice(0,count);
+let empty="☆☆☆☆☆".slice(0,5-count);
+document.getElementById(id).textContent=full+empty;
+}
+
+function resetRubric(){
+setStars("star-accuracy",0);
+setStars("star-fluency",0);
+setStars("star-pause",0);
+setStars("star-expression",0);
+rubricTip.textContent="提交朗读后，系统将根据录音时长、识别关键词和朗读完整度点亮星级。";
+}
+
+function updateRubric(score,hit,dur){
+let accuracy=Math.min(5,Math.max(1,Math.round(hit/9*5)));
+
+let fluency=
+dur>=90?5:
+dur>=70?4:
+dur>=50?3:
+dur>=30?2:1;
+
+let pause=
+score>=90?5:
+score>=80?4:
+score>=70?3:
+score>=60?2:1;
+
+let expression=
+score>=92?5:
+score>=82?4:
+score>=72?3:
+score>=60?2:1;
+
+setStars("star-accuracy",accuracy);
+setStars("star-fluency",fluency);
+setStars("star-pause",pause);
+setStars("star-expression",expression);
+
+let level="";
+
+if(score>=90){
+level="优秀：朗读准确流利，节奏自然，能够体现文言文韵味。";
+}
+else if(score>=80){
+level="良好：朗读较流利，重点字音掌握较好，个别停顿还可优化。";
+}
+else if(score>=70){
+level="合格：能够完成朗读任务，但字音、节奏和连贯性还需加强。";
+}
+else{
+level="待提升：建议跟随AI范读再次练习，重点关注字音和句读停顿。";
+}
+
+rubricTip.textContent=level;
+}
+
+function calcReadingScore(){
+let dur=((recEndTime||Date.now())-recStartTime)/1000;
+let keys=['庆历','毕昇','活板','胶泥','铁板','密布','炀','平板','字平如砥'];
+let hit=keys.filter(k=>recognitionText.includes(k)).length;
+
+let score=SpeechRecognition
+?Math.min(100,Math.round(35+dur/40*20+hit/keys.length*45))
+:Math.min(85,Math.round(50+dur/45*35));
+
+readResult.innerHTML=
+`<h3>朗读评分：${score}分</h3>
+<p>识别关键词：${hit}/${keys.length}</p>`;
+
+updateRubric(score,hit,Math.round(dur));
+
+saveProgress('预习检测馆-朗读',{
+score,
+hit,
+duration:Math.round(dur)
+});
+}
+
+const Q=[
+{q:'“布衣毕昇”中“布衣”是？',o:['平民','官员','工匠','商人'],a:0},
+{q:'“火烧令坚”中“火”是？',o:['用火','火焰','火种','点火'],a:0},
+{q:'“奇字”指？',o:['生僻字','错字','外文','奇怪字'],a:0},
+{q:'“砥”的意思是？',o:['磨刀石','石头','底部','光滑'],a:0},
+{q:'“旋刻之”的意思？',o:['马上刻','慢慢刻','删除','旋转'],a:0},
+{q:'活字发明者是？',o:['毕昇','沈括','王羲之','杜甫'],a:0},
+{q:'文中活字材料是？',o:['胶泥','木头','石头','铁'],a:0},
+{q:'“字平如砥”说明字面怎样？',o:['平整','粗糙','弯曲','破损'],a:0},
+{q:'活字印刷的主要优点是？',o:['可重复使用','只能一次性使用','昂贵','缓慢'],a:0},
+{q:'《活板》介绍的是？',o:['印刷术','文学流派','绘画','建筑'],a:0}
+];
+
+let ans={};
+
+function loadQuiz(){
+quiz.innerHTML='';
+
+Q.forEach((q,i)=>{
+let div=document.createElement('div');
+div.className='qitem';
+div.innerHTML='<b>'+(i+1)+'. '+q.q+'</b>';
+
+q.o.forEach((o,j)=>{
+let d=document.createElement('div');
+d.className='option';
+d.innerText=o;
+
+d.onclick=()=>{
+ans[i]=j;
+div.querySelectorAll('.option').forEach(x=>x.classList.remove('active'));
+d.classList.add('active');
+};
+
+div.appendChild(d);
+});
+
+quiz.appendChild(div);
+});
+}
+
+function submitQuiz(){
+let sc=0;
+let wrong=[];
+
+Q.forEach((q,i)=>{
+if(ans[i]===q.a){
+sc+=10;
+}else{
+wrong.push({
+index:i+1,
+question:q.q,
+correct:q.o[q.a],
+chosen:ans[i]!==undefined?q.o[ans[i]]:'未作答'
+});
+}
+});
+
+quizResult.innerHTML=`得分：${sc}分，错题：${wrong.length}题`;
+
+let records=JSON.parse(localStorage.getItem('pretestRecords')||'[]');
+
+records.push({
+id:Date.now(),
+studentKey:studentKey(),
+student:getStudent(),
+score:sc,
+wrong,
+time:new Date().toLocaleString()
+});
+
+localStorage.setItem('pretestRecords',JSON.stringify(records));
+
+saveProgress('预习检测馆-内容测评',{
+score:sc,
+wrongCount:wrong.length
+});
+}
+
+function resetQuiz(){
+ans={};
+loadQuiz();
+quizResult.innerText='';
+}
+
+loadQuiz();
+
+/* 探展通行证渲染函数（长条形两行） */
+function renderStudentPass() {
+  const st = getStudent();
+  const passDiv = document.getElementById('studentBadge');
+  if (!passDiv) return;
+
+  if (!st) {
+    passDiv.innerHTML = `<span style="opacity:0.7;">未登录</span>`;
+    return;
+  }
+
+  const b1 = localStorage.getItem('badge1') === 'unlocked';
+  const b2 = localStorage.getItem('badge2') === 'unlocked';
+  const b3 = localStorage.getItem('badge3') === 'unlocked';
+  const passNumber = st.passNumber || 'FX-2026-0001';
+
+  passDiv.innerHTML = `
+    <div class="pass-row">
+      <span class="pass-name">${esc(st.name)}</span>
+      <span>${esc(st.cls)} ${esc(st.seat)}号</span>
+    </div>
+    <div class="pass-row">
+      <span>编号：${esc(passNumber)}</span>
+      <span class="pass-badge-icon ${b1?'unlocked':''}">🛠️</span>
+      <span class="pass-badge-icon ${b2?'unlocked':''}">📜</span>
+      <span class="pass-badge-icon ${b3?'unlocked':''}">💡</span>
+    </div>
+  `;
+}
+</script>
+<script src="mengxi-assistant.js"></script></body>
+</html>

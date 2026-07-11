@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>活字印刷云展馆 · 研学挑战</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:"KaiTi","Noto Serif SC",serif;
+height:100vh;
+overflow:hidden;
+background:#000;
+}
+
+.bg img{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0;
+transition:2s;
+}
+
+.shadow{
+position:absolute;
+inset:0;
+background:linear-gradient(rgba(0,0,0,.56),rgba(0,0,0,.46),rgba(0,0,0,.76));
+z-index:2;
+}
+
+.title{
+position:absolute;
+z-index:3;
+top:8%;
+width:100%;
+text-align:center;
+color:#f5e7c6;
+}
+
+.title h1{
+font-size:68px;
+letter-spacing:8px;
+text-shadow:0 8px 24px rgba(0,0,0,.55);
+}
+
+.title p{
+font-size:22px;
+margin-top:10px;
+letter-spacing:4px;
+}
+
+.recruit{
+position:absolute;
+z-index:4;
+left:50%;
+top:30%;
+transform:translateX(-50%);
+width:min(820px,calc(100% - 40px));
+padding:18px 24px;
+border-radius:28px;
+background:rgba(45,31,20,.45);
+border:1px solid rgba(255,255,255,.2);
+color:#fff7ed;
+backdrop-filter:blur(8px);
+box-shadow:0 18px 45px rgba(0,0,0,.28);
+line-height:1.8;
+}
+
+.recruit h2{
+font-size:24px;
+color:#f5e7c6;
+letter-spacing:3px;
+margin-bottom:6px;
+text-align:center;
+}
+
+.recruit p{
+font-size:16px;
+text-indent:2em;
+margin-bottom:4px;
+}
+
+.recruit p.no-indent{
+text-indent:0;
+}
+
+.side-card{
+position:absolute;
+z-index:5;
+top:56%;
+width:440px;
+min-height:430px;
+padding:26px;
+color:#fff7ed;
+border-radius:34px;
+background:rgba(45,31,20,.42);
+border:1px solid rgba(255,255,255,.22);
+backdrop-filter:blur(10px);
+box-shadow:0 24px 70px rgba(0,0,0,.34);
+transition:.55s cubic-bezier(.22,1,.36,1);
+overflow:hidden;
+}
+
+.side-card::before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(135deg,rgba(255,255,255,.16),rgba(255,255,255,.04));
+pointer-events:none;
+}
+
+.left-card{
+left:0;
+transform:translate(-82%,-50%);
+}
+
+.right-card{
+right:0;
+transform:translate(82%,-50%);
+}
+
+.left-card:hover{
+left:0;
+transform:translate(30px,-50%);
+}
+
+.right-card:hover{
+right:0;
+transform:translate(-30px,-50%);
+}
+
+.card-handle{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:56px;
+height:210px;
+display:flex;
+align-items:center;
+justify-content:center;
+writing-mode:vertical-rl;
+letter-spacing:4px;
+font-weight:bold;
+font-size:18px;
+color:#f5e7c6;
+background:rgba(245,231,198,.18);
+border:1px solid rgba(255,255,255,.18);
+box-shadow:0 10px 30px rgba(0,0,0,.22);
+}
+
+.left-card .card-handle{right:12px;border-radius:24px;}
+.right-card .card-handle{left:12px;border-radius:24px;}
+
+.card-content{
+position:relative;
+z-index:2;
+opacity:.08;
+transform:scale(.94);
+transition:.45s;
+}
+
+.side-card:hover .card-content{
+opacity:1;
+transform:scale(1);
+}
+
+.side-card:hover .card-handle{
+opacity:.18;
+}
+
+h2,h3{
+font-size:28px;
+letter-spacing:3px;
+margin-bottom:16px;
+color:#f5e7c6;
+}
+
+.sub{
+display:inline-block;
+background:rgba(245,231,198,.20);
+color:#fff7ed;
+padding:6px 16px;
+border-radius:24px;
+font-size:15px;
+margin-bottom:16px;
+border:1px solid rgba(255,255,255,.16);
+}
+
+/* 探展证专用样式 */
+.pass-header{
+text-align:center;
+margin-bottom:18px;
+}
+
+.pass-header .pass-title-top{
+font-size:20px;
+color:#f5e7c6;
+letter-spacing:2px;
+}
+
+.pass-header .pass-title-main{
+font-size:30px;
+font-weight:bold;
+color:#f5e7c6;
+letter-spacing:4px;
+margin:6px 0;
+}
+
+.pass-header .pass-subtitle{
+font-size:15px;
+color:rgba(245,231,198,.8);
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:8px;
+}
+
+.form-row.full{grid-column:1/3;}
+
+label{
+display:block;
+font-weight:bold;
+color:#f5e7c6;
+margin-bottom:6px;
+letter-spacing:1px;
+}
+
+input{
+width:100%;
+border:1px solid rgba(255,255,255,.24);
+border-radius:20px;
+padding:13px 15px;
+font-family:inherit;
+font-size:17px;
+background:rgba(255,255,255,.14);
+color:#fff7ed;
+outline:none;
+transition:.25s;
+}
+
+input::placeholder{color:rgba(255,247,237,.65);}
+
+input:focus{
+border-color:rgba(245,231,198,.8);
+box-shadow:0 0 0 4px rgba(245,231,198,.18);
+background:rgba(255,255,255,.18);
+}
+
+.start-btn,.logout-btn{
+width:100%;
+margin-top:16px;
+font-family:inherit;
+border:none;
+border-radius:28px;
+padding:13px 20px;
+background:linear-gradient(135deg,#c9a678,#8b6549);
+color:white;
+font-size:19px;
+font-weight:bold;
+letter-spacing:2px;
+cursor:pointer;
+box-shadow:0 6px 0 #4d3422,0 14px 30px rgba(0,0,0,.25);
+transition:.2s;
+}
+
+.logout-btn{
+background:rgba(255,255,255,.14);
+box-shadow:none;
+border:1px solid rgba(255,255,255,.18);
+font-size:16px;
+}
+
+.start-btn:hover,.logout-btn:hover{
+transform:translateY(-2px);
+}
+
+#loginMsg{
+margin-top:12px;
+min-height:24px;
+text-align:center;
+font-weight:bold;
+color:#f5e7c6;
+line-height:1.6;
+}
+
+/* 编号与徽章显示 */
+.pass-info{
+margin:14px 0;
+padding:12px 15px;
+border-radius:18px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.15);
+}
+
+.pass-info .info-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:8px;
+font-size:16px;
+}
+
+.pass-info .info-row:last-child{
+margin-bottom:0;
+}
+
+.pass-info .label{
+color:rgba(245,231,198,.8);
+}
+
+.pass-info .value{
+color:#f5e7c6;
+font-weight:bold;
+}
+
+.badge-status{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+.badge-icon{
+font-size:20px;
+filter:grayscale(1);
+opacity:0.4;
+transition:0.3s;
+}
+
+.badge-icon.unlocked{
+filter:grayscale(0);
+opacity:1;
+}
+
+.route-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.route-item{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 15px;
+border-radius:22px;
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.14);
+text-decoration:none;
+color:#fff7ed;
+transition:.25s;
+cursor:pointer;
+}
+
+.route-item:hover{
+background:rgba(255,255,255,.24);
+transform:translateX(4px);
+}
+
+.route-icon{
+width:38px;
+height:38px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+background:rgba(245,231,198,.22);
+font-size:20px;
+}
+
+.route-text strong{
+display:block;
+font-size:18px;
+letter-spacing:1px;
+}
+
+.route-text span{
+font-size:13px;
+opacity:.85;
+}
+
+.badge-box{
+margin-top:14px;
+padding:13px;
+border-radius:20px;
+background:rgba(255,255,255,.1);
+border:1px solid rgba(255,255,255,.14);
+}
+
+.badge-box h4{
+font-size:18px;
+margin-bottom:8px;
+color:#f5e7c6;
+}
+
+.badge-box p{
+font-size:14px;
+line-height:1.7;
+opacity:.92;
+}
+
+.teacher-link{
+margin-top:12px;
+display:block;
+text-align:center;
+color:#f5e7c6;
+text-decoration:none;
+font-size:15px;
+opacity:.86;
+}
+
+.teacher-link:hover{
+opacity:1;
+text-decoration:underline;
+}
+
+.hint{
+position:absolute;
+z-index:4;
+left:50%;
+top:86%;
+transform:translateX(-50%);
+padding:10px 24px;
+border-radius:30px;
+background:rgba(255,255,255,.12);
+border:1px solid rgba(255,255,255,.15);
+color:#f5e7c6;
+font-size:16px;
+letter-spacing:2px;
+backdrop-filter:blur(6px);
+}
+
+.footer-note{
+position:absolute;
+z-index:3;
+bottom:18px;
+width:100%;
+text-align:center;
+color:rgba(245,231,198,.82);
+letter-spacing:2px;
+font-size:15px;
+}
+
+@media(max-width:1000px){
+body{overflow:auto;min-height:100vh;}
+.title{top:5%;}
+.title h1{font-size:40px;letter-spacing:4px;}
+.title p{font-size:16px;}
+
+.recruit{
+position:relative;
+left:auto;
+top:auto;
+transform:none;
+margin:155px auto 18px;
+}
+
+.side-card{
+position:relative;
+top:auto;
+left:auto!important;
+right:auto!important;
+transform:none!important;
+width:calc(100% - 30px);
+min-height:auto;
+margin:18px auto;
+}
+
+.card-handle{display:none;}
+.card-content{opacity:1;transform:none;}
+.hint{display:none;}
+.form-grid{grid-template-columns:1fr;}
+.form-row.full{grid-column:auto;}
+.footer-note{position:relative;padding:10px 0 22px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg">
+<img src="images/1.jpg">
+<img src="images/2.jpg">
+<img src="images/3.jpg">
+<img src="images/4.jpg">
+<img src="images/5.jpg">
+<img src="images/6.jpg">
+<img src="images/7.jpg">
+</div>
+
+<div class="shadow"></div>
+
+<div class="title">
+<h1>活字印刷云展馆</h1>
+<p>AI互动学习系统</p>
+</div>
+
+<section class="recruit">
+<h2>福州非遗“活字印刷云展馆”研学挑战</h2>
+<p class="no-indent">亲爱的同学：</p>
+<p>福州三坊七巷福建省非物质文化遗产博览苑的“福州活字印刷云展馆”，正式向全市中学生发出<b>研学挑战邀请</b>！</p>
+<p>你将化身“非遗探展员”，在通过活板初探馆的考验后，探访云展馆的三大核心展区：</p>
+<p>🛠️ 研学探究馆<br><p>📜 活字解说馆<br><p>💡 非遗传承馆</p>
+<p>每完成一个展区的探究任务，即可解锁一枚<b>匠心徽章</b>。集齐三枚徽章后，你的姓名将镌刻在云展馆的<b>“研学荣誉墙”</b>上，成为福州活字文化的小小传承人。</p>
+<p>挑战，现在开始！</p>
+</section>
+
+<section class="side-card left-card">
+<div class="card-handle">研学探展证</div>
+
+<div class="card-content">
+<!-- 新标题样式 -->
+<div class="pass-header">
+<div class="pass-title-top">📜 福州活字印刷云展馆</div>
+<div class="pass-title-main">── 研学探展证 ──</div>
+<div class="pass-subtitle">Expedition Pass</div>
+</div>
+
+<div class="form-grid">
+<div class="form-row">
+<label>班级</label>
+<input id="cls" placeholder="例如：七年级1班">
+</div>
+
+<div class="form-row">
+<label>座号</label>
+<input id="seat" placeholder="例如：08">
+</div>
+
+<div class="form-row full">
+<label>姓名</label>
+<input id="name" placeholder="请输入姓名">
+</div>
+</div>
+
+<!-- 探展编号与徽章区域 -->
+<div class="pass-info">
+<div class="info-row">
+<span class="label">探展编号</span>
+<span class="value" id="passNumber">FX-2026-0001</span>
+</div>
+<div class="info-row">
+<span class="label">已解锁徽章</span>
+<span class="badge-status" id="badgeDisplay">
+<span class="badge-icon" id="badge1Icon">🛠️</span>
+<span class="badge-icon" id="badge2Icon">📜</span>
+<span class="badge-icon" id="badge3Icon">💡</span>
+</span>
+</div>
+</div>
+
+<button class="start-btn" type="button" onclick="loginAndStart()">🔍 领取证件，开始挑战</button>
+<button class="logout-btn" type="button" onclick="logout()">退出登录</button>
+
+<div id="loginMsg">请先填写探展证信息，学习成果将自动记录。</div>
+</div>
+</section>
+
+<section class="side-card right-card">
+<div class="card-handle">探展路线</div>
+
+<div class="card-content">
+<h3>云展馆探展路线</h3>
+
+<div class="route-list">
+
+<a class="route-item" href="pretest.html">
+<div class="route-icon">📖</div>
+<div class="route-text">
+<strong>活板初识馆</strong>
+<span>AI范读 · 课文初读 · 预习检测</span>
+</div>
+</a>
+
+<a class="route-item" href="inquiry.html">
+<div class="route-icon">🔍</div>
+<div class="route-text">
+<strong>研学探究馆</strong>
+<span>工序排序 · 工序探微 · 获得工艺探究徽章</span>
+</div>
+</a>
+
+<a class="route-item" href="speech.html">
+<div class="route-icon">🎙️</div>
+<div class="route-text">
+<strong>活字解说馆</strong>
+<span>撰写解说词 · 获得云端解说徽章</span>
+</div>
+</a>
+
+<a class="route-item" href="heritage.html">
+<div class="route-icon">🏛️</div>
+<div class="route-text">
+<strong>非遗传承馆</strong>
+<span>分层作业 · 获得非遗传承徽章</span>
+</div>
+</a>
+
+</div>
+
+<div class="badge-box">
+<h4>三枚匠心徽章</h4>
+<p>
+① 工艺探究徽章：完成工序排序，并解锁工序探微任务。<br>
+② 云端解说徽章：提交符合要求的展馆解说词。<br>
+③ 非遗传承徽章：完成一项课后分层作业。<br>
+集齐三枚，即可登榜<strong>研学荣誉墙</strong>，成为活字文化小小传承人。
+</p>
+</div>
+
+<a class="teacher-link" href="teacher.html">教师数据中心入口</a>
+</div>
+</section>
+
+<div class="hint">将鼠标移至左右两侧卡片，开启你的云展馆之旅</div>
+
+<div class="footer-note">福建非遗博物院 · 云展馆 · 活字印刷</div>
+
+<script>
+let imgs=document.querySelectorAll(".bg img");
+let i=0;
+
+if(imgs.length){
+imgs[0].style.opacity=1;
+setInterval(()=>{
+imgs.forEach(x=>x.style.opacity=0);
+i=(i+1)%imgs.length;
+imgs[i].style.opacity=1;
+},3000);
+}
+
+function getStudent(){
+return JSON.parse(
+localStorage.getItem("currentStudent") ||
+localStorage.getItem("studentInfo") ||
+localStorage.getItem("activeStudent") ||
+localStorage.getItem("loginStudent") ||
+"null"
+);
+}
+
+function saveStudentEverywhere(st){
+const key=st.cls+"-"+st.seat+"-"+st.name;
+
+const item={
+cls:st.cls,
+seat:st.seat,
+name:st.name,
+key:key,
+passNumber:st.passNumber,
+time:new Date().toLocaleString()
+};
+
+localStorage.setItem("currentStudent",JSON.stringify(item));
+localStorage.setItem("studentInfo",JSON.stringify(item));
+localStorage.setItem("activeStudent",JSON.stringify(item));
+localStorage.setItem("loginStudent",JSON.stringify(item));
+
+let all=JSON.parse(localStorage.getItem("students")||"[]");
+let idx=all.findIndex(x=>x.key===key);
+
+if(idx>=0){
+all[idx]=item;
+}else{
+all.push(item);
+}
+
+localStorage.setItem("students",JSON.stringify(all));
+}
+
+function saveProgress(page,detail={}){
+const student=getStudent();
+
+let list=JSON.parse(localStorage.getItem("progressRecords")||"[]");
+
+list.push({
+id:Date.now(),
+studentKey:student ? student.key : "未登录学生",
+student:student,
+page:page,
+detail:detail,
+time:new Date().toLocaleString()
+});
+
+localStorage.setItem("progressRecords",JSON.stringify(list));
+}
+
+// 生成探展编号
+function generatePassNumber(){
+let all=JSON.parse(localStorage.getItem("students")||"[]");
+if(all.length===0) return "FX-2026-0001";
+let maxNum=0;
+all.forEach(s=>{
+if(s.passNumber){
+let num=parseInt(s.passNumber.split('-')[1])||0;
+if(num>maxNum) maxNum=num;
+}
+});
+let nextNum=String(maxNum+1).padStart(4,'0');
+return "FX-2026-"+nextNum;
+}
+
+// 更新徽章显示
+function updateBadgeDisplay(){
+let b1=localStorage.getItem('badge1')==='unlocked';
+let b2=localStorage.getItem('badge2')==='unlocked';
+let b3=localStorage.getItem('badge3')==='unlocked';
+document.getElementById('badge1Icon').className='badge-icon'+(b1?' unlocked':'');
+document.getElementById('badge2Icon').className='badge-icon'+(b2?' unlocked':'');
+document.getElementById('badge3Icon').className='badge-icon'+(b3?' unlocked':'');
+}
+
+// 初始化编号
+function initPassNumber(){
+let currentNumber=generatePassNumber();
+document.getElementById('passNumber').textContent=currentNumber;
+let student=getStudent();
+if(student && student.passNumber){
+document.getElementById('passNumber').textContent=student.passNumber;
+} else{
+document.getElementById('passNumber').textContent=currentNumber;
+}
+}
+
+function loginOnly(){
+const st={
+cls:document.getElementById("cls").value.trim(),
+seat:document.getElementById("seat").value.trim(),
+name:document.getElementById("name").value.trim()
+};
+
+if(!st.cls||!st.seat||!st.name){
+loginMsg.style.color="#ffcfbf";
+loginMsg.textContent="请完整填写班级、座号、姓名。";
+return false;
+}
+
+// 如果没有编号则生成新编号
+let existingStudent=getStudent();
+if(existingStudent && existingStudent.key===st.cls+"-"+st.seat+"-"+st.name){
+st.passNumber=existingStudent.passNumber;
+}else{
+st.passNumber=generatePassNumber();
+}
+
+saveStudentEverywhere(st);
+saveProgress("首页登录",{action:"保存学生信息"});
+document.getElementById('passNumber').textContent=st.passNumber;
+
+loginMsg.style.color="#d9f2c4";
+loginMsg.textContent="✅ 探展证已生效，学习成果将记录到当前学生。";
+return true;
+}
+
+function loginAndStart(){
+if(loginOnly()){
+setTimeout(()=>{
+window.location.href="pretest.html";
+},600);
+}
+}
+
+function logout(){
+localStorage.removeItem("currentStudent");
+localStorage.removeItem("studentInfo");
+localStorage.removeItem("activeStudent");
+localStorage.removeItem("loginStudent");
+
+document.getElementById("cls").value="";
+document.getElementById("seat").value="";
+document.getElementById("name").value="";
+
+document.getElementById('passNumber').textContent=generatePassNumber();
+loginMsg.style.color="#f5e7c6";
+loginMsg.textContent="已退出登录，请重新填写探展证信息。";
+updateBadgeDisplay();
+}
+
+function refreshLogin(){
+const old=getStudent();
+
+if(old){
+document.getElementById("cls").value=old.cls||"";
+document.getElementById("seat").value=old.seat||"";
+document.getElementById("name").value=old.name||"";
+document.getElementById('passNumber').textContent=old.passNumber||generatePassNumber();
+
+loginMsg.style.color="#d9f2c4";
+loginMsg.textContent=`已登录：${old.cls} ${old.seat}号 ${old.name}`;
+} else{
+document.getElementById('passNumber').textContent=generatePassNumber();
+}
+updateBadgeDisplay();
+}
+
+// 页面加载时初始化
+initPassNumber();
+refreshLogin();
+</script>
+<!-- 引入 Three.js 核心库（如果页面之前没有加载） -->
+
+<!-- 引入梦溪助手 -->
+<script src="mengxi-assistant.js"></script>
+</body>
+</html>

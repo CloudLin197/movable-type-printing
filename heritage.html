@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>非遗传承馆</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"KaiTi","Noto Serif SC",serif;background:#f5efe6;min-height:100vh;color:#3b281c;}
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:2s;}
+.hero-mask{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:16px;margin-top:6px;}
+.nav-menu{margin-top:12px;}
+.nav-menu a{display:inline-block;padding:8px 16px;margin:4px;border-radius:24px;background:rgba(255,255,255,.15);color:white;text-decoration:none;font-size:15px;transition:.25s;}
+.nav-menu a:hover,.nav-menu a.active{background:rgba(255,255,255,.36);transform:translateY(-1px);}
+.exhibit-hall{max-width:1200px;width:calc(100% - 40px);margin:22px auto 36px;background:#fcf8f0;border-radius:40px;padding:30px 28px 40px;border:1px solid #e6d6bd;box-shadow:0 20px 40px rgba(100,70,40,.22);}
+.museum-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-bottom:2px solid #dacfbb;padding-bottom:18px;margin-bottom:28px;gap:12px;}
+.museum-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.museum-title h1{font-size:2rem;color:#4d2e1b;letter-spacing:4px;}
+.sub{background:#a67b5c;color:#fff7ed;padding:6px 18px;border-radius:30px;}
+
+/* 探展通行证容器 */
+.badge-fujian{
+  background: rgba(166,123,92,0.9);
+  color: #fff7ed;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  white-space: nowrap;
+}
+.pass-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.pass-name{ font-weight: bold; }
+.pass-badge-icon{
+  font-size: 18px;
+  filter: grayscale(1);
+  opacity: 0.4;
+  transition: 0.3s;
+}
+.pass-badge-icon.unlocked{
+  filter: grayscale(0);
+  opacity: 1;
+  text-shadow: 0 0 6px gold;
+}
+
+.panel,.intro-box,.section-box{background:#f3ede4;border:1px solid #e2d4c0;border-radius:30px;padding:24px;margin-bottom:24px;}
+.panel-title{font-size:1.5rem;font-weight:bold;color:#3b281c;border-left:8px solid #a67b5c;padding-left:14px;margin-bottom:18px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}.hero{height:190px}.hero-content h1{font-size:32px}.exhibit-hall{width:calc(100% - 22px);padding:22px 16px;}}
+input,select,textarea{width:100%;border:1px solid #cbb79e;border-radius:18px;padding:12px 14px;font-family:inherit;font-size:16px;background:#fffaf3;}
+textarea{resize:vertical;line-height:1.8;}
+label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
+.btn{font-family:inherit;background:#e8ddd0;border:1px solid #cbb79e;padding:10px 22px;border-radius:30px;font-size:1rem;font-weight:bold;cursor:pointer;margin:6px 4px 0 0;box-shadow:0 4px 0 #9b846b;transition:.15s;}
+.btn:hover{filter:brightness(1.02);transform:translateY(-1px);}
+.btn:active{transform:translateY(4px);box-shadow:none;}
+.btn-primary{background:#a67b5c;color:white;border-color:#8b6549;box-shadow:0 4px 0 #624b36;}
+.footer-note{text-align:center;color:#7d644b;border-top:1px solid #ddcfbb;padding-top:20px;margin-top:28px;}
+.success{color:#5f8a4a}.error{color:#b35a4a}.muted{color:#7d644b}.feedback{min-height:24px;margin-top:10px;font-weight:bold;}
+.card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:24px;padding:18px;box-shadow:0 6px 0 #d1c0ab;}
+.table{width:100%;border-collapse:collapse;background:#fcf8f0;border-radius:18px;overflow:hidden;}
+.table th,.table td{border:1px solid #decfbb;padding:10px;text-align:left;line-height:1.6;vertical-align:top;}
+.table th{background:#a67b5c;color:white;}
+.empty{text-align:center;padding:28px;color:#7d644b;background:#fcf8f0;border:1px dashed #cbb79e;border-radius:20px;}
+
+.preview-img{display:none;width:100%;max-height:220px;object-fit:cover;border-radius:18px;margin-top:10px;border:1px solid #dacbbc}.tab-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.tab-btn{padding:9px 18px;border-radius:24px;border:2px solid #dacbbc;background:#e8ddd0;font-family:inherit;font-weight:bold;cursor:pointer}.tab-btn.active{background:#a67b5c;color:white}.work-list{display:flex;flex-direction:column;gap:16px}.work-card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:24px;padding:18px;box-shadow:0 6px 0 #d1c0ab}.work-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.tag{background:#a67b5c;color:white;border-radius:18px;padding:4px 12px;font-size:14px}.work-img{width:100%;max-height:260px;object-fit:cover;border-radius:18px;margin:10px 0}.work-text{line-height:1.9;white-space:pre-wrap}.comment-box{margin-top:12px;background:#f5efe6;border-radius:16px;padding:12px}.comment-item{border-top:1px dashed #d0bfa8;padding-top:6px;margin-top:6px}</style>
+<script>
+const SITE_PAGES=[['index.html','首页'],['pretest.html','活板初探馆'],['inquiry.html','研学探究馆'],['speech.html','活字解说馆'],['heritage.html','非遗传承馆'],['teacher.html','教师数据中心']];
+function renderHero(active){
+ document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+}
+function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;if(imgs.length){imgs[0].style.opacity=1;setInterval(()=>{imgs.forEach(x=>x.style.opacity=0);i=(i+1)%imgs.length;imgs[i].style.opacity=1;},3000);}}
+function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
+function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
+function studentKey(){let s=getStudent();return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';}
+function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';}
+function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
+function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+</script>
+</head>
+<body>
+<script>renderHero('heritage.html');</script>
+
+<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🏛️ 非遗传承馆</h1><span class="sub">课后分层作业展示中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">恭喜你，展项设计师！</div><p style="line-height:1.9;font-size:17px">你已经集齐三枚"匠心徽章"，正式解锁"展项设计师"的荣誉称号。请任选一个项目，为展馆补充一块有深度的文化拼图。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📌 分层任务选择</div><div class="card"><b>任务 A：福建印刷非遗档案</b><p>须包含历史渊源、工艺流程、传承现状、保护措施；图文并茂，不少于300字。</p></div><br><div class="card"><b>任务 B：非遗传承人"画像"</b><p>撰写人物小传，体现坚守精神与匠心品质，可配AI人物画像。</p></div><label>小组 / 姓名</label><input id="author"><label>选择任务</label><select id="taskType"><option value="A">任务 A：福建印刷非遗档案</option><option value="B">任务 B：非遗传承人画像</option></select><label>作品标题</label><input id="title"><label>上传图片</label><input type="file" id="imageFile" accept="image/*"><img id="previewImg" class="preview-img"><label>作品正文</label><textarea id="content" maxlength="1200" placeholder="请输入不少于300字的作业内容。"></textarea><div class="muted" id="count" style="text-align:right">当前字数：0/1200</div><button class="btn btn-primary" id="submitBtn">提交到传承馆</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback"></div></section><section class="panel"><div class="panel-title">🖼️ 展馆作品展示</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('all',this)">全部作品</button><button class="tab-btn" onclick="switchTab('A',this)">非遗档案室</button><button class="tab-btn" onclick="switchTab('B',this)">匠心人物墙</button></div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
+<script>
+startHero();
+
+// 渲染探展通行证
+renderStudentPass();
+
+let st=getStudent();if(st)author.value=st.cls+' '+st.name;let currentTab='all',selectedImageData='',works=JSON.parse(localStorage.getItem('heritageWorks')||'[]');content.addEventListener('input',()=>count.textContent=`当前字数：${content.value.length}/1200`);imageFile.addEventListener('change',()=>{let file=imageFile.files[0];if(!file){selectedImageData='';previewImg.style.display='none';return;}if(!file.type.startsWith('image/')){show('❌ 请上传图片文件。','error');imageFile.value='';return;}let r=new FileReader();r.onload=e=>{selectedImageData=e.target.result;previewImg.src=selectedImageData;previewImg.style.display='block'};r.readAsDataURL(file);});clearBtn.onclick=()=>{clearForm();feedback.textContent=''};submitBtn.onclick=()=>{let a=author.value.trim(),t=title.value.trim(),c=content.value.trim(),type=taskType.value;if(!a||!t||!c){show('❌ 请填写提交者、标题和正文。','error');return;}if(c.length<300){show('❌ 正文字数不足300字，请继续补充。','error');return;}if(type==='A'&&['历史','工艺','传承','保护'].filter(w=>c.includes(w)).length<3){show('❌ 任务A建议包含历史、工艺、传承、保护等内容。','error');return;}if(type==='B'&&['传承','坚守','匠心','精神'].filter(w=>c.includes(w)).length<2){show('❌ 任务B应体现坚守精神与匠心品质。','error');return;}works.push({id:Date.now(),author:a,type,title:t,image:selectedImageData,content:c,student:getStudent(),studentKey:studentKey(),likes:0,comments:[],time:new Date().toLocaleString()});save();render();saveProgress('非遗传承馆',{action:'提交分层作业',task:type,length:c.length});show('✅ 提交成功！作品已进入非遗传承馆。','success');clearForm();};function clearForm(){title.value='';imageFile.value='';selectedImageData='';previewImg.src='';previewImg.style.display='none';content.value='';count.textContent='当前字数：0/1200'}function show(m,t){feedback.textContent=m;feedback.className='feedback '+t}function save(){localStorage.setItem('heritageWorks',JSON.stringify(works));}function switchTab(tab,btn){currentTab=tab;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+function render(){workList.innerHTML='';let list=works.filter(w=>currentTab==='all'||w.type===currentTab).sort((a,b)=>b.likes-a.likes);if(!list.length){workList.innerHTML='<div class="empty">暂无作品，等待同学们提交。</div>';return;}list.forEach(w=>{let typeName=w.type==='A'?'非遗档案室':'匠心人物墙';let card=document.createElement('div');card.className='work-card';card.innerHTML=`<div class="work-top"><div><b style="font-size:20px">${esc(w.title)}</b><div class="muted">提交者：${esc(w.author)}　${esc(w.time||'')}</div></div><div class="tag">${typeName}</div></div>${w.image?`<img class="work-img" src="${w.image}">`:''}<div class="work-text">${esc(w.content)}</div><button class="btn" onclick="likeWork(${w.id})">👍 点赞 ${w.likes}</button><button class="btn" onclick="toggleComment(${w.id})">💬 评论 ${w.comments.length}</button><button class="btn" onclick="deleteWork(${w.id})">删除</button><div class="comment-box" id="commentBox-${w.id}" style="display:none"><input id="commentInput-${w.id}" placeholder="请输入评论内容"><button class="btn btn-primary" onclick="addComment(${w.id})">提交评论</button>${w.comments.length?w.comments.map(c=>`<div class="comment-item">💬 ${esc(c)}</div>`).join(''):'<div class="muted">暂无评论</div>'}</div>`;workList.appendChild(card);});}function likeWork(id){let w=works.find(x=>x.id===id);if(w){w.likes++;save();render();}}function toggleComment(id){let b=document.getElementById('commentBox-'+id);b.style.display=b.style.display==='none'?'block':'none'}function addComment(id){let inp=document.getElementById('commentInput-'+id),t=inp.value.trim();if(!t)return alert('请先输入评论');let w=works.find(x=>x.id===id);w.comments.push(t);save();render();}function deleteWork(id){if(confirm('确定删除这个作品吗？')){works=works.filter(x=>x.id!==id);save();render();}}
+render();
+
+/* 探展通行证渲染函数（长条形两行） */
+function renderStudentPass() {
+  const st = getStudent();
+  const passDiv = document.getElementById('studentBadge');
+  if (!passDiv) return;
+
+  if (!st) {
+    passDiv.innerHTML = `<span style="opacity:0.7;">未登录</span>`;
+    return;
+  }
+
+  const b1 = localStorage.getItem('badge1') === 'unlocked';
+  const b2 = localStorage.getItem('badge2') === 'unlocked';
+  const b3 = localStorage.getItem('badge3') === 'unlocked';
+  const passNumber = st.passNumber || 'FX-2026-0001';
+
+  passDiv.innerHTML = `
+    <div class="pass-row">
+      <span class="pass-name">${esc(st.name)}</span>
+      <span>${esc(st.cls)} ${esc(st.seat)}号</span>
+    </div>
+    <div class="pass-row">
+      <span>编号：${esc(passNumber)}</span>
+      <span class="pass-badge-icon ${b1?'unlocked':''}">🛠️</span>
+      <span class="pass-badge-icon ${b2?'unlocked':''}">📜</span>
+      <span class="pass-badge-icon ${b3?'unlocked':''}">💡</span>
+    </div>
+  `;
+}
+</script>
+<script src="mengxi-assistant.js"></script></body>
+</html>

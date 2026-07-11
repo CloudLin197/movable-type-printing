@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教师数据中心</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:"KaiTi","Noto Serif SC",serif;background:#f5efe6;min-height:100vh;color:#3b281c;}
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:2s;}
+.hero-mask{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:16px;margin-top:6px;}
+.nav-menu{margin-top:12px;}
+.nav-menu a{display:inline-block;padding:8px 16px;margin:4px;border-radius:24px;background:rgba(255,255,255,.15);color:white;text-decoration:none;font-size:15px;transition:.25s;}
+.nav-menu a:hover,.nav-menu a.active{background:rgba(255,255,255,.36);transform:translateY(-1px);}
+.exhibit-hall{max-width:1200px;width:calc(100% - 40px);margin:22px auto 36px;background:#fcf8f0;border-radius:40px;padding:30px 28px 40px;border:1px solid #e6d6bd;box-shadow:0 20px 40px rgba(100,70,40,.22);}
+.museum-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;border-bottom:2px solid #dacfbb;padding-bottom:18px;margin-bottom:28px;gap:12px;}
+.museum-title{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.museum-title h1{font-size:2rem;color:#4d2e1b;letter-spacing:4px;}
+.sub,.badge-fujian{background:#a67b5c;color:#fff7ed;padding:6px 18px;border-radius:30px;}
+.panel,.intro-box,.section-box{background:#f3ede4;border:1px solid #e2d4c0;border-radius:30px;padding:24px;margin-bottom:24px;}
+.panel-title{font-size:1.5rem;font-weight:bold;color:#3b281c;border-left:8px solid #a67b5c;padding-left:14px;margin-bottom:18px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}.hero{height:190px}.hero-content h1{font-size:32px}.exhibit-hall{width:calc(100% - 22px);padding:22px 16px;}}
+input,select,textarea{width:100%;border:1px solid #cbb79e;border-radius:18px;padding:12px 14px;font-family:inherit;font-size:16px;background:#fffaf3;}
+textarea{resize:vertical;line-height:1.8;}
+label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
+.btn{font-family:inherit;background:#e8ddd0;border:1px solid #cbb79e;padding:10px 22px;border-radius:30px;font-size:1rem;font-weight:bold;cursor:pointer;margin:6px 4px 0 0;box-shadow:0 4px 0 #9b846b;transition:.15s;}
+.btn:hover{filter:brightness(1.02);transform:translateY(-1px);}
+.btn:active{transform:translateY(4px);box-shadow:none;}
+.btn-primary{background:#a67b5c;color:white;border-color:#8b6549;box-shadow:0 4px 0 #624b36;}
+.footer-note{text-align:center;color:#7d644b;border-top:1px solid #ddcfbb;padding-top:20px;margin-top:28px;}
+.success{color:#5f8a4a}.error{color:#b35a4a}.muted{color:#7d644b}.feedback{min-height:24px;margin-top:10px;font-weight:bold;}
+.card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:24px;padding:18px;box-shadow:0 6px 0 #d1c0ab;}
+.table{width:100%;border-collapse:collapse;background:#fcf8f0;border-radius:18px;overflow:hidden;}
+.table th,.table td{border:1px solid #decfbb;padding:10px;text-align:left;line-height:1.6;vertical-align:top;}
+.table th{background:#a67b5c;color:white;}
+.empty{text-align:center;padding:28px;color:#7d644b;background:#fcf8f0;border:1px dashed #cbb79e;border-radius:20px;}
+
+.metric{text-align:center}.metric h2{font-size:34px;color:#4d2e1b}.bar-row{display:grid;grid-template-columns:130px 1fr 60px;align-items:center;gap:10px;margin:12px 0}.bar-bg{height:24px;background:#eadfcc;border-radius:20px;overflow:hidden}.bar-fill{height:100%;background:#a67b5c;border-radius:20px}.mini-card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:18px;padding:12px;margin:10px 0;line-height:1.7}.wrong{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #d0bfa8;padding:10px 0}.badge{background:#a67b5c;color:white;border-radius:16px;padding:3px 10px}</style>
+<script>
+const SITE_PAGES=[['index.html','首页'],['pretest.html','活板初探馆'],['inquiry.html','研学探究馆'],['speech.html','活字解说馆'],['heritage.html','非遗传承馆'],['teacher.html','教师数据中心']];
+function renderHero(active){
+ document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+}
+function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;if(imgs.length){imgs[0].style.opacity=1;setInterval(()=>{imgs.forEach(x=>x.style.opacity=0);i=(i+1)%imgs.length;imgs[i].style.opacity=1;},3000);}}
+function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
+function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
+function studentKey(){let s=getStudent();return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';}
+function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';}
+function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
+function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+</script>
+</head>
+<body>
+<script>renderHero('teacher.html');</script>
+
+<div class="exhibit-hall" id="loginPanel"><header class="museum-header"><div class="museum-title"><h1>📊 教师数据中心</h1><span class="sub">教师入口</span></div><div class="badge-fujian">教师码验证</div></header><section class="panel" style="max-width:520px;margin:auto"><div class="panel-title">请输入教师码</div><input id="teacherCode" type="password" placeholder="请输入教师码"><button class="btn btn-primary" onclick="checkCode()">进入数据中心</button><div id="codeMsg" class="feedback"></div></section><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
+<div class="exhibit-hall" id="dash" style="display:none"><header class="museum-header"><div class="museum-title"><h1>📊 教师数据中心</h1><span class="sub">学习数据可视化</span></div><div class="badge-fujian">教师码：123456</div></header><div class="grid-3" id="cards"></div><section class="panel"><div class="panel-title">📈 完成情况可视化</div><div id="bars"></div></section><section class="panel"><div class="panel-title">🔥 高频错题整理</div><div id="wrongList"></div></section><section class="panel"><div class="panel-title">👥 学生学习记录</div><div style="overflow:auto"><table class="table" id="studentTable"></table></div></section><section class="panel"><div class="panel-title">🎙️ 解说词与传承馆提交</div><div class="grid-2"><div><h3>活字解说馆</h3><div id="speechList"></div></div><div><h3>非遗传承馆</h3><div id="heritageList"></div></div></div></section><button class="btn" onclick="exportData()">导出数据JSON</button><button class="btn" onclick="clearAll()">清空全部本地数据</button><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
+<script>startHero();
+
+function checkCode(){if(teacherCode.value==='123456'){loginPanel.style.display='none';dash.style.display='block';renderDashboard();}else{codeMsg.textContent='❌ 教师码错误';codeMsg.className='feedback error';}}
+teacherCode.addEventListener('keydown',e=>{if(e.key==='Enter')checkCode()});
+function renderDashboard(){let students=JSON.parse(localStorage.getItem('students')||'[]'),pre=JSON.parse(localStorage.getItem('pretestRecords')||'[]'),progress=JSON.parse(localStorage.getItem('progressRecords')||'[]'),speech=JSON.parse(localStorage.getItem('speechWorks')||'[]'),heritage=JSON.parse(localStorage.getItem('heritageWorks')||'[]');let unique=new Set([...students.map(s=>s.key),...pre.map(r=>r.studentKey),...progress.map(r=>r.studentKey),...speech.map(r=>r.studentKey),...heritage.map(r=>r.studentKey)]);let avg=pre.length?Math.round(pre.reduce((a,b)=>a+b.score,0)/pre.length):0;let pass=pre.length?Math.round(pre.filter(x=>x.score>=60).length/pre.length*100):0;let inquiryDone=new Set(progress.filter(p=>p.page==='研学探究馆'&&p.detail&&p.detail.action==='完成工序排序').map(p=>p.studentKey));cards.innerHTML=`<div class="card metric"><h2>${unique.size}</h2><p>学生人数</p></div><div class="card metric"><h2>${avg}</h2><p>预习平均分</p></div><div class="card metric"><h2>${pass}%</h2><p>及格率</p></div><div class="card metric"><h2>${inquiryDone.size}</h2><p>探究完成</p></div><div class="card metric"><h2>${speech.length}</h2><p>解说词提交</p></div><div class="card metric"><h2>${heritage.length}</h2><p>传承作业提交</p></div>`;let max=Math.max(unique.size,1);let items=[['预习检测',new Set(pre.map(x=>x.studentKey)).size],['研学探究',inquiryDone.size],['活字解说',new Set(speech.map(x=>x.studentKey)).size],['非遗传承',new Set(heritage.map(x=>x.studentKey)).size]];bars.innerHTML=items.map(x=>`<div class="bar-row"><b>${x[0]}</b><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(x[1]/max*100)}%"></div></div><span>${x[1]}/${max}</span></div>`).join('');
+let wrongMap={};pre.forEach(r=>(r.wrong||[]).forEach(w=>{let k=w.index+'. '+w.question;if(!wrongMap[k])wrongMap[k]={count:0,correct:w.correct};wrongMap[k].count++;}));let wrongs=Object.entries(wrongMap).sort((a,b)=>b[1].count-a[1].count);wrongList.innerHTML=wrongs.length?wrongs.map(([q,v])=>`<div class="wrong"><div><b>${esc(q)}</b><div class="muted">正确答案：${esc(v.correct)}</div></div><span class="badge">${v.count}次</span></div>`).join(''):'<div class="empty">暂无错题数据。学生提交内容测评后会自动生成。</div>';
+studentTable.innerHTML='<tr><th>学生</th><th>预习最高分</th><th>探究</th><th>解说</th><th>传承</th><th>最近记录</th></tr>'+Array.from(unique).map(k=>{let s=students.find(x=>x.key===k);let name=s?`${s.cls} ${s.seat}号 ${s.name}`:k;let scores=pre.filter(x=>x.studentKey===k).map(x=>x.score);let sp=speech.filter(x=>x.studentKey===k).length;let he=heritage.filter(x=>x.studentKey===k).length;let pr=progress.filter(x=>x.studentKey===k).slice(-1)[0];return `<tr><td>${esc(name)}</td><td>${scores.length?Math.max(...scores):'未提交'}</td><td>${inquiryDone.has(k)?'已完成':'未完成'}</td><td>${sp}</td><td>${he}</td><td>${pr?esc(pr.page+' '+pr.time):''}</td></tr>`;}).join('');
+speechList.innerHTML=speech.length?speech.sort((a,b)=>b.likes-a.likes).slice(0,10).map(w=>`<div class="mini-card"><b>${esc(w.name)}</b> 👍${w.likes}<br>${esc(w.text).slice(0,90)}...</div>`).join(''):'<div class="empty">暂无提交</div>';heritageList.innerHTML=heritage.length?heritage.sort((a,b)=>b.likes-a.likes).slice(0,10).map(w=>`<div class="mini-card"><b>${esc(w.title)}</b> 👍${w.likes}<br>${esc(w.content).slice(0,90)}...</div>`).join(''):'<div class="empty">暂无提交</div>';}
+function exportData(){let data={students:JSON.parse(localStorage.getItem('students')||'[]'),pretestRecords:JSON.parse(localStorage.getItem('pretestRecords')||'[]'),progressRecords:JSON.parse(localStorage.getItem('progressRecords')||'[]'),speechWorks:JSON.parse(localStorage.getItem('speechWorks')||'[]'),heritageWorks:JSON.parse(localStorage.getItem('heritageWorks')||'[]')};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='活字印刷云展馆学习数据.json';a.click();}
+function clearAll(){if(confirm('确定清空全部本地学习数据吗？')){['students','currentStudent','pretestRecords','progressRecords','speechWorks','heritageWorks'].forEach(k=>localStorage.removeItem(k));renderDashboard();}}
+</script>
+<script src="mengxi-assistant.js"></script></body>
+</html>
