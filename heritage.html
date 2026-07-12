@@ -75,12 +75,57 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
 .table th{background:#a67b5c;color:white;}
 .empty{text-align:center;padding:28px;color:#7d644b;background:#fcf8f0;border:1px dashed #cbb79e;border-radius:20px;}
 
-.preview-img{display:none;width:100%;max-height:220px;object-fit:cover;border-radius:18px;margin-top:10px;border:1px solid #dacbbc}.tab-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.tab-btn{padding:9px 18px;border-radius:24px;border:2px solid #dacbbc;background:#e8ddd0;font-family:inherit;font-weight:bold;cursor:pointer}.tab-btn.active{background:#a67b5c;color:white}.work-list{display:flex;flex-direction:column;gap:16px}.work-card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:24px;padding:18px;box-shadow:0 6px 0 #d1c0ab}.work-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.tag{background:#a67b5c;color:white;border-radius:18px;padding:4px 12px;font-size:14px}.work-img{width:100%;max-height:260px;object-fit:cover;border-radius:18px;margin:10px 0}.work-text{line-height:1.9;white-space:pre-wrap}.comment-box{margin-top:12px;background:#f5efe6;border-radius:16px;padding:12px}.comment-item{border-top:1px dashed #d0bfa8;padding-top:6px;margin-top:6px}</style>
-<script>
-const SITE_PAGES=[['index.html','首页'],['pretest.html','活板初探馆'],['inquiry.html','研学探究馆'],['speech.html','活字解说馆'],['heritage.html','非遗传承馆'],['teacher.html','教师数据中心']];
-function renderHero(active){
- document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+.preview-img{display:none;width:100%;max-height:220px;object-fit:cover;border-radius:18px;margin-top:10px;border:1px solid #dacbbc}.tab-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.tab-btn{padding:9px 18px;border-radius:24px;border:2px solid #dacbbc;background:#e8ddd0;font-family:inherit;font-weight:bold;cursor:pointer}.tab-btn.active{background:#a67b5c;color:white}.work-list{display:flex;flex-direction:column;gap:16px}.work-card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:24px;padding:18px;box-shadow:0 6px 0 #d1c0ab}.work-top{display:flex;justify-content:space-between;gap:10px;align-items:center}.tag{background:#a67b5c;color:white;border-radius:18px;padding:4px 12px;font-size:14px}.work-img{width:100%;max-height:260px;object-fit:cover;border-radius:18px;margin:10px 0}.work-text{line-height:1.9;white-space:pre-wrap}.comment-box{margin-top:12px;background:#f5efe6;border-radius:16px;padding:12px}.comment-item{border-top:1px dashed #d0bfa8;padding-top:6px;margin-top:6px}
+/* ===== 古韵无障碍导航：图片下方、与正文同宽 ===== */
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;}
+.hero-mask{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,.56));z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;text-shadow:0 4px 18px rgba(0,0,0,.7);}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:17px;margin-top:7px;letter-spacing:2px;}
+.help-button{position:absolute;z-index:5;top:16px;right:18px;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 15px 8px 10px;border-radius:24px;border:1px solid rgba(107,68,31,.38);background:linear-gradient(#fff9ed,#ead7b7);color:#5a3518;text-decoration:none;font-size:16px;font-weight:700;box-shadow:0 5px 14px rgba(0,0,0,.28);}
+.help-button:hover,.help-button:focus-visible{transform:translateY(-1px);filter:brightness(1.04);outline:2px solid #e2b66e;outline-offset:2px;}
+.help-button .help-q{width:27px;height:27px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #7a4a21;background:#fffaf0;font-family:Arial,sans-serif;font-weight:900;}
+.site-nav-shell{max-width:1200px;width:calc(100% - 40px);height:64px;margin:14px auto 0;border:1px solid #b88a55;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#4a2b16,#2f190d);box-shadow:0 8px 18px rgba(76,45,20,.22),inset 0 1px 0 rgba(255,244,215,.14);}
+.site-nav{height:100%;display:flex;align-items:stretch;}
+.site-nav a{--wash:rgba(191,130,61,.06);position:relative;flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 12px;border-right:1px solid rgba(247,222,172,.18);background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;text-decoration:none;font-size:18px;font-weight:700;white-space:nowrap;text-shadow:0 2px 5px rgba(0,0,0,.65);transition:.2s ease;}
+.site-nav a:last-child{border-right:0;}
+.site-nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:4px;border-radius:4px 4px 0 0;background:#e0ad5e;transform:scaleX(0);transition:transform .2s ease;}
+.site-nav a.active{background:linear-gradient(180deg,rgba(167,101,39,.52),rgba(89,45,17,.42));color:#fff7e6;box-shadow:inset 0 0 24px rgba(242,183,91,.12);}
+.site-nav a.active::after{transform:scaleX(1);}
+.site-nav a:hover,.site-nav a:focus-visible{background:linear-gradient(180deg,rgba(180,109,42,.58),rgba(96,49,18,.45));color:#fff9ec;outline:none;box-shadow:inset 0 0 28px rgba(242,183,91,.14);}
+.site-nav a:hover::after,.site-nav a:focus-visible::after{transform:scaleX(1);}
+.site-nav:hover a.active:not(:hover):not(:focus-visible){background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;box-shadow:none;}
+.site-nav:hover a.active:not(:hover):not(:focus-visible)::after{transform:scaleX(0);}
+.nav-icon{width:30px;height:30px;flex:0 0 30px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(245,218,165,.44);background:rgba(255,238,202,.08);color:#f0d29b;}
+.nav-icon svg{width:17px;height:17px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.exhibit-hall{margin-top:12px!important;}
+@media(max-width:900px){
+  .hero{height:190px;}
+  .hero-content h1{font-size:32px;}
+  .site-nav-shell{width:calc(100% - 22px);height:62px;overflow-x:auto;overflow-y:hidden;border-radius:15px;}
+  .site-nav{min-width:920px;}
+  .site-nav a{flex:0 0 auto;min-width:145px;font-size:17px;padding:0 14px;}
 }
+@media(max-width:560px){
+  .help-button{top:10px;right:10px;padding:7px 10px;font-size:15px;}
+  .help-button .help-text-full{display:none;}
+  .site-nav-shell{height:58px;margin-top:10px;}
+  .site-nav{min-width:850px;}
+  .site-nav a{min-width:135px;font-size:16px;}
+  .nav-icon{width:28px;height:28px;flex-basis:28px;}
+}
+
+</style>
+<script>
+const SITE_PAGES=[["index.html", "首页", "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"></path><path d=\"M5.5 9.5V20h13V9.5\"></path><path d=\"M9.5 20v-6h5v6\"></path></svg>"], ["pretest.html", "活板初探馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5h7.5A2.5 2.5 0 0 1 14 8v10.5H6.5A2.5 2.5 0 0 0 4 21V5.5Z\"></path><path d=\"M20 5.5h-7.5A2.5 2.5 0 0 0 10 8v10.5h7.5A2.5 2.5 0 0 1 20 21V5.5Z\"></path></svg>"], ["inquiry.html", "研学探究馆", "<svg viewBox=\"0 0 24 24\"><circle cx=\"10.5\" cy=\"10.5\" r=\"5.5\"></circle><path d=\"M15 15 21 21\"></path><path d=\"M10.5 8v5\"></path><path d=\"M8 10.5h5\"></path></svg>"], ["speech.html", "活字解说馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z\"></path><path d=\"M7 11a5 5 0 0 0 10 0\"></path><path d=\"M12 16v4\"></path><path d=\"M9 20h6\"></path></svg>"], ["heritage.html", "非遗传承馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3c3.5 0 6 2.2 6 5.3 0 2.2-1.4 3.8-3.2 5.1-.8.6-1.3 1.4-1.3 2.3V19h-3v-3.3c0-.9-.5-1.7-1.3-2.3C7.4 12.1 6 10.5 6 8.3 6 5.2 8.5 3 12 3Z\"></path><path d=\"M9.5 22h5\"></path><path d=\"M9.5 19h5\"></path></svg>"], ["teacher.html", "教师数据中心", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 6h16v10H4z\"></path><path d=\"M8 20h8\"></path><path d=\"M12 16v4\"></path><path d=\"M7.5 10.5h3\"></path><path d=\"M13.5 10.5h3\"></path></svg>"]];
+
+function renderHero(active){
+ const hero=`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg" alt="">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p></div><a class="help-button" href="help.html" aria-label="使用帮助"><span class="help-q">?</span><span><span class="help-text-full">使用</span>帮助</span></a></div>`;
+ const nav=`<div class="site-nav-shell"><nav class="site-nav" aria-label="展馆导航">${SITE_PAGES.map(p=>`<a href="${p[0]}" class="${p[0]===active?'active':''}" ${p[0]===active?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${p[2]}</span><span>${p[1]}</span></a>`).join('')}</nav></div>`;
+ document.write(hero+nav);
+}
+
 function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;if(imgs.length){imgs[0].style.opacity=1;setInterval(()=>{imgs.forEach(x=>x.style.opacity=0);i=(i+1)%imgs.length;imgs[i].style.opacity=1;},3000);}}
 function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
 function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
@@ -89,6 +134,8 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
+<link rel="stylesheet" href="platform-v2.css">
+<script src="platform-v2.js?v=2.22"></script>
 </head>
 <body>
 <script>renderHero('heritage.html');</script>
@@ -100,7 +147,7 @@ startHero();
 // 渲染探展通行证
 renderStudentPass();
 
-let st=getStudent();if(st)author.value=st.cls+' '+st.name;let currentTab='all',selectedImageData='',works=JSON.parse(localStorage.getItem('heritageWorks')||'[]');content.addEventListener('input',()=>count.textContent=`当前字数：${content.value.length}/1200`);imageFile.addEventListener('change',()=>{let file=imageFile.files[0];if(!file){selectedImageData='';previewImg.style.display='none';return;}if(!file.type.startsWith('image/')){show('❌ 请上传图片文件。','error');imageFile.value='';return;}let r=new FileReader();r.onload=e=>{selectedImageData=e.target.result;previewImg.src=selectedImageData;previewImg.style.display='block'};r.readAsDataURL(file);});clearBtn.onclick=()=>{clearForm();feedback.textContent=''};submitBtn.onclick=()=>{let a=author.value.trim(),t=title.value.trim(),c=content.value.trim(),type=taskType.value;if(!a||!t||!c){show('❌ 请填写提交者、标题和正文。','error');return;}if(c.length<300){show('❌ 正文字数不足300字，请继续补充。','error');return;}if(type==='A'&&['历史','工艺','传承','保护'].filter(w=>c.includes(w)).length<3){show('❌ 任务A建议包含历史、工艺、传承、保护等内容。','error');return;}if(type==='B'&&['传承','坚守','匠心','精神'].filter(w=>c.includes(w)).length<2){show('❌ 任务B应体现坚守精神与匠心品质。','error');return;}works.push({id:Date.now(),author:a,type,title:t,image:selectedImageData,content:c,student:getStudent(),studentKey:studentKey(),likes:0,comments:[],time:new Date().toLocaleString()});save();render();saveProgress('非遗传承馆',{action:'提交分层作业',task:type,length:c.length});show('✅ 提交成功！作品已进入非遗传承馆。','success');clearForm();};function clearForm(){title.value='';imageFile.value='';selectedImageData='';previewImg.src='';previewImg.style.display='none';content.value='';count.textContent='当前字数：0/1200'}function show(m,t){feedback.textContent=m;feedback.className='feedback '+t}function save(){localStorage.setItem('heritageWorks',JSON.stringify(works));}function switchTab(tab,btn){currentTab=tab;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+let st=getStudent();if(st)author.value=st.cls+' '+st.name;let currentTab='all',selectedImageData='',works=JSON.parse(localStorage.getItem('heritageWorks')||'[]');content.addEventListener('input',()=>count.textContent=`当前字数：${content.value.length}/1200`);imageFile.addEventListener('change',()=>{let file=imageFile.files[0];if(!file){selectedImageData='';previewImg.style.display='none';return;}if(!file.type.startsWith('image/')){show('❌ 请上传图片文件。','error');imageFile.value='';return;}let r=new FileReader();r.onload=e=>{selectedImageData=e.target.result;previewImg.src=selectedImageData;previewImg.style.display='block'};r.readAsDataURL(file);});clearBtn.onclick=()=>{clearForm();feedback.textContent=''};submitBtn.onclick=()=>{let a=author.value.trim(),t=title.value.trim(),c=content.value.trim(),type=taskType.value;if(!a||!t||!c){show('❌ 请填写提交者、标题和正文。','error');return;}if(c.length<300){show('❌ 正文字数不足300字，请继续补充。','error');return;}if(type==='A'&&['历史','工艺','传承','保护'].filter(w=>c.includes(w)).length<3){show('❌ 任务A建议包含历史、工艺、传承、保护等内容。','error');return;}if(type==='B'&&['传承','坚守','匠心','精神'].filter(w=>c.includes(w)).length<2){show('❌ 任务B应体现坚守精神与匠心品质。','error');return;}works.push({id:Date.now(),author:a,type,title:t,image:selectedImageData,content:c,student:getStudent(),studentKey:studentKey(),likes:0,comments:[],time:new Date().toLocaleString()});save();render();window.MTP2&&MTP2.unlockBadge(3);saveProgress('非遗传承馆',{action:'提交分层作业',task:type,length:c.length});show('✅ 提交成功！作品已进入非遗传承馆。','success');clearForm();};function clearForm(){title.value='';imageFile.value='';selectedImageData='';previewImg.src='';previewImg.style.display='none';content.value='';count.textContent='当前字数：0/1200'}function show(m,t){feedback.textContent=m;feedback.className='feedback '+t}function save(){localStorage.setItem('heritageWorks',JSON.stringify(works));}function switchTab(tab,btn){currentTab=tab;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
 function render(){workList.innerHTML='';let list=works.filter(w=>currentTab==='all'||w.type===currentTab).sort((a,b)=>b.likes-a.likes);if(!list.length){workList.innerHTML='<div class="empty">暂无作品，等待同学们提交。</div>';return;}list.forEach(w=>{let typeName=w.type==='A'?'非遗档案室':'匠心人物墙';let card=document.createElement('div');card.className='work-card';card.innerHTML=`<div class="work-top"><div><b style="font-size:20px">${esc(w.title)}</b><div class="muted">提交者：${esc(w.author)}　${esc(w.time||'')}</div></div><div class="tag">${typeName}</div></div>${w.image?`<img class="work-img" src="${w.image}">`:''}<div class="work-text">${esc(w.content)}</div><button class="btn" onclick="likeWork(${w.id})">👍 点赞 ${w.likes}</button><button class="btn" onclick="toggleComment(${w.id})">💬 评论 ${w.comments.length}</button><button class="btn" onclick="deleteWork(${w.id})">删除</button><div class="comment-box" id="commentBox-${w.id}" style="display:none"><input id="commentInput-${w.id}" placeholder="请输入评论内容"><button class="btn btn-primary" onclick="addComment(${w.id})">提交评论</button>${w.comments.length?w.comments.map(c=>`<div class="comment-item">💬 ${esc(c)}</div>`).join(''):'<div class="muted">暂无评论</div>'}</div>`;workList.appendChild(card);});}function likeWork(id){let w=works.find(x=>x.id===id);if(w){w.likes++;save();render();}}function toggleComment(id){let b=document.getElementById('commentBox-'+id);b.style.display=b.style.display==='none'?'block':'none'}function addComment(id){let inp=document.getElementById('commentInput-'+id),t=inp.value.trim();if(!t)return alert('请先输入评论');let w=works.find(x=>x.id===id);w.comments.push(t);save();render();}function deleteWork(id){if(confirm('确定删除这个作品吗？')){works=works.filter(x=>x.id!==id);save();render();}}
 render();
 
@@ -117,7 +164,8 @@ function renderStudentPass() {
 
   const b1 = localStorage.getItem('badge1') === 'unlocked';
   const b2 = localStorage.getItem('badge2') === 'unlocked';
-  const b3 = localStorage.getItem('badge3') === 'unlocked';
+  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : localStorage.getItem('badge3') === 'unlocked';
+  const thinkingStar = !!(window.MTP2 && window.MTP2.getThinkingStar && window.MTP2.getThinkingStar());
   const passNumber = st.passNumber || 'FX-2026-0001';
 
   passDiv.innerHTML = `
@@ -130,9 +178,11 @@ function renderStudentPass() {
       <span class="pass-badge-icon ${b1?'unlocked':''}">🛠️</span>
       <span class="pass-badge-icon ${b2?'unlocked':''}">📜</span>
       <span class="pass-badge-icon ${b3?'unlocked':''}">💡</span>
+      ${thinkingStar?'<span class="thinking-star-mark" title="思辨之星" aria-label="思辨之星">★</span>':''}
     </div>
   `;
 }
 </script>
-<script src="mengxi-assistant.js"></script></body>
+<script src="assets/hanzi-pinyin.js"></script>
+<script src="mengxi-assistant.js?v=2.29"></script></body>
 </html>

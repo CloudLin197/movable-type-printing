@@ -1,0 +1,25 @@
+
+/* ===== 活字印刷云展馆 V2.0 统一增强 ===== */
+:root{--v2-content:1200px;--v2-gold:#e5b96f;--v2-wood:#3a2112;--v2-ink:#352316;}
+.hero{height:220px!important;position:relative!important;overflow:hidden!important;}
+.hero-content{top:38%!important;}
+.site-nav-shell{position:absolute!important;z-index:6!important;left:50%!important;bottom:16px!important;transform:translateX(-50%)!important;max-width:var(--v2-content)!important;width:calc(100% - 40px)!important;height:66px!important;margin:0!important;border-radius:18px!important;background:linear-gradient(180deg,rgba(73,43,23,.88),rgba(39,20,10,.91))!important;backdrop-filter:blur(5px)!important;box-shadow:0 8px 22px rgba(0,0,0,.33),inset 0 1px 0 rgba(255,244,215,.16)!important;}
+.site-nav a{font-size:18px!important;gap:11px!important;}
+.nav-icon{width:40px!important;height:40px!important;flex-basis:40px!important;}
+.nav-icon svg{width:24px!important;height:24px!important;stroke-width:1.9!important;}
+.help-button{top:14px!important;right:18px!important;z-index:8!important;}
+.exhibit-hall{margin-top:20px!important;}
+.v2-userbar{max-width:var(--v2-content);width:calc(100% - 40px);margin:14px auto 0;padding:10px 14px;border:1px solid #d4bd98;border-radius:16px;background:#fff8ec;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 5px 14px rgba(90,55,25,.12);font-size:16px;color:#4c331f;}
+.v2-userbar-actions{display:flex;gap:8px;flex-wrap:wrap}.v2-mini-btn{border:1px solid #a98257;background:#ead7bb;color:#4c2f18;padding:7px 12px;border-radius:18px;cursor:pointer;font-family:inherit;font-weight:bold}.v2-mini-btn:hover{background:#dbc09a}.v2-teacher-flag{background:#8b5a2b;color:white;padding:5px 12px;border-radius:16px;font-weight:bold}
+.v2-badges{display:flex;gap:10px;align-items:center}.v2-badge-img{width:42px;height:42px;object-fit:contain;border-radius:50%;filter:grayscale(1);opacity:.35;transition:.25s}.v2-badge-img.unlocked{filter:none;opacity:1;filter:drop-shadow(0 0 5px rgba(210,150,45,.5))}
+.pass-badge-icon{font-size:0!important;width:34px;height:34px;display:inline-flex!important}.pass-badge-icon img{width:34px;height:34px;object-fit:contain;border-radius:50%;filter:grayscale(1);opacity:.35}.pass-badge-icon.unlocked img{filter:none;opacity:1}
+.v2-dragging{opacity:.45!important;transform:scale(.96)!important}.step-card[draggable="true"]{cursor:grab}.step-card[draggable="true"]:active{cursor:grabbing}
+.v2-cloud-note{padding:12px 14px;border-radius:14px;background:#f4ead9;border:1px dashed #b89970;line-height:1.7;color:#65472e}
+@media(max-width:900px){.hero{height:210px!important}.site-nav-shell{height:64px!important;bottom:12px!important}.site-nav{min-width:1020px!important}.site-nav a{font-size:17px!important}.nav-icon{width:36px!important;height:36px!important;flex-basis:36px!important}.nav-icon svg{width:21px!important;height:21px!important}.v2-userbar{width:calc(100% - 22px);font-size:15px;align-items:flex-start;flex-direction:column}.v2-userbar-actions{width:100%}}
+@media(max-width:560px){.hero{height:196px!important}.hero-content{top:34%!important}.site-nav-shell{width:calc(100% - 18px)!important;height:60px!important;bottom:8px!important}.site-nav a{font-size:16px!important;min-width:145px!important}.nav-icon{width:34px!important;height:34px!important;flex-basis:34px!important}.nav-icon svg{width:20px!important;height:20px!important}}
+
+
+/* V2.17 思辨之星：未获得时不渲染，获得后显示在学生登录信息中 */
+.thinking-star-mark{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff8b9 0 18%,#f1bd3d 46%,#a9680d 100%);border:2px solid #fff0a8;color:#fff9db;font-size:22px;line-height:1;text-shadow:0 1px 2px rgba(91,48,0,.65);box-shadow:0 0 0 2px #9f6825,0 4px 9px rgba(104,61,13,.28);animation:v2-thinking-star-in .45s ease both}
+.v2-thinking-star{display:inline-flex;align-items:center;gap:4px;margin-left:10px;padding:3px 9px;border-radius:14px;background:#fff0b8;border:1px solid #c88a23;color:#80500d;font-weight:800;white-space:nowrap}
+@keyframes v2-thinking-star-in{from{opacity:0;transform:scale(.55) rotate(-18deg)}to{opacity:1;transform:scale(1) rotate(0)}}

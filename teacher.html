@@ -41,12 +41,110 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
 .table th{background:#a67b5c;color:white;}
 .empty{text-align:center;padding:28px;color:#7d644b;background:#fcf8f0;border:1px dashed #cbb79e;border-radius:20px;}
 
-.metric{text-align:center}.metric h2{font-size:34px;color:#4d2e1b}.bar-row{display:grid;grid-template-columns:130px 1fr 60px;align-items:center;gap:10px;margin:12px 0}.bar-bg{height:24px;background:#eadfcc;border-radius:20px;overflow:hidden}.bar-fill{height:100%;background:#a67b5c;border-radius:20px}.mini-card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:18px;padding:12px;margin:10px 0;line-height:1.7}.wrong{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #d0bfa8;padding:10px 0}.badge{background:#a67b5c;color:white;border-radius:16px;padding:3px 10px}</style>
-<script>
-const SITE_PAGES=[['index.html','首页'],['pretest.html','活板初探馆'],['inquiry.html','研学探究馆'],['speech.html','活字解说馆'],['heritage.html','非遗传承馆'],['teacher.html','教师数据中心']];
-function renderHero(active){
- document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+.metric{text-align:center}.metric h2{font-size:34px;color:#4d2e1b}.bar-row{display:grid;grid-template-columns:130px 1fr 60px;align-items:center;gap:10px;margin:12px 0}.bar-bg{height:24px;background:#eadfcc;border-radius:20px;overflow:hidden}.bar-fill{height:100%;background:#a67b5c;border-radius:20px}.mini-card{background:#fcf8f0;border:1px solid #dacbbc;border-radius:18px;padding:12px;margin:10px 0;line-height:1.7}.wrong{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed #d0bfa8;padding:10px 0}.badge{background:#a67b5c;color:white;border-radius:16px;padding:3px 10px}
+/* ===== 古韵无障碍导航：图片下方、与正文同宽 ===== */
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;}
+.hero-mask{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,.56));z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;text-shadow:0 4px 18px rgba(0,0,0,.7);}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:17px;margin-top:7px;letter-spacing:2px;}
+.help-button{position:absolute;z-index:5;top:16px;right:18px;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 15px 8px 10px;border-radius:24px;border:1px solid rgba(107,68,31,.38);background:linear-gradient(#fff9ed,#ead7b7);color:#5a3518;text-decoration:none;font-size:16px;font-weight:700;box-shadow:0 5px 14px rgba(0,0,0,.28);}
+.help-button:hover,.help-button:focus-visible{transform:translateY(-1px);filter:brightness(1.04);outline:2px solid #e2b66e;outline-offset:2px;}
+.help-button .help-q{width:27px;height:27px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #7a4a21;background:#fffaf0;font-family:Arial,sans-serif;font-weight:900;}
+.site-nav-shell{max-width:1200px;width:calc(100% - 40px);height:64px;margin:14px auto 0;border:1px solid #b88a55;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#4a2b16,#2f190d);box-shadow:0 8px 18px rgba(76,45,20,.22),inset 0 1px 0 rgba(255,244,215,.14);}
+.site-nav{height:100%;display:flex;align-items:stretch;}
+.site-nav a{--wash:rgba(191,130,61,.06);position:relative;flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 12px;border-right:1px solid rgba(247,222,172,.18);background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;text-decoration:none;font-size:18px;font-weight:700;white-space:nowrap;text-shadow:0 2px 5px rgba(0,0,0,.65);transition:.2s ease;}
+.site-nav a:last-child{border-right:0;}
+.site-nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:4px;border-radius:4px 4px 0 0;background:#e0ad5e;transform:scaleX(0);transition:transform .2s ease;}
+.site-nav a.active{background:linear-gradient(180deg,rgba(167,101,39,.52),rgba(89,45,17,.42));color:#fff7e6;box-shadow:inset 0 0 24px rgba(242,183,91,.12);}
+.site-nav a.active::after{transform:scaleX(1);}
+.site-nav a:hover,.site-nav a:focus-visible{background:linear-gradient(180deg,rgba(180,109,42,.58),rgba(96,49,18,.45));color:#fff9ec;outline:none;box-shadow:inset 0 0 28px rgba(242,183,91,.14);}
+.site-nav a:hover::after,.site-nav a:focus-visible::after{transform:scaleX(1);}
+.site-nav:hover a.active:not(:hover):not(:focus-visible){background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;box-shadow:none;}
+.site-nav:hover a.active:not(:hover):not(:focus-visible)::after{transform:scaleX(0);}
+.nav-icon{width:30px;height:30px;flex:0 0 30px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(245,218,165,.44);background:rgba(255,238,202,.08);color:#f0d29b;}
+.nav-icon svg{width:17px;height:17px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.exhibit-hall{margin-top:12px!important;}
+@media(max-width:900px){
+  .hero{height:190px;}
+  .hero-content h1{font-size:32px;}
+  .site-nav-shell{width:calc(100% - 22px);height:62px;overflow-x:auto;overflow-y:hidden;border-radius:15px;}
+  .site-nav{min-width:920px;}
+  .site-nav a{flex:0 0 auto;min-width:145px;font-size:17px;padding:0 14px;}
 }
+@media(max-width:560px){
+  .help-button{top:10px;right:10px;padding:7px 10px;font-size:15px;}
+  .help-button .help-text-full{display:none;}
+  .site-nav-shell{height:58px;margin-top:10px;}
+  .site-nav{min-width:850px;}
+  .site-nav a{min-width:135px;font-size:16px;}
+  .nav-icon{width:28px;height:28px;flex-basis:28px;}
+}
+
+
+/* ===== V2.20 年级 / 班级数据分析仪表盘 ===== */
+.dashboard-toolbar{display:grid;grid-template-columns:1fr 1fr auto;gap:14px;align-items:end}
+.toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.scope-summary{margin-top:14px;padding:12px 16px;border-radius:18px;background:#fff9ee;border:1px dashed #c8aa82;color:#65462f;line-height:1.75}
+.metric small{display:block;margin-top:5px;color:#806850;font-size:13px}
+.chart-card{background:#fffaf3;border:1px solid #decdb6;border-radius:24px;padding:18px;min-height:300px}
+.chart-title{font-size:1.2rem;font-weight:bold;color:#4d2e1b;margin-bottom:6px}
+.chart-desc{color:#7c654e;font-size:14px;line-height:1.6;margin-bottom:14px}
+.chart-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:#6d5540;margin:6px 0 14px}
+.legend-dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.legend-score{background:#9c6b48}.legend-rate{background:#5f8364}.legend-star{background:#d39b35}
+.column-chart{height:230px;display:flex;align-items:flex-end;gap:16px;padding:18px 8px 0;border-left:1px solid #d8c9b6;border-bottom:1px solid #d8c9b6;overflow-x:auto}
+.column-group{min-width:88px;flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.column-bars{height:185px;display:flex;align-items:flex-end;justify-content:center;gap:7px;width:100%}
+.column{position:relative;width:25px;min-height:2px;border-radius:8px 8px 2px 2px;transition:.25s}
+.column.score{background:linear-gradient(#b98b63,#8f5d3c)}
+.column.rate{background:linear-gradient(#7ca184,#55785d)}
+.column.star{background:linear-gradient(#e2b45e,#c58b27)}
+.column span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:bold;color:#5b402d;white-space:nowrap}
+.column-label{font-size:13px;color:#5f4937;margin-top:8px;text-align:center;max-width:100px;line-height:1.35}
+.compare-list{display:flex;flex-direction:column;gap:14px}
+.compare-card{border:1px solid #decdb8;background:#fffaf3;border-radius:18px;padding:14px}
+.compare-card.selected{border:2px solid #a67b5c;box-shadow:0 0 0 3px rgba(166,123,92,.1)}
+.compare-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.compare-head b{font-size:17px;color:#4e3422}
+.compare-meta{font-size:13px;color:#806850}
+.mini-bar-row{display:grid;grid-template-columns:88px 1fr 50px;gap:8px;align-items:center;margin:8px 0;font-size:13px}
+.mini-bar-track{height:15px;background:#eadfce;border-radius:10px;overflow:hidden}
+.mini-bar-value{height:100%;border-radius:10px;background:linear-gradient(90deg,#a67b5c,#c89b6b)}
+.mini-bar-value.green{background:linear-gradient(90deg,#5f8364,#89aa8e)}
+.mini-bar-value.gold{background:linear-gradient(90deg,#bd8429,#e3b45f)}
+.module-chart .bar-row{grid-template-columns:100px 1fr 64px}
+.score-dist{height:220px;display:flex;align-items:flex-end;gap:14px;padding:20px 8px 0;border-left:1px solid #d8c9b6;border-bottom:1px solid #d8c9b6}
+.dist-group{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.dist-bar{width:55%;min-height:2px;background:linear-gradient(#b98b63,#8f5d3c);border-radius:8px 8px 2px 2px;position:relative}
+.dist-bar span{position:absolute;top:-21px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:bold}
+.dist-label{font-size:12px;color:#6c5541;margin-top:8px;text-align:center}
+.status-ok{color:#4f7a54;font-weight:bold}.status-no{color:#a18469}.star-on{color:#c0831e;font-weight:bold}
+.notice-cloud{background:#fff4db;border:1px solid #dfbd78;border-radius:18px;padding:12px 16px;color:#6c4c20;line-height:1.7;margin-bottom:18px}
+.table-wrap{overflow:auto;max-height:520px}
+.table th{position:sticky;top:0;z-index:1}
+.file-input{display:none}
+@media(max-width:900px){
+  .dashboard-toolbar{grid-template-columns:1fr}
+  .toolbar-actions{justify-content:flex-start}
+  .column-chart{min-width:620px}
+  .chart-scroll{overflow-x:auto}
+}
+
+/* 教师数据中心精简：隐藏旧版动态注入模块 */
+.v2-teacher-actions{display:none!important;}
+
+</style>
+<script>
+const SITE_PAGES=[["index.html", "首页", "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"></path><path d=\"M5.5 9.5V20h13V9.5\"></path><path d=\"M9.5 20v-6h5v6\"></path></svg>"], ["pretest.html", "活板初探馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5h7.5A2.5 2.5 0 0 1 14 8v10.5H6.5A2.5 2.5 0 0 0 4 21V5.5Z\"></path><path d=\"M20 5.5h-7.5A2.5 2.5 0 0 0 10 8v10.5h7.5A2.5 2.5 0 0 1 20 21V5.5Z\"></path></svg>"], ["inquiry.html", "研学探究馆", "<svg viewBox=\"0 0 24 24\"><circle cx=\"10.5\" cy=\"10.5\" r=\"5.5\"></circle><path d=\"M15 15 21 21\"></path><path d=\"M10.5 8v5\"></path><path d=\"M8 10.5h5\"></path></svg>"], ["speech.html", "活字解说馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z\"></path><path d=\"M7 11a5 5 0 0 0 10 0\"></path><path d=\"M12 16v4\"></path><path d=\"M9 20h6\"></path></svg>"], ["heritage.html", "非遗传承馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3c3.5 0 6 2.2 6 5.3 0 2.2-1.4 3.8-3.2 5.1-.8.6-1.3 1.4-1.3 2.3V19h-3v-3.3c0-.9-.5-1.7-1.3-2.3C7.4 12.1 6 10.5 6 8.3 6 5.2 8.5 3 12 3Z\"></path><path d=\"M9.5 22h5\"></path><path d=\"M9.5 19h5\"></path></svg>"], ["teacher.html", "教师数据中心", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 6h16v10H4z\"></path><path d=\"M8 20h8\"></path><path d=\"M12 16v4\"></path><path d=\"M7.5 10.5h3\"></path><path d=\"M13.5 10.5h3\"></path></svg>"]];
+
+function renderHero(active){
+ const hero=`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg" alt="">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p></div><a class="help-button" href="help.html" aria-label="使用帮助"><span class="help-q">?</span><span><span class="help-text-full">使用</span>帮助</span></a></div>`;
+ const nav=`<div class="site-nav-shell"><nav class="site-nav" aria-label="展馆导航">${SITE_PAGES.map(p=>`<a href="${p[0]}" class="${p[0]===active?'active':''}" ${p[0]===active?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${p[2]}</span><span>${p[1]}</span></a>`).join('')}</nav></div>`;
+ document.write(hero+nav);
+}
+
 function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;if(imgs.length){imgs[0].style.opacity=1;setInterval(()=>{imgs.forEach(x=>x.style.opacity=0);i=(i+1)%imgs.length;imgs[i].style.opacity=1;},3000);}}
 function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
 function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
@@ -55,22 +153,466 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
+<link rel="stylesheet" href="platform-v2.css">
+<script src="platform-v2.js?v=2.22"></script>
 </head>
 <body>
 <script>renderHero('teacher.html');</script>
 
-<div class="exhibit-hall" id="loginPanel"><header class="museum-header"><div class="museum-title"><h1>📊 教师数据中心</h1><span class="sub">教师入口</span></div><div class="badge-fujian">教师码验证</div></header><section class="panel" style="max-width:520px;margin:auto"><div class="panel-title">请输入教师码</div><input id="teacherCode" type="password" placeholder="请输入教师码"><button class="btn btn-primary" onclick="checkCode()">进入数据中心</button><div id="codeMsg" class="feedback"></div></section><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
-<div class="exhibit-hall" id="dash" style="display:none"><header class="museum-header"><div class="museum-title"><h1>📊 教师数据中心</h1><span class="sub">学习数据可视化</span></div><div class="badge-fujian">教师码：123456</div></header><div class="grid-3" id="cards"></div><section class="panel"><div class="panel-title">📈 完成情况可视化</div><div id="bars"></div></section><section class="panel"><div class="panel-title">🔥 高频错题整理</div><div id="wrongList"></div></section><section class="panel"><div class="panel-title">👥 学生学习记录</div><div style="overflow:auto"><table class="table" id="studentTable"></table></div></section><section class="panel"><div class="panel-title">🎙️ 解说词与传承馆提交</div><div class="grid-2"><div><h3>活字解说馆</h3><div id="speechList"></div></div><div><h3>非遗传承馆</h3><div id="heritageList"></div></div></div></section><button class="btn" onclick="exportData()">导出数据JSON</button><button class="btn" onclick="clearAll()">清空全部本地数据</button><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
-<script>startHero();
+<div class="exhibit-hall" id="loginPanel">
+<header class="museum-header">
+  <div class="museum-title"><h1>📊 教师数据中心</h1><span class="sub">教师入口</span></div>
+  <div class="badge-fujian">教师码验证</div>
+</header>
+<section class="panel" style="max-width:520px;margin:auto">
+  <div class="panel-title">请输入教师码</div>
+  <input id="teacherCode" type="password" placeholder="请输入教师码" autocomplete="current-password">
+  <button class="btn btn-primary" id="loginBtn" type="button">进入数据中心</button>
+  <div id="codeMsg" class="feedback"></div>
+</section>
+<div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
+</div>
 
-function checkCode(){if(teacherCode.value==='123456'){loginPanel.style.display='none';dash.style.display='block';renderDashboard();}else{codeMsg.textContent='❌ 教师码错误';codeMsg.className='feedback error';}}
-teacherCode.addEventListener('keydown',e=>{if(e.key==='Enter')checkCode()});
-function renderDashboard(){let students=JSON.parse(localStorage.getItem('students')||'[]'),pre=JSON.parse(localStorage.getItem('pretestRecords')||'[]'),progress=JSON.parse(localStorage.getItem('progressRecords')||'[]'),speech=JSON.parse(localStorage.getItem('speechWorks')||'[]'),heritage=JSON.parse(localStorage.getItem('heritageWorks')||'[]');let unique=new Set([...students.map(s=>s.key),...pre.map(r=>r.studentKey),...progress.map(r=>r.studentKey),...speech.map(r=>r.studentKey),...heritage.map(r=>r.studentKey)]);let avg=pre.length?Math.round(pre.reduce((a,b)=>a+b.score,0)/pre.length):0;let pass=pre.length?Math.round(pre.filter(x=>x.score>=60).length/pre.length*100):0;let inquiryDone=new Set(progress.filter(p=>p.page==='研学探究馆'&&p.detail&&p.detail.action==='完成工序排序').map(p=>p.studentKey));cards.innerHTML=`<div class="card metric"><h2>${unique.size}</h2><p>学生人数</p></div><div class="card metric"><h2>${avg}</h2><p>预习平均分</p></div><div class="card metric"><h2>${pass}%</h2><p>及格率</p></div><div class="card metric"><h2>${inquiryDone.size}</h2><p>探究完成</p></div><div class="card metric"><h2>${speech.length}</h2><p>解说词提交</p></div><div class="card metric"><h2>${heritage.length}</h2><p>传承作业提交</p></div>`;let max=Math.max(unique.size,1);let items=[['预习检测',new Set(pre.map(x=>x.studentKey)).size],['研学探究',inquiryDone.size],['活字解说',new Set(speech.map(x=>x.studentKey)).size],['非遗传承',new Set(heritage.map(x=>x.studentKey)).size]];bars.innerHTML=items.map(x=>`<div class="bar-row"><b>${x[0]}</b><div class="bar-bg"><div class="bar-fill" style="width:${Math.round(x[1]/max*100)}%"></div></div><span>${x[1]}/${max}</span></div>`).join('');
-let wrongMap={};pre.forEach(r=>(r.wrong||[]).forEach(w=>{let k=w.index+'. '+w.question;if(!wrongMap[k])wrongMap[k]={count:0,correct:w.correct};wrongMap[k].count++;}));let wrongs=Object.entries(wrongMap).sort((a,b)=>b[1].count-a[1].count);wrongList.innerHTML=wrongs.length?wrongs.map(([q,v])=>`<div class="wrong"><div><b>${esc(q)}</b><div class="muted">正确答案：${esc(v.correct)}</div></div><span class="badge">${v.count}次</span></div>`).join(''):'<div class="empty">暂无错题数据。学生提交内容测评后会自动生成。</div>';
-studentTable.innerHTML='<tr><th>学生</th><th>预习最高分</th><th>探究</th><th>解说</th><th>传承</th><th>最近记录</th></tr>'+Array.from(unique).map(k=>{let s=students.find(x=>x.key===k);let name=s?`${s.cls} ${s.seat}号 ${s.name}`:k;let scores=pre.filter(x=>x.studentKey===k).map(x=>x.score);let sp=speech.filter(x=>x.studentKey===k).length;let he=heritage.filter(x=>x.studentKey===k).length;let pr=progress.filter(x=>x.studentKey===k).slice(-1)[0];return `<tr><td>${esc(name)}</td><td>${scores.length?Math.max(...scores):'未提交'}</td><td>${inquiryDone.has(k)?'已完成':'未完成'}</td><td>${sp}</td><td>${he}</td><td>${pr?esc(pr.page+' '+pr.time):''}</td></tr>`;}).join('');
-speechList.innerHTML=speech.length?speech.sort((a,b)=>b.likes-a.likes).slice(0,10).map(w=>`<div class="mini-card"><b>${esc(w.name)}</b> 👍${w.likes}<br>${esc(w.text).slice(0,90)}...</div>`).join(''):'<div class="empty">暂无提交</div>';heritageList.innerHTML=heritage.length?heritage.sort((a,b)=>b.likes-a.likes).slice(0,10).map(w=>`<div class="mini-card"><b>${esc(w.title)}</b> 👍${w.likes}<br>${esc(w.content).slice(0,90)}...</div>`).join(''):'<div class="empty">暂无提交</div>';}
-function exportData(){let data={students:JSON.parse(localStorage.getItem('students')||'[]'),pretestRecords:JSON.parse(localStorage.getItem('pretestRecords')||'[]'),progressRecords:JSON.parse(localStorage.getItem('progressRecords')||'[]'),speechWorks:JSON.parse(localStorage.getItem('speechWorks')||'[]'),heritageWorks:JSON.parse(localStorage.getItem('heritageWorks')||'[]')};let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='活字印刷云展馆学习数据.json';a.click();}
-function clearAll(){if(confirm('确定清空全部本地学习数据吗？')){['students','currentStudent','pretestRecords','progressRecords','speechWorks','heritageWorks'].forEach(k=>localStorage.removeItem(k));renderDashboard();}}
+<div class="exhibit-hall" id="dash" style="display:none">
+<header class="museum-header">
+  <div class="museum-title"><h1>📊 教师数据中心</h1></div>
+  <div>
+    <button class="btn" id="logoutBtn" type="button">退出教师状态</button>
+  </div>
+</header>
+
+<section class="panel">
+  <div class="panel-title">🔎 查看范围</div>
+  <div class="dashboard-toolbar">
+    <div>
+      <label for="gradeFilter">年级</label>
+      <select id="gradeFilter"><option value="">全部年级</option></select>
+    </div>
+    <div>
+      <label for="classFilter">班级</label>
+      <select id="classFilter"><option value="">全部班级</option></select>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn" id="refreshBtn" type="button">刷新数据</button>
+      <button class="btn" id="importBtn" type="button">导入并合并数据</button>
+      <input class="file-input" id="importFile" type="file" accept=".json,application/json">
+    </div>
+  </div>
+  <div id="scopeSummary" class="scope-summary"></div>
+</section>
+
+<div class="grid-3" id="cards"></div>
+
+<section class="panel">
+  <div class="panel-title">📊 年级整体对比</div>
+  <div class="chart-desc">比较各年级的预习平均分、四个学习模块的平均完成率和思辨之星点亮率。</div>
+  <div class="chart-legend">
+    <span><i class="legend-dot legend-score"></i>预习平均分</span>
+    <span><i class="legend-dot legend-rate"></i>模块完成率</span>
+    <span><i class="legend-dot legend-star"></i>思辨之星率</span>
+  </div>
+  <div class="chart-scroll"><div id="gradeChart"></div></div>
+</section>
+
+<section class="panel">
+  <div class="panel-title">🏫 班级横向对比</div>
+  <div class="chart-desc">选择一个年级后，可直接比较该年级各班的平均分、模块完成率、全流程完成率与思辨之星点亮率；选择具体班级后，该班会突出显示。</div>
+  <div id="classChart" class="compare-list"></div>
+</section>
+
+<div class="grid-2">
+  <section class="panel module-chart">
+    <div class="panel-title">🧭 当前范围学习进程</div>
+    <div id="moduleChart"></div>
+  </section>
+  <section class="panel">
+    <div class="panel-title">📚 当前范围成绩分布</div>
+    <div id="scoreChart"></div>
+  </section>
+</div>
+
+<section class="panel">
+  <div class="panel-title">🔥 当前范围高频错题</div>
+  <div id="wrongList"></div>
+</section>
+
+<section class="panel">
+  <div class="panel-title">👥 学生学习明细</div>
+  <div class="table-wrap"><table class="table" id="studentTable"></table></div>
+</section>
+
+<section class="panel">
+  <div class="panel-title">🎙️ 当前范围作品与提交</div>
+  <div class="grid-2">
+    <div><h3>活字解说馆</h3><div id="speechList"></div></div>
+    <div><h3>非遗传承馆</h3><div id="heritageList"></div></div>
+  </div>
+</section>
+
+<button class="btn btn-primary" id="exportBtn" type="button">导出全部数据 JSON</button>
+<button class="btn" id="exportSummaryBtn" type="button">导出班级汇总 CSV</button>
+<button class="btn" id="clearBtn" type="button">清空全部本地数据</button>
+<div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
+</div>
+<script>
+startHero();
+
+const DATA_KEYS=['students','pretestRecords','progressRecords','speechWorks','heritageWorks'];
+let dashboardModel=null;
+
+function byId(id){return document.getElementById(id);}
+function readList(key){
+  try{const value=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(value)?value:[];}
+  catch(e){return [];}
+}
+function toNumber(value){const n=Number(value);return Number.isFinite(n)?n:null;}
+function percent(n,d){return d?Math.round(n/d*100):0;}
+function safeDate(value){
+  const d=new Date(value);
+  return Number.isNaN(d.getTime())?null:d;
+}
+function latestText(values){
+  const parsed=values.map(v=>({v,d:safeDate(v)})).filter(x=>x.d).sort((a,b)=>b.d-a.d);
+  return parsed[0]?parsed[0].v:(values.filter(Boolean).slice(-1)[0]||'');
+}
+function normalizeGradeName(value){
+  const raw=String(value||'').trim();
+  if(!raw)return '未标注年级';
+  const map={'初一':'七年级','初二':'八年级','初三':'九年级','高一':'高一','高二':'高二','高三':'高三'};
+  if(map[raw])return map[raw];
+  for(const k of Object.keys(map)){if(raw.includes(k))return map[k];}
+  const m=raw.match(/([一二三四五六七八九十\d]+)\s*年级/);
+  if(m)return `${m[1]}年级`;
+  const m2=raw.match(/^([1-9])(?:0\d|\d{2})$/);
+  if(m2)return `${m2[1]}年级`;
+  const m3=raw.match(/^([1-9])\s*年/);
+  if(m3)return `${m3[1]}年级`;
+  return raw;
+}
+function parseClassInfo(student,key){
+  const s=student||{};
+  const raw=String(s.cls||s.className||s.class||'').trim();
+  let grade=normalizeGradeName(s.grade||s.gradeName||raw);
+  let classLabel=raw;
+  if(!classLabel){
+    const keyText=String(key||'');
+    const keyClass=keyText.split('-')[0]||'';
+    classLabel=keyClass||'未标注班级';
+    if(grade==='未标注年级')grade=normalizeGradeName(keyClass);
+  }
+  if(/^\d{3}$/.test(classLabel)){
+    grade=`${classLabel[0]}年级`;
+    classLabel=`${grade}${Number(classLabel.slice(1))}班`;
+  }else if(!/班/.test(classLabel)){
+    const num=String(s.classNo||s.classNumber||'').trim();
+    if(num)classLabel=`${grade}${num}班`;
+  }
+  if(grade==='未标注年级'){
+    const match=classLabel.match(/([一二三四五六七八九十\d]+)\s*年级/);
+    if(match)grade=`${match[1]}年级`;
+  }
+  if(!classLabel||classLabel==='未标注班级')classLabel='未标注班级';
+  return {grade,classLabel};
+}
+function studentDisplay(student,key){
+  const s=student||{};
+  const info=parseClassInfo(s,key);
+  const seat=s.seat!==undefined&&s.seat!==''?`${s.seat}号 `:'';
+  const name=s.name||String(key||'').split('-').slice(-1)[0]||'未命名';
+  return `${info.classLabel} ${seat}${name}`.trim();
+}
+function recordStudentKey(record){
+  if(record&&record.studentKey)return String(record.studentKey);
+  const s=record&&record.student;
+  if(s)return `${s.cls||s.className||s.class||'未标注班级'}-${s.seat||''}-${s.name||'未命名'}`;
+  return '未识别学生';
+}
+function hasThinkingStarFromStorage(key){
+  const directKeys=[`thinkingStar:${key}`,`socraticStar:${key}`,`thinking-star:${key}`];
+  if(directKeys.some(k=>localStorage.getItem(k)==='true'||localStorage.getItem(k)==='1'))return true;
+  for(let i=0;i<localStorage.length;i++){
+    const storageKey=localStorage.key(i)||'';
+    if(!/(thinking|socratic|思辨)/i.test(storageKey))continue;
+    try{
+      const value=JSON.parse(localStorage.getItem(storageKey));
+      if(Array.isArray(value)&&value.map(String).includes(String(key)))return true;
+      if(value&&typeof value==='object'&&(value[key]===true||value[key]===1||value.studentKey===key))return true;
+    }catch(e){}
+  }
+  return false;
+}
+function buildModel(){
+  const data=Object.fromEntries(DATA_KEYS.map(k=>[k,readList(k)]));
+  const map=new Map();
+  function ensure(key,student){
+    const k=String(key||'未识别学生');
+    if(!map.has(k)){
+      const base=student||{};
+      const info=parseClassInfo(base,k);
+      map.set(k,{
+        key:k,student:{...base},grade:info.grade,classLabel:info.classLabel,
+        scores:[],attempts:0,wrong:[],progress:[],speech:[],heritage:[],
+        modules:{pretest:false,inquiry:false,speech:false,heritage:false},
+        thinkingStar:false,times:[]
+      });
+    }else if(student){
+      const row=map.get(k);
+      row.student={...row.student,...student};
+      const info=parseClassInfo(row.student,k);
+      row.grade=info.grade;row.classLabel=info.classLabel;
+    }
+    return map.get(k);
+  }
+  data.students.forEach(s=>ensure(s.key||`${s.cls||s.className||s.class||'未标注班级'}-${s.seat||''}-${s.name||'未命名'}`,s));
+  data.pretestRecords.forEach(r=>{
+    const key=recordStudentKey(r),row=ensure(key,r.student);
+    const score=toNumber(r.score);if(score!==null)row.scores.push(score);
+    row.attempts++;row.modules.pretest=true;
+    (r.wrong||[]).forEach(w=>row.wrong.push(w));
+    if(r.time)row.times.push(r.time);
+  });
+  data.progressRecords.forEach(r=>{
+    const key=recordStudentKey(r),row=ensure(key,r.student);
+    row.progress.push(r);if(r.time)row.times.push(r.time);
+    const page=String(r.page||''),action=String((r.detail&&r.detail.action)||'');
+    if(/研学探究馆/.test(page)&&/(完成工序排序|完成研学探究|探究馆.*(?:完成|解锁)|全部解锁|点亮思辨之星)/.test(action))row.modules.inquiry=true;
+    if((r.detail&&r.detail.completed===true)&&/研学探究馆/.test(page))row.modules.inquiry=true;
+    if(/思辨之星/.test(action)||r.detail&&r.detail.thinkingStar===true)row.thinkingStar=true;
+  });
+  data.speechWorks.forEach(r=>{const row=ensure(recordStudentKey(r),r.student);row.speech.push(r);row.modules.speech=true;if(r.time)row.times.push(r.time);});
+  data.heritageWorks.forEach(r=>{const row=ensure(recordStudentKey(r),r.student);row.heritage.push(r);row.modules.heritage=true;if(r.time)row.times.push(r.time);});
+  map.forEach(row=>{
+    const s=row.student||{};
+    row.thinkingStar=row.thinkingStar||s.thinkingStar===true||s.socraticStar===true||
+      (Array.isArray(s.badges)&&s.badges.some(x=>/思辨/.test(String(x))))||hasThinkingStarFromStorage(row.key);
+    row.bestScore=row.scores.length?Math.max(...row.scores):null;
+    row.latest=latestText(row.times.concat(s.time||[]));
+    row.completedCount=Object.values(row.modules).filter(Boolean).length;
+    row.fullComplete=row.completedCount===4;
+  });
+  return {data,students:Array.from(map.values())};
+}
+function stats(rows){
+  const scores=rows.map(r=>r.bestScore).filter(v=>v!==null);
+  const total=rows.length;
+  const moduleTotals={
+    pretest:rows.filter(r=>r.modules.pretest).length,
+    inquiry:rows.filter(r=>r.modules.inquiry).length,
+    speech:rows.filter(r=>r.modules.speech).length,
+    heritage:rows.filter(r=>r.modules.heritage).length
+  };
+  return {
+    total,
+    scored:scores.length,
+    avg:scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0,
+    pass:scores.length?percent(scores.filter(x=>x>=60).length,scores.length):0,
+    full:percent(rows.filter(r=>r.fullComplete).length,total),
+    star:percent(rows.filter(r=>r.thinkingStar).length,total),
+    starCount:rows.filter(r=>r.thinkingStar).length,
+    active:rows.filter(r=>r.scores.length||r.progress.length||r.speech.length||r.heritage.length).length,
+    moduleTotals,
+    moduleRate:total?Math.round(Object.values(moduleTotals).reduce((a,b)=>a+b,0)/(total*4)*100):0
+  };
+}
+function groupedStats(rows,field){
+  const groups={};
+  rows.forEach(r=>{const k=r[field]||'未标注';(groups[k]||(groups[k]=[])).push(r);});
+  return Object.entries(groups).map(([name,list])=>({name,rows:list,...stats(list)})).sort((a,b)=>a.name.localeCompare(b.name,'zh-CN',{numeric:true}));
+}
+function currentRows(){
+  const grade=byId('gradeFilter').value,cls=byId('classFilter').value;
+  return dashboardModel.students.filter(r=>(!grade||r.grade===grade)&&(!cls||r.classLabel===cls));
+}
+function populateFilters(preserve=true){
+  const g=byId('gradeFilter'),c=byId('classFilter');
+  const oldGrade=preserve?g.value:'',oldClass=preserve?c.value:'';
+  const grades=[...new Set(dashboardModel.students.map(r=>r.grade))].sort((a,b)=>a.localeCompare(b,'zh-CN',{numeric:true}));
+  g.innerHTML='<option value="">全部年级</option>'+grades.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  if(grades.includes(oldGrade))g.value=oldGrade;
+  const classes=[...new Set(dashboardModel.students.filter(r=>!g.value||r.grade===g.value).map(r=>r.classLabel))].sort((a,b)=>a.localeCompare(b,'zh-CN',{numeric:true}));
+  c.innerHTML='<option value="">全部班级</option>'+classes.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  if(classes.includes(oldClass))c.value=oldClass;
+}
+function renderCards(rows){
+  const s=stats(rows);
+  byId('cards').innerHTML=`
+    <div class="card metric"><h2>${s.total}</h2><p>学生人数</p><small>当前筛选范围</small></div>
+    <div class="card metric"><h2>${s.avg}</h2><p>预习平均分</p><small>${s.scored}人有成绩</small></div>
+    <div class="card metric"><h2>${s.pass}%</h2><p>及格率</p><small>按有成绩学生计算</small></div>
+    <div class="card metric"><h2>${s.moduleRate}%</h2><p>模块完成率</p><small>四馆平均完成度</small></div>
+    <div class="card metric"><h2>${s.full}%</h2><p>全流程完成率</p><small>四个模块均完成</small></div>
+    <div class="card metric"><h2>${s.starCount}</h2><p>思辨之星</p><small>点亮率 ${s.star}%</small></div>`;
+}
+function renderGradeChart(){
+  const groups=groupedStats(dashboardModel.students,'grade');
+  if(!groups.length){byId('gradeChart').innerHTML='<div class="empty">暂无年级数据。</div>';return;}
+  byId('gradeChart').innerHTML=`<div class="column-chart">${groups.map(g=>`
+    <div class="column-group">
+      <div class="column-bars">
+        <div class="column score" style="height:${Math.max(g.avg,2)}%"><span>${g.avg}</span></div>
+        <div class="column rate" style="height:${Math.max(g.moduleRate,2)}%"><span>${g.moduleRate}%</span></div>
+        <div class="column star" style="height:${Math.max(g.star,2)}%"><span>${g.star}%</span></div>
+      </div>
+      <div class="column-label">${esc(g.name)}<br>${g.total}人</div>
+    </div>`).join('')}</div>`;
+}
+function renderClassChart(){
+  const grade=byId('gradeFilter').value,selected=byId('classFilter').value;
+  let rows=dashboardModel.students.filter(r=>!grade||r.grade===grade);
+  const groups=groupedStats(rows,'classLabel');
+  if(!groups.length){byId('classChart').innerHTML='<div class="empty">暂无班级数据。</div>';return;}
+  byId('classChart').innerHTML=groups.map(g=>`
+    <div class="compare-card ${selected===g.name?'selected':''}">
+      <div class="compare-head"><b>${esc(g.name)}</b><span class="compare-meta">${g.total}人 · ${g.scored}人有成绩</span></div>
+      ${miniBar('预习平均分',g.avg,'')}
+      ${miniBar('模块完成率',g.moduleRate,'green')}
+      ${miniBar('全流程完成',g.full,'green')}
+      ${miniBar('思辨之星',g.star,'gold')}
+    </div>`).join('');
+}
+function miniBar(label,value,kind){
+  return `<div class="mini-bar-row"><span>${label}</span><div class="mini-bar-track"><div class="mini-bar-value ${kind}" style="width:${Math.max(0,Math.min(100,value))}%"></div></div><b>${value}%</b></div>`;
+}
+function renderModuleChart(rows){
+  const s=stats(rows),max=Math.max(s.total,1);
+  const items=[['预习检测',s.moduleTotals.pretest],['研学探究',s.moduleTotals.inquiry],['活字解说',s.moduleTotals.speech],['非遗传承',s.moduleTotals.heritage]];
+  byId('moduleChart').innerHTML=rows.length?items.map(x=>`<div class="bar-row"><b>${x[0]}</b><div class="bar-bg"><div class="bar-fill" style="width:${percent(x[1],max)}%"></div></div><span>${x[1]}/${s.total}</span></div>`).join(''):'<div class="empty">当前范围暂无学生数据。</div>';
+}
+function renderScoreChart(rows){
+  const bins=[{label:'0—59',min:0,max:59,count:0},{label:'60—69',min:60,max:69,count:0},{label:'70—79',min:70,max:79,count:0},{label:'80—89',min:80,max:89,count:0},{label:'90—100',min:90,max:100,count:0}];
+  rows.forEach(r=>{if(r.bestScore!==null){const b=bins.find(x=>r.bestScore>=x.min&&r.bestScore<=x.max);if(b)b.count++;}});
+  const max=Math.max(...bins.map(x=>x.count),1);
+  if(!rows.some(r=>r.bestScore!==null)){byId('scoreChart').innerHTML='<div class="empty">当前范围暂无成绩数据。</div>';return;}
+  byId('scoreChart').innerHTML=`<div class="score-dist">${bins.map(b=>`
+    <div class="dist-group"><div class="dist-bar" style="height:${Math.max(3,b.count/max*100)}%"><span>${b.count}人</span></div><div class="dist-label">${b.label}</div></div>`).join('')}</div>`;
+}
+function renderWrongList(rows){
+  const keys=new Set(rows.map(r=>r.key)),map={};
+  dashboardModel.data.pretestRecords.filter(r=>keys.has(recordStudentKey(r))).forEach(r=>(r.wrong||[]).forEach(w=>{
+    const k=`${w.index||''}. ${w.question||'未命名题目'}`;
+    if(!map[k])map[k]={count:0,correct:w.correct||''};map[k].count++;
+  }));
+  const list=Object.entries(map).sort((a,b)=>b[1].count-a[1].count);
+  byId('wrongList').innerHTML=list.length?list.map(([q,v])=>`<div class="wrong"><div><b>${esc(q)}</b><div class="muted">正确答案：${esc(v.correct)}</div></div><span class="badge">${v.count}次</span></div>`).join(''):'<div class="empty">当前范围暂无错题数据。</div>';
+}
+function mark(ok){return ok?'<span class="status-ok">已完成</span>':'<span class="status-no">未完成</span>';}
+function renderStudentTable(rows){
+  byId('studentTable').innerHTML='<tr><th>年级</th><th>班级 / 学生</th><th>预习最高分</th><th>作答次数</th><th>探究</th><th>解说</th><th>传承</th><th>思辨之星</th><th>最近记录</th></tr>'+
+    rows.sort((a,b)=>(a.grade+a.classLabel+(a.student.seat||'')).localeCompare(b.grade+b.classLabel+(b.student.seat||''),'zh-CN',{numeric:true})).map(r=>`
+      <tr>
+        <td>${esc(r.grade)}</td>
+        <td>${esc(studentDisplay(r.student,r.key))}</td>
+        <td>${r.bestScore===null?'未提交':r.bestScore}</td>
+        <td>${r.attempts}</td>
+        <td>${mark(r.modules.inquiry)}</td>
+        <td>${mark(r.modules.speech)}</td>
+        <td>${mark(r.modules.heritage)}</td>
+        <td>${r.thinkingStar?'<span class="star-on">⭐ 已点亮</span>':'—'}</td>
+        <td>${esc(r.latest||'')}</td>
+      </tr>`).join('');
+}
+function renderWorks(rows){
+  const keys=new Set(rows.map(r=>r.key));
+  const speech=dashboardModel.data.speechWorks.filter(x=>keys.has(recordStudentKey(x))).sort((a,b)=>(b.likes||0)-(a.likes||0)).slice(0,10);
+  const heritage=dashboardModel.data.heritageWorks.filter(x=>keys.has(recordStudentKey(x))).sort((a,b)=>(b.likes||0)-(a.likes||0)).slice(0,10);
+  byId('speechList').innerHTML=speech.length?speech.map(w=>`<div class="mini-card"><b>${esc(w.name||recordStudentKey(w))}</b> 👍${w.likes||0}<br>${esc(w.text||'').slice(0,120)}${String(w.text||'').length>120?'…':''}</div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
+  byId('heritageList').innerHTML=heritage.length?heritage.map(w=>`<div class="mini-card"><b>${esc(w.title||recordStudentKey(w))}</b> 👍${w.likes||0}<br>${esc(w.content||'').slice(0,120)}${String(w.content||'').length>120?'…':''}</div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
+}
+function renderScopeSummary(rows){
+  const grade=byId('gradeFilter').value||'全部年级',cls=byId('classFilter').value||'全部班级',s=stats(rows);
+  byId('scopeSummary').innerHTML=`当前查看：<b>${esc(grade)} · ${esc(cls)}</b>。共 ${s.total} 名学生，${s.active} 人产生过学习记录；预习平均分 ${s.avg}，模块平均完成率 ${s.moduleRate}%，全流程完成率 ${s.full}%，思辨之星点亮率 ${s.star}%。`;
+}
+function renderDashboard(){
+  dashboardModel=buildModel();
+  populateFilters(true);
+  renderAll();
+}
+function renderAll(){
+  const rows=currentRows();
+  renderScopeSummary(rows);renderCards(rows);renderGradeChart();renderClassChart();renderModuleChart(rows);renderScoreChart(rows);renderWrongList(rows);renderStudentTable(rows);renderWorks(rows);
+}
+function checkCode(){
+  if(byId('teacherCode').value==='123456'){
+    localStorage.setItem('teacherLoggedIn','true');
+    byId('loginPanel').style.display='none';byId('dash').style.display='block';renderDashboard();
+  }else{
+    byId('codeMsg').textContent='❌ 教师码错误';byId('codeMsg').className='feedback error';
+  }
+}
+function logoutTeacher(){
+  localStorage.removeItem('teacherLoggedIn');
+  byId('dash').style.display='none';byId('loginPanel').style.display='block';byId('teacherCode').value='';
+}
+function exportData(){
+  const data=Object.fromEntries(DATA_KEYS.map(k=>[k,readList(k)]));
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='活字印刷云展馆学习数据.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function csvCell(value){const s=String(value??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
+function exportSummaryCsv(){
+  const rows=groupedStats(dashboardModel.students,'classLabel');
+  const header=['班级','学生人数','有成绩人数','预习平均分','及格率','模块完成率','全流程完成率','思辨之星人数','思辨之星率'];
+  const lines=[header,...rows.map(r=>[r.name,r.total,r.scored,r.avg,`${r.pass}%`,`${r.moduleRate}%`,`${r.full}%`,r.starCount,`${r.star}%`])];
+  const blob=new Blob(['\uFEFF'+lines.map(row=>row.map(csvCell).join(',')).join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='活字印刷云展馆班级汇总.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function mergeArrays(key,incoming){
+  const current=readList(key),map=new Map();
+  function signature(item){
+    if(key==='students')return item.key||`${item.cls||item.className||item.class||''}-${item.seat||''}-${item.name||''}`;
+    return item.id||[recordStudentKey(item),item.time||'',item.page||'',item.score??'',item.title||'',item.text||'',item.content||''].join('|');
+  }
+  current.concat(Array.isArray(incoming)?incoming:[]).forEach(item=>{if(item&&typeof item==='object')map.set(signature(item),item);});
+  localStorage.setItem(key,JSON.stringify(Array.from(map.values())));
+}
+async function importData(file){
+  try{
+    const data=JSON.parse(await file.text());
+    DATA_KEYS.forEach(k=>mergeArrays(k,data[k]));
+    alert('数据已导入并合并。相同记录不会重复加入。');
+    renderDashboard();
+  }catch(e){alert('导入失败：请选择由教师数据中心导出的 JSON 文件。');}
+}
+function clearAll(){
+  if(confirm('确定清空全部本地学习数据吗？此操作无法撤销。')){
+    DATA_KEYS.concat(['currentStudent']).forEach(k=>localStorage.removeItem(k));renderDashboard();
+  }
+}
+
+byId('loginBtn').addEventListener('click',checkCode);
+byId('teacherCode').addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});
+byId('logoutBtn').addEventListener('click',logoutTeacher);
+byId('refreshBtn').addEventListener('click',renderDashboard);
+byId('gradeFilter').addEventListener('change',()=>{
+  const g=byId('gradeFilter').value,c=byId('classFilter');
+  const classes=[...new Set(dashboardModel.students.filter(r=>!g||r.grade===g).map(r=>r.classLabel))].sort((a,b)=>a.localeCompare(b,'zh-CN',{numeric:true}));
+  c.innerHTML='<option value="">全部班级</option>'+classes.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');
+  renderAll();
+});
+byId('classFilter').addEventListener('change',renderAll);
+byId('importBtn').addEventListener('click',()=>byId('importFile').click());
+byId('importFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(file)importData(file);e.target.value='';});
+byId('exportBtn').addEventListener('click',exportData);
+byId('exportSummaryBtn').addEventListener('click',exportSummaryCsv);
+byId('clearBtn').addEventListener('click',clearAll);
+
+if(localStorage.getItem('teacherLoggedIn')==='true'){
+  byId('loginPanel').style.display='none';byId('dash').style.display='block';renderDashboard();
+}
 </script>
-<script src="mengxi-assistant.js"></script></body>
+
+<script>
+(function removeLegacyTeacherSyncModule(){
+  function removeModule(){
+    document.querySelectorAll('.v2-teacher-actions').forEach(function(el){el.remove();});
+  }
+  removeModule();
+  document.addEventListener('DOMContentLoaded',function(){
+    removeModule();
+    new MutationObserver(removeModule).observe(document.body,{childList:true,subtree:true});
+  });
+})();
+</script>
+<script src="assets/hanzi-pinyin.js"></script>
+<script src="mengxi-assistant.js?v=2.29"></script></body>
 </html>

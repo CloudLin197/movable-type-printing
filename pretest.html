@@ -85,9 +85,200 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
 
 .text{background:#fffaf3;border:1px solid #dacbbc;border-radius:18px;padding:16px;line-height:2;max-height:270px;overflow:auto;}
 .read-box{background:#1e1b16;color:#b7ff9d;padding:10px;border-radius:14px;margin-top:10px;min-height:42px;font-family:monospace;}
-.option{background:#fffaf3;padding:10px;margin:7px 0;border-radius:12px;cursor:pointer;border:1px solid #dacbbc;}
-.option.active{background:#f0d9b5;border-color:#a67b5c;}
-.qitem{margin-bottom:16px;line-height:1.7;}
+/* ===== 内容测评：紧凑双栏卡片 ===== */
+.quiz-panel{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 100% 0,rgba(198,150,91,.16),transparent 34%),
+    linear-gradient(180deg,#f8f1e7 0%,#f1e7d8 100%);
+}
+.quiz-panel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.22;
+  background-image:repeating-linear-gradient(135deg,rgba(120,75,36,.07) 0 1px,transparent 1px 12px);
+}
+.quiz-panel>*{position:relative;z-index:1;}
+.quiz-headbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin:-2px 0 18px;
+  padding:14px 16px;
+  border:1px solid #ddc9ac;
+  border-radius:18px;
+  background:rgba(255,250,242,.84);
+  box-shadow:0 8px 20px rgba(95,58,27,.08);
+}
+.quiz-intro{display:flex;align-items:center;gap:12px;min-width:0;}
+.quiz-seal{
+  width:46px;height:46px;flex:0 0 46px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:14px;
+  background:linear-gradient(145deg,#a56c3a,#74431f);
+  color:#fff5df;font-size:23px;
+  box-shadow:inset 0 0 0 2px rgba(255,235,195,.25),0 5px 12px rgba(89,48,20,.2);
+}
+.quiz-copy strong{display:block;color:#55331c;font-size:18px;letter-spacing:1px;}
+.quiz-copy span{display:block;color:#80664d;font-size:14px;margin-top:3px;line-height:1.5;}
+.quiz-progress{
+  flex:0 0 auto;
+  min-width:112px;
+  text-align:center;
+  padding:9px 14px;
+  border-radius:16px;
+  background:#4e2d19;
+  color:#f8e9ca;
+  box-shadow:inset 0 0 0 1px rgba(255,232,191,.18);
+}
+.quiz-progress strong{font-family:Georgia,serif;font-size:25px;line-height:1;}
+.quiz-progress span{font-size:13px;margin-left:3px;}
+.quiz-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.qitem{
+  min-width:0;
+  padding:15px;
+  border:1px solid #ddcbb2;
+  border-radius:18px;
+  background:rgba(255,251,244,.93);
+  box-shadow:0 6px 0 rgba(198,174,142,.48);
+  transition:.2s ease;
+}
+.qitem:hover{transform:translateY(-2px);box-shadow:0 9px 18px rgba(88,54,27,.11);}
+.qitem.answered{border-color:#b68a59;background:#fff9ed;}
+.question-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px;line-height:1.55;}
+.question-no{
+  width:28px;height:28px;flex:0 0 28px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9px;
+  background:#7f4b27;color:#fff8e9;
+  font-family:Georgia,serif;font-weight:bold;font-size:15px;
+  box-shadow:0 3px 0 #5e341b;
+}
+.question-text{font-weight:bold;color:#442a19;font-size:16px;padding-top:2px;}
+.option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+.option{
+  min-width:0;
+  display:flex;align-items:center;gap:8px;
+  padding:9px 10px;
+  border-radius:12px;
+  cursor:pointer;
+  border:1px solid #dfd0bc;
+  background:#fbf4e9;
+  color:#5b422e;
+  line-height:1.35;
+  transition:.16s ease;
+  user-select:none;
+}
+.option:hover{border-color:#ba8b58;background:#f7ead7;transform:translateY(-1px);}
+.option-letter{
+  width:22px;height:22px;flex:0 0 22px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  background:#e8dac7;color:#725035;
+  font-family:Arial,sans-serif;font-weight:800;font-size:12px;
+}
+.option-text{min-width:0;overflow-wrap:anywhere;}
+.option.active{
+  background:linear-gradient(135deg,#eed4aa,#f8ead2);
+  border-color:#95613a;
+  color:#432818;
+  box-shadow:inset 0 0 0 1px rgba(126,76,37,.16);
+}
+.option.active .option-letter{background:#7f4b27;color:#fff7e8;}
+.quiz-actions{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px;}
+.quiz-actions .btn{min-width:132px;margin-top:0;}
+.quiz-result-card{
+  margin:15px auto 0;
+  max-width:560px;
+  min-height:0;
+  padding:0;
+  text-align:center;
+  border-radius:16px;
+  transition:.2s ease;
+}
+.quiz-result-card.has-result{padding:13px 18px;border:1px solid #d3b88f;background:#fff8e9;box-shadow:0 6px 16px rgba(94,56,24,.1);}
+.quiz-result-card strong{font-size:22px;color:#6b3d1d;}
+.quiz-result-card .result-note{display:block;margin-top:4px;color:#76583d;font-size:14px;font-weight:normal;}
+@media(max-width:880px){
+  .quiz-grid{grid-template-columns:1fr;}
+}
+@media(max-width:560px){
+  .quiz-headbar{align-items:flex-start;padding:12px;}
+  .quiz-copy span{display:none;}
+  .quiz-progress{min-width:92px;padding:8px 9px;}
+  .option-grid{grid-template-columns:1fr;}
+  .qitem{padding:13px;}
+}
+
+/* ===== 双栏等高 + 内容闯关排行榜 ===== */
+.grid-2{align-items:stretch;}
+.grid-2>.panel{height:100%;margin-bottom:0;}
+
+.challenge-board{
+  margin-top:18px;
+  border:1px solid #d7c2a4;
+  border-radius:20px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#fffaf1 0%,#f4e8d6 100%);
+  box-shadow:0 8px 20px rgba(92,55,25,.10);
+}
+.challenge-board-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 15px;
+  color:#fff7e8;
+  background:linear-gradient(135deg,#7e4a26,#4f2b17);
+}
+.challenge-board-title{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:bold;letter-spacing:1px;}
+.challenge-board-badge{
+  flex:0 0 auto;
+  padding:4px 9px;
+  border-radius:999px;
+  background:rgba(255,244,220,.14);
+  border:1px solid rgba(255,238,198,.22);
+  color:#f7dfb6;
+  font-size:12px;
+}
+.leaderboard-list{padding:10px 12px 6px;}
+.leaderboard-row{
+  display:grid;
+  grid-template-columns:38px minmax(78px,.85fr) minmax(72px,1fr) 58px 64px;
+  align-items:center;
+  gap:8px;
+  min-height:39px;
+  padding:7px 8px;
+  border-bottom:1px dashed #dcc9ae;
+  color:#4b321f;
+  font-size:14px;
+}
+.leaderboard-row:last-child{border-bottom:0;}
+.leaderboard-row.is-current{background:#f9e8c8;border-radius:12px;border-bottom-color:transparent;box-shadow:inset 0 0 0 1px #d5ae72;}
+.leaderboard-head-row{font-size:12px;color:#806348;font-weight:bold;background:#f3e3cd;border-radius:12px;border-bottom:0;margin-bottom:4px;}
+.rank-medal{
+  width:27px;height:27px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  font-family:Georgia,serif;font-weight:bold;
+  background:#e9dcc8;color:#6e4c31;
+}
+.rank-1{background:linear-gradient(145deg,#ffd86b,#c98b20);color:#59330d;box-shadow:0 3px 8px rgba(174,112,18,.28);}
+.rank-2{background:linear-gradient(145deg,#f2f2ef,#a9aaa7);color:#444;}
+.rank-3{background:linear-gradient(145deg,#e6ae76,#a66831);color:#4c2a12;}
+.leaderboard-class,.leaderboard-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.leaderboard-score{font-weight:bold;color:#8b4c20;text-align:center;}
+.leaderboard-time{text-align:right;color:#765b43;font-variant-numeric:tabular-nums;}
+.leaderboard-empty{padding:24px 16px;text-align:center;color:#80664c;line-height:1.7;}
+.challenge-board-note{padding:9px 13px 12px;text-align:center;color:#7b6048;font-size:12px;line-height:1.55;}
+@media(max-width:560px){
+  .leaderboard-row{grid-template-columns:34px minmax(64px,.8fr) minmax(68px,1fr) 50px 58px;gap:5px;font-size:13px;padding:7px 5px;}
+  .challenge-board-badge{display:none;}
+}
 
 .reading-rubric{
 background:#fffaf2;
@@ -128,21 +319,93 @@ background:#f3e4cc;
 border-radius:14px;
 padding:10px;
 }
+
+.rubric-score{
+min-width:58px;
+text-align:right;
+font-family:"Noto Serif SC","Songti SC",serif;
+font-size:16px;
+font-weight:bold;
+color:#6f431f;
+}
+.rubric-right{
+display:flex;
+align-items:center;
+gap:12px;
+}
+.reading-analysis{
+margin-top:12px;
+padding:14px 16px;
+border-radius:16px;
+background:#fffaf2;
+border:1px solid #dacbbc;
+line-height:1.8;
+color:#4d3422;
+}
+.reading-analysis h4{margin-bottom:8px;color:#6a3f18;font-size:17px;}
+.reading-analysis .analysis-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px;margin:10px 0;}
+.reading-analysis .analysis-item{background:#f5ead8;border-radius:12px;padding:8px 10px;}
+.reading-analysis .analysis-label{color:#7b5a3b;font-size:13px;display:block;}
+.reading-analysis .analysis-value{font-weight:bold;color:#4d3422;font-size:16px;}
+.reading-analysis ul{margin:8px 0 0 1.2em;}
+.reading-analysis .notice{margin-top:10px;color:#7a5b3e;font-size:13px;border-top:1px dashed #d5c2a8;padding-top:8px;}
+@media(max-width:560px){
+  .rubric-item{align-items:flex-start;gap:8px;}
+  .rubric-right{flex-direction:column;align-items:flex-end;gap:3px;}
+  .reading-analysis .analysis-grid{grid-template-columns:1fr;}
+}
+
+/* ===== 古韵无障碍导航：图片下方、与正文同宽 ===== */
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;}
+.hero-mask{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,.56));z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;text-shadow:0 4px 18px rgba(0,0,0,.7);}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:17px;margin-top:7px;letter-spacing:2px;}
+.help-button{position:absolute;z-index:5;top:16px;right:18px;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 15px 8px 10px;border-radius:24px;border:1px solid rgba(107,68,31,.38);background:linear-gradient(#fff9ed,#ead7b7);color:#5a3518;text-decoration:none;font-size:16px;font-weight:700;box-shadow:0 5px 14px rgba(0,0,0,.28);}
+.help-button:hover,.help-button:focus-visible{transform:translateY(-1px);filter:brightness(1.04);outline:2px solid #e2b66e;outline-offset:2px;}
+.help-button .help-q{width:27px;height:27px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #7a4a21;background:#fffaf0;font-family:Arial,sans-serif;font-weight:900;}
+.site-nav-shell{max-width:1200px;width:calc(100% - 40px);height:64px;margin:14px auto 0;border:1px solid #b88a55;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#4a2b16,#2f190d);box-shadow:0 8px 18px rgba(76,45,20,.22),inset 0 1px 0 rgba(255,244,215,.14);}
+.site-nav{height:100%;display:flex;align-items:stretch;}
+.site-nav a{--wash:rgba(191,130,61,.06);position:relative;flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 12px;border-right:1px solid rgba(247,222,172,.18);background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;text-decoration:none;font-size:18px;font-weight:700;white-space:nowrap;text-shadow:0 2px 5px rgba(0,0,0,.65);transition:.2s ease;}
+.site-nav a:last-child{border-right:0;}
+.site-nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:4px;border-radius:4px 4px 0 0;background:#e0ad5e;transform:scaleX(0);transition:transform .2s ease;}
+.site-nav a.active{background:linear-gradient(180deg,rgba(167,101,39,.52),rgba(89,45,17,.42));color:#fff7e6;box-shadow:inset 0 0 24px rgba(242,183,91,.12);}
+.site-nav a.active::after{transform:scaleX(1);}
+.site-nav a:hover,.site-nav a:focus-visible{background:linear-gradient(180deg,rgba(180,109,42,.58),rgba(96,49,18,.45));color:#fff9ec;outline:none;box-shadow:inset 0 0 28px rgba(242,183,91,.14);}
+.site-nav a:hover::after,.site-nav a:focus-visible::after{transform:scaleX(1);}
+.site-nav:hover a.active:not(:hover):not(:focus-visible){background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;box-shadow:none;}
+.site-nav:hover a.active:not(:hover):not(:focus-visible)::after{transform:scaleX(0);}
+.nav-icon{width:30px;height:30px;flex:0 0 30px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(245,218,165,.44);background:rgba(255,238,202,.08);color:#f0d29b;}
+.nav-icon svg{width:17px;height:17px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.exhibit-hall{margin-top:12px!important;}
+@media(max-width:900px){
+  .hero{height:190px;}
+  .hero-content h1{font-size:32px;}
+  .site-nav-shell{width:calc(100% - 22px);height:62px;overflow-x:auto;overflow-y:hidden;border-radius:15px;}
+  .site-nav{min-width:920px;}
+  .site-nav a{flex:0 0 auto;min-width:145px;font-size:17px;padding:0 14px;}
+}
+@media(max-width:560px){
+  .help-button{top:10px;right:10px;padding:7px 10px;font-size:15px;}
+  .help-button .help-text-full{display:none;}
+  .site-nav-shell{height:58px;margin-top:10px;}
+  .site-nav{min-width:850px;}
+  .site-nav a{min-width:135px;font-size:16px;}
+  .nav-icon{width:28px;height:28px;flex-basis:28px;}
+}
+
 </style>
 
 <script>
-const SITE_PAGES=[
-['index.html','首页'],
-['pretest.html','活板初探馆'],
-['inquiry.html','研学探究馆'],
-['speech.html','活字解说馆'],
-['heritage.html','非遗传承馆'],
-['teacher.html','教师数据中心']
-];
+const SITE_PAGES=[["index.html", "首页", "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"></path><path d=\"M5.5 9.5V20h13V9.5\"></path><path d=\"M9.5 20v-6h5v6\"></path></svg>"], ["pretest.html", "活板初探馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5h7.5A2.5 2.5 0 0 1 14 8v10.5H6.5A2.5 2.5 0 0 0 4 21V5.5Z\"></path><path d=\"M20 5.5h-7.5A2.5 2.5 0 0 0 10 8v10.5h7.5A2.5 2.5 0 0 1 20 21V5.5Z\"></path></svg>"], ["inquiry.html", "研学探究馆", "<svg viewBox=\"0 0 24 24\"><circle cx=\"10.5\" cy=\"10.5\" r=\"5.5\"></circle><path d=\"M15 15 21 21\"></path><path d=\"M10.5 8v5\"></path><path d=\"M8 10.5h5\"></path></svg>"], ["speech.html", "活字解说馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z\"></path><path d=\"M7 11a5 5 0 0 0 10 0\"></path><path d=\"M12 16v4\"></path><path d=\"M9 20h6\"></path></svg>"], ["heritage.html", "非遗传承馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3c3.5 0 6 2.2 6 5.3 0 2.2-1.4 3.8-3.2 5.1-.8.6-1.3 1.4-1.3 2.3V19h-3v-3.3c0-.9-.5-1.7-1.3-2.3C7.4 12.1 6 10.5 6 8.3 6 5.2 8.5 3 12 3Z\"></path><path d=\"M9.5 22h5\"></path><path d=\"M9.5 19h5\"></path></svg>"], ["teacher.html", "教师数据中心", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 6h16v10H4z\"></path><path d=\"M8 20h8\"></path><path d=\"M12 16v4\"></path><path d=\"M7.5 10.5h3\"></path><path d=\"M13.5 10.5h3\"></path></svg>"]];
 
 function renderHero(active){
-document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+ const hero=`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg" alt="">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p></div><a class="help-button" href="help.html" aria-label="使用帮助"><span class="help-q">?</span><span><span class="help-text-full">使用</span>帮助</span></a></div>`;
+ const nav=`<div class="site-nav-shell"><nav class="site-nav" aria-label="展馆导航">${SITE_PAGES.map(p=>`<a href="${p[0]}" class="${p[0]===active?'active':''}" ${p[0]===active?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${p[2]}</span><span>${p[1]}</span></a>`).join('')}</nav></div>`;
+ document.write(hero+nav);
 }
+
 
 function startHero(){
 let imgs=document.querySelectorAll('.hero-bg img');
@@ -211,6 +474,8 @@ function esc(s){
 return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
 </script>
+<link rel="stylesheet" href="platform-v2.css">
+<script src="platform-v2.js?v=2.22"></script>
 </head>
 
 <body>
@@ -261,40 +526,63 @@ return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"
 <div id="readResult" class="feedback"></div>
 
 <div class="reading-rubric" id="readingRubric">
-<h3>🌟 朗读评价量表</h3>
+<h3>🌟 朗读评价量表（整篇总分100分）</h3>
 
 <div class="rubric-item">
 <span>字音准确</span>
-<div class="stars" id="star-accuracy">☆☆☆☆☆</div>
+<div class="rubric-right"><div class="stars" id="star-accuracy">☆☆☆☆☆</div><div class="rubric-score" id="score-accuracy">0/25</div></div>
 </div>
 
 <div class="rubric-item">
 <span>朗读流利</span>
-<div class="stars" id="star-fluency">☆☆☆☆☆</div>
+<div class="rubric-right"><div class="stars" id="star-fluency">☆☆☆☆☆</div><div class="rubric-score" id="score-fluency">0/25</div></div>
 </div>
 
 <div class="rubric-item">
 <span>停顿节奏</span>
-<div class="stars" id="star-pause">☆☆☆☆☆</div>
+<div class="rubric-right"><div class="stars" id="star-pause">☆☆☆☆☆</div><div class="rubric-score" id="score-pause">0/25</div></div>
 </div>
 
 <div class="rubric-item">
 <span>情感表达</span>
-<div class="stars" id="star-expression">☆☆☆☆☆</div>
+<div class="rubric-right"><div class="stars" id="star-expression">☆☆☆☆☆</div><div class="rubric-score" id="score-expression">0/25</div></div>
 </div>
 
 <div class="rubric-tip" id="rubricTip">
-提交朗读后，系统将根据录音时长、识别关键词和朗读完整度点亮星级。
+系统会把本次完整录音作为一次朗读作品，总分固定为100分；不会按句累加。评价将综合识别文本与原文匹配度、朗读速度、停顿分布及声音变化。
 </div>
+
+<div class="reading-analysis" id="readingAnalysis" hidden></div>
+</div>
+
+<div class="challenge-board" aria-labelledby="leaderboardTitle">
+  <div class="challenge-board-head">
+    <div class="challenge-board-title" id="leaderboardTitle"><span aria-hidden="true">🏆</span> 内容闯关排行榜</div>
+    <span class="challenge-board-badge">最高分优先 · 同分用时短者优先</span>
+  </div>
+  <div class="leaderboard-list" id="quizLeaderboard"></div>
+  <div class="challenge-board-note">记录每位同学的最佳成绩；同分时，完成本轮测评并提交得更快的同学排名靠前。</div>
 </div>
 </section>
 
-<section class="panel">
+<section class="panel quiz-panel">
 <div class="panel-title">📚 内容测评（10题）</div>
-<div id="quiz"></div>
-<button class="btn btn-primary" onclick="submitQuiz()">提交测试</button>
-<button class="btn" onclick="resetQuiz()">重测</button>
-<div id="quizResult" class="feedback"></div>
+<div class="quiz-headbar">
+  <div class="quiz-intro">
+    <div class="quiz-seal" aria-hidden="true">闯</div>
+    <div class="quiz-copy">
+      <strong>课文知识小闯关</strong>
+      <span>每轮随机抽取10题并打乱选项；重新作答会更换题目与选项。</span>
+    </div>
+  </div>
+  <div class="quiz-progress" aria-live="polite"><strong id="quizAnswered">0</strong><span>/10 已作答</span></div>
+</div>
+<div id="quiz" class="quiz-grid"></div>
+<div class="quiz-actions">
+  <button class="btn btn-primary" onclick="submitQuiz()">提交测试</button>
+  <button class="btn" onclick="resetQuiz()">重新作答</button>
+</div>
+<div id="quizResult" class="quiz-result-card" aria-live="polite"></div>
 </section>
 
 </div>
@@ -312,7 +600,8 @@ const TEXT=`活板（沈括）
 板印书籍，唐人尚未盛为之。自冯瀛王始印五经，已后典籍皆为板本。
 庆历中，有布衣毕昇，又为活板。其法：用胶泥刻字，薄如钱唇，每字为一印，火烧令坚。先设一铁板，其上以松脂、蜡和纸灰之类冒之。欲印，则以一铁范置铁板上，乃密布字印。满铁范为一板，持就火炀之，药稍镕。则以一平板按其面，则字平如砥。
 若止印三二本，未为简易；若印数十百千本，则极为神速。常作二铁板，一板印刷，一板已自布字。此印者才毕，则第二板已具，更互用之，瞬息可就。
-不用，则以纸帖之，每韵为一帖，木格贮之。有奇字素无备者，旋刻之，以草火烧，瞬息可成。用讫再火令药镕，以手拂之，其印自落，殊不沾污。`;
+不用，则以纸帖之，每韵为一帖，木格贮之。有奇字素无备者，旋刻之，以草火烧，瞬息可成。用讫再火令药镕，以手拂之，其印自落，殊不沾污。
+昇死，其印为予群从所得，至今宝藏。`;
 
 readText.innerText=TEXT;
 
@@ -423,100 +712,402 @@ return;
 calcReadingScore();
 }
 
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function round1(v){return Math.round(v*10)/10;}
+
 function setStars(id,count){
+count=clamp(Math.round(count),0,5);
 let full="★★★★★".slice(0,count);
 let empty="☆☆☆☆☆".slice(0,5-count);
 document.getElementById(id).textContent=full+empty;
 }
 
+function setDimension(name,score){
+score=clamp(Math.round(score),0,25);
+document.getElementById(`score-${name}`).textContent=`${score}/25`;
+setStars(`star-${name}`,score===0?0:Math.ceil(score/5));
+}
+
 function resetRubric(){
-setStars("star-accuracy",0);
-setStars("star-fluency",0);
-setStars("star-pause",0);
-setStars("star-expression",0);
-rubricTip.textContent="提交朗读后，系统将根据录音时长、识别关键词和朗读完整度点亮星级。";
+['accuracy','fluency','pause','expression'].forEach(n=>setDimension(n,0));
+rubricTip.textContent="系统会把本次完整录音作为一次朗读作品，总分固定为100分；不会按句累加。评价将综合识别文本与原文匹配度、朗读速度、停顿分布及声音变化。";
+readingAnalysis.hidden=true;
+readingAnalysis.innerHTML='';
 }
 
-function updateRubric(score,hit,dur){
-let accuracy=Math.min(5,Math.max(1,Math.round(hit/9*5)));
-
-let fluency=
-dur>=90?5:
-dur>=70?4:
-dur>=50?3:
-dur>=30?2:1;
-
-let pause=
-score>=90?5:
-score>=80?4:
-score>=70?3:
-score>=60?2:1;
-
-let expression=
-score>=92?5:
-score>=82?4:
-score>=72?3:
-score>=60?2:1;
-
-setStars("star-accuracy",accuracy);
-setStars("star-fluency",fluency);
-setStars("star-pause",pause);
-setStars("star-expression",expression);
-
-let level="";
-
-if(score>=90){
-level="优秀：朗读准确流利，节奏自然，能够体现文言文韵味。";
-}
-else if(score>=80){
-level="良好：朗读较流利，重点字音掌握较好，个别停顿还可优化。";
-}
-else if(score>=70){
-level="合格：能够完成朗读任务，但字音、节奏和连贯性还需加强。";
-}
-else{
-level="待提升：建议跟随AI范读再次练习，重点关注字音和句读停顿。";
+function normalizeChinese(s){
+return (s||'').replace(/[^\u3400-\u9fff]/g,'');
 }
 
-rubricTip.textContent=level;
+function lcsLength(a,b){
+if(!a.length||!b.length)return 0;
+// 保证第二维较短，降低长篇文本比较时的内存占用。
+if(b.length>a.length){let t=a;a=b;b=t;}
+let prev=new Uint16Array(b.length+1);
+let curr=new Uint16Array(b.length+1);
+for(let i=1;i<=a.length;i++){
+  for(let j=1;j<=b.length;j++){
+    curr[j]=a[i-1]===b[j-1]?prev[j-1]+1:Math.max(prev[j],curr[j-1]);
+  }
+  let t=prev;prev=curr;curr=t;curr.fill(0);
+}
+return prev[b.length];
 }
 
-function calcReadingScore(){
-let dur=((recEndTime||Date.now())-recStartTime)/1000;
-let keys=['庆历','毕昇','活板','胶泥','铁板','密布','炀','平板','字平如砥'];
-let hit=keys.filter(k=>recognitionText.includes(k)).length;
+function percentile(arr,p){
+if(!arr.length)return 0;
+let a=arr.slice().sort((x,y)=>x-y);
+let idx=(a.length-1)*p;
+let lo=Math.floor(idx),hi=Math.ceil(idx);
+return lo===hi?a[lo]:a[lo]+(a[hi]-a[lo])*(idx-lo);
+}
 
-let score=SpeechRecognition
-?Math.min(100,Math.round(35+dur/40*20+hit/keys.length*45))
-:Math.min(85,Math.round(50+dur/45*35));
+function scoreRange(value,idealLow,idealHigh,outerLow,outerHigh){
+if(value>=idealLow&&value<=idealHigh)return 1;
+if(value<=outerLow||value>=outerHigh)return 0;
+if(value<idealLow)return (value-outerLow)/(idealLow-outerLow);
+return (outerHigh-value)/(outerHigh-idealHigh);
+}
 
-readResult.innerHTML=
-`<h3>朗读评分：${score}分</h3>
-<p>识别关键词：${hit}/${keys.length}</p>`;
+async function analyzeAudio(blob){
+const ctx=new (window.AudioContext||window.webkitAudioContext)();
+try{
+  const buf=await ctx.decodeAudioData(await blob.arrayBuffer());
+  const sr=buf.sampleRate;
+  const channels=buf.numberOfChannels;
+  const len=buf.length;
+  const mono=new Float32Array(len);
+  for(let c=0;c<channels;c++){
+    const data=buf.getChannelData(c);
+    for(let i=0;i<len;i++)mono[i]+=data[i]/channels;
+  }
 
-updateRubric(score,hit,Math.round(dur));
+  const frame=Math.max(1,Math.floor(sr*0.05));
+  const hop=Math.max(1,Math.floor(sr*0.025));
+  const rms=[];
+  for(let s=0;s+frame<len;s+=hop){
+    let sum=0;
+    for(let i=s;i<s+frame;i++)sum+=mono[i]*mono[i];
+    rms.push(Math.sqrt(sum/frame));
+  }
+  const p20=percentile(rms,.2),p80=percentile(rms,.8);
+  const threshold=Math.max(.008,p20*2.1,p80*.18);
+  const voiced=rms.map(v=>v>=threshold);
+
+  // 合并很短的静音毛刺，避免把一个词误切成多个语段。
+  const maxGap=Math.max(1,Math.round(.14/.025));
+  for(let i=0;i<voiced.length;){
+    if(voiced[i]){i++;continue;}
+    let j=i;while(j<voiced.length&&!voiced[j])j++;
+    if(i>0&&j<voiced.length&&j-i<=maxGap){for(let k=i;k<j;k++)voiced[k]=true;}
+    i=j;
+  }
+
+  const segments=[];
+  let i=0;
+  while(i<voiced.length){
+    while(i<voiced.length&&!voiced[i])i++;
+    if(i>=voiced.length)break;
+    let j=i;while(j<voiced.length&&voiced[j])j++;
+    if((j-i)*.025>=.18)segments.push({start:i*.025,end:j*.025});
+    i=j;
+  }
+  const pauses=[];
+  for(let k=1;k<segments.length;k++){
+    const d=segments[k].start-segments[k-1].end;
+    if(d>=.18)pauses.push(d);
+  }
+  const voicedDuration=segments.reduce((s,x)=>s+x.end-x.start,0);
+  const duration=buf.duration;
+  const voicedRatio=duration?voicedDuration/duration:0;
+  const meanPause=pauses.length?pauses.reduce((a,b)=>a+b,0)/pauses.length:0;
+  const longPauses=pauses.filter(x=>x>1.6).length;
+
+  const voicedRms=rms.filter((v,idx)=>voiced[idx]);
+  const meanEnergy=voicedRms.length?voicedRms.reduce((a,b)=>a+b,0)/voicedRms.length:0;
+  const energyStd=voicedRms.length?Math.sqrt(voicedRms.reduce((a,b)=>a+(b-meanEnergy)**2,0)/voicedRms.length):0;
+  const energyCV=meanEnergy?energyStd/meanEnergy:0;
+
+  // 轻量级基频变化估计：降采样后做归一化自相关，只抽取有限帧。
+  const targetSr=8000;
+  const step=Math.max(1,Math.floor(sr/targetSr));
+  const downLen=Math.floor(len/step);
+  const down=new Float32Array(downLen);
+  for(let d=0;d<downLen;d++)down[d]=mono[d*step];
+  const win=512, minLag=Math.floor(targetSr/380), maxLag=Math.floor(targetSr/75);
+  const pitches=[];
+  const maxFrames=90;
+  const stride=Math.max(win,Math.floor((downLen-win)/Math.max(1,maxFrames)));
+  for(let s=0;s+win<downLen;s+=stride){
+    let e=0;for(let n=0;n<win;n++)e+=down[s+n]*down[s+n];
+    if(Math.sqrt(e/win)<threshold*.8)continue;
+    let bestLag=0,best=-1;
+    for(let lag=minLag;lag<=maxLag;lag++){
+      let num=0,a2=0,b2=0;
+      for(let n=0;n<win-lag;n++){
+        const a=down[s+n],b=down[s+n+lag];
+        num+=a*b;a2+=a*a;b2+=b*b;
+      }
+      const corr=num/Math.sqrt((a2||1e-9)*(b2||1e-9));
+      if(corr>best){best=corr;bestLag=lag;}
+    }
+    if(best>.42&&bestLag)pitches.push(targetSr/bestLag);
+  }
+  const pitchMean=pitches.length?pitches.reduce((a,b)=>a+b,0)/pitches.length:0;
+  const pitchStd=pitches.length?Math.sqrt(pitches.reduce((a,b)=>a+(b-pitchMean)**2,0)/pitches.length):0;
+  const pitchCV=pitchMean?pitchStd/pitchMean:0;
+
+  return {duration,voicedDuration,voicedRatio,segments:segments.length,pauses,meanPause,longPauses,energyCV,pitchCV,meanEnergy};
+}finally{
+  try{await ctx.close();}catch(e){}
+}
+}
+
+function buildFeedback(metrics){
+const items=[];
+if(metrics.coverage<.35){
+  items.push(`本次识别到的内容约占原文${Math.round(metrics.coverage*100)}%，更像是片段朗读，因此整篇总分会受到明显限制。`);
+}else if(metrics.coverage<.75){
+  items.push(`已读到原文约${Math.round(metrics.coverage*100)}%，建议补齐未读或未被稳定识别的部分。`);
+}else{
+  items.push(`朗读内容覆盖原文约${Math.round(metrics.coverage*100)}%，完整度较好。`);
+}
+
+if(metrics.missingKeys.length){
+  items.push(`以下重点词未被稳定识别：${metrics.missingKeys.slice(0,6).join('、')}。可对照范读检查字音与咬字。`);
+}else{
+  items.push('重点词语均被较稳定地识别，字音与咬字总体清楚。');
+}
+
+if(metrics.speechRate<1.7){
+  items.push(`有效语速约${round1(metrics.speechRate)}字/秒，整体偏慢，可减少逐字停顿。`);
+}else if(metrics.speechRate>4.6){
+  items.push(`有效语速约${round1(metrics.speechRate)}字/秒，整体偏快，建议在句号、分号处留出更清晰的停顿。`);
+}else{
+  items.push(`有效语速约${round1(metrics.speechRate)}字/秒，处于较自然的朗读区间。`);
+}
+
+if(metrics.longPauses>2){
+  items.push(`检测到${metrics.longPauses}次超过1.6秒的长停顿，连贯性受到影响。`);
+}else if(metrics.pauseCount===0&&metrics.coverage>.35){
+  items.push('几乎没有检测到清晰停顿，建议依据句号、分号和逗号划分层次。');
+}else{
+  items.push(`检测到${metrics.pauseCount}次有效停顿，平均约${round1(metrics.meanPause)}秒。`);
+}
+
+if(metrics.expressionScore>=19){
+  items.push('音量与语调变化较丰富，能体现说明性文字的层次。');
+}else if(metrics.expressionScore>=13){
+  items.push('声音有一定变化，但重点句和转折处还可以更突出。');
+}else{
+  items.push('音量、语调变化较少，建议在“则极为神速”“瞬息可就”等重点语句上加强表达。');
+}
+return items;
+}
+
+async function calcReadingScore(){
+if(!audioBlob&&chunks.length)buildAudioBlob();
+if(!audioBlob){alert('请先录音');return;}
+readResult.innerHTML='<span class="muted">正在分析整篇录音与识别文本，请稍候……</span>';
+
+const ref=normalizeChinese(TEXT);
+const spoken=normalizeChinese(recognitionText);
+const recognitionAvailable=!!SpeechRecognition;
+const matched=spoken?lcsLength(ref,spoken):0;
+const coverage=ref.length?matched/ref.length:0;
+const precision=spoken.length?matched/spoken.length:0;
+const keys=['庆历','毕昇','活板','胶泥','钱唇','铁范','密布','炀','镕','字平如砥','神速','更互用之','木格贮之','以手拂之'];
+const hitKeys=keys.filter(k=>spoken.includes(k));
+const missingKeys=keys.filter(k=>!spoken.includes(k));
+const keyRatio=hitKeys.length/keys.length;
+
+let audio;
+try{audio=await analyzeAudio(audioBlob);}catch(err){
+  console.warn('音频分析失败',err);
+  audio={duration:Math.max(0,((recEndTime||Date.now())-recStartTime)/1000),voicedDuration:0,voicedRatio:0,segments:0,pauses:[],meanPause:0,longPauses:0,energyCV:0,pitchCV:0,meanEnergy:0};
+}
+
+const speechRate=audio.voicedDuration>0?spoken.length/audio.voicedDuration:0;
+// 朗读完整度以“识别文本覆盖”为主、录音有效时长为辅，避免只读一句却获得高分。
+const expectedVoicedDuration=ref.length/3.0;
+const durationCoverage=expectedVoicedDuration?clamp(audio.voicedDuration/expectedVoicedDuration,0,1):0;
+const completionEvidence=recognitionAvailable
+  ?Math.max(coverage,Math.min(durationCoverage,coverage+.16))
+  :durationCoverage;
+const completenessGate=.16+.84*Math.sqrt(clamp(completionEvidence,0,1));
+
+let accuracyScore;
+if(!recognitionAvailable){
+  accuracyScore=0;
+}else{
+  accuracyScore=25*(.68*coverage+.22*precision+.10*keyRatio);
+  if(spoken.length<12)accuracyScore=Math.min(accuracyScore,4);
+}
+accuracyScore=clamp(Math.round(accuracyScore),0,25);
+
+const rateQuality=scoreRange(speechRate,2.0,3.9,.7,5.8);
+const voicedQuality=scoreRange(audio.voicedRatio,.55,.88,.25,.98);
+const continuity=clamp(1-audio.longPauses/Math.max(2,audio.segments),0,1);
+let fluencyScore=25*(.52*rateQuality+.23*voicedQuality+.25*continuity)*completenessGate;
+if(audio.voicedDuration<4)fluencyScore=Math.min(fluencyScore,4);
+fluencyScore=clamp(Math.round(fluencyScore),0,25);
+
+const punctuationCount=(TEXT.match(/[，。；：！？]/g)||[]).length;
+const targetPauses=Math.max(1,punctuationCount*coverage*.62);
+const pauseCount=audio.pauses.length;
+const countQuality=targetPauses?clamp(1-Math.abs(pauseCount-targetPauses)/Math.max(targetPauses,3),0,1):0;
+const pauseDurationQuality=pauseCount?scoreRange(audio.meanPause,.22,.95,.08,2.2):0;
+const longPauseQuality=clamp(1-audio.longPauses/Math.max(1,pauseCount),0,1);
+let pauseScore=25*(.45*countQuality+.35*pauseDurationQuality+.20*longPauseQuality)*completenessGate;
+if(coverage<.12)pauseScore=Math.min(pauseScore,4);
+pauseScore=clamp(Math.round(pauseScore),0,25);
+
+const energyQuality=scoreRange(audio.energyCV,.16,.52,.03,.9);
+const pitchQuality=audio.pitchCV?scoreRange(audio.pitchCV,.06,.22,.01,.48):.25;
+const audibility=scoreRange(audio.meanEnergy,.018,.22,.004,.55);
+let expressionScore=25*(.42*energyQuality+.38*pitchQuality+.20*audibility)*(.45+.55*Math.sqrt(clamp(coverage,0,1)));
+if(audio.voicedDuration<4)expressionScore=Math.min(expressionScore,4);
+expressionScore=clamp(Math.round(expressionScore),0,25);
+
+// 对明显不完整的片段朗读设置整篇总分上限；这是一次总评，不按句累计。
+const maxTotal=
+  completionEvidence<.12?20:
+  completionEvidence<.25?35:
+  completionEvidence<.50?60:
+  completionEvidence<.75?80:100;
+let dims=[accuracyScore,fluencyScore,pauseScore,expressionScore];
+let rawTotal=dims.reduce((a,b)=>a+b,0);
+if(rawTotal>maxTotal){
+  const exact=dims.map(v=>v*maxTotal/rawTotal);
+  dims=exact.map(v=>Math.floor(v));
+  let remain=maxTotal-dims.reduce((a,b)=>a+b,0);
+  const order=exact.map((v,i)=>({i,f:v-Math.floor(v)})).sort((a,b)=>b.f-a.f);
+  for(let i=0;i<remain;i++)dims[order[i%order.length].i]++;
+  [accuracyScore,fluencyScore,pauseScore,expressionScore]=dims;
+}
+const total=accuracyScore+fluencyScore+pauseScore+expressionScore;
+setDimension('accuracy',accuracyScore);
+setDimension('fluency',fluencyScore);
+setDimension('pause',pauseScore);
+setDimension('expression',expressionScore);
+
+let level=total>=90?'优秀':total>=80?'良好':total>=70?'合格':total>=60?'基本达标':'需要继续练习';
+rubricTip.textContent=`${level}：本次为整篇录音的一次综合评分，四项各25分，总分${total}/100。`;
+
+const metrics={coverage,precision,keyRatio,missingKeys,speechRate,longPauses:audio.longPauses,pauseCount,meanPause:audio.meanPause,expressionScore};
+const feedback=buildFeedback(metrics);
+const recognitionNote=recognitionAvailable
+  ?'字音准确项依据浏览器语音识别文本与原文的顺序匹配进行估算；“未识别”不一定等于读错，也可能受环境噪声、麦克风或浏览器识别能力影响。'
+  :'当前浏览器不支持中文语音识别，字音准确项未作虚假估分。建议使用最新版 Chrome 或 Edge 重新测评。';
+
+readResult.innerHTML=`<h3>整篇朗读总分：${total}/100（${level}）</h3>
+<p>内容覆盖：${Math.round(coverage*100)}%　重点词识别：${hitKeys.length}/${keys.length}　录音时长：${round1(audio.duration)}秒</p>`;
+
+readingAnalysis.hidden=false;
+readingAnalysis.innerHTML=`<h4>本次朗读分析</h4>
+<div class="analysis-grid">
+  <div class="analysis-item"><span class="analysis-label">识别内容与原文匹配</span><span class="analysis-value">${Math.round(coverage*100)}%</span></div>
+  <div class="analysis-item"><span class="analysis-label">整篇完整度证据</span><span class="analysis-value">${Math.round(completionEvidence*100)}%</span></div>
+  <div class="analysis-item"><span class="analysis-label">有效朗读语速</span><span class="analysis-value">${round1(speechRate)} 字/秒</span></div>
+  <div class="analysis-item"><span class="analysis-label">有效停顿</span><span class="analysis-value">${pauseCount} 次</span></div>
+  <div class="analysis-item"><span class="analysis-label">超过1.6秒的长停顿</span><span class="analysis-value">${audio.longPauses} 次</span></div>
+</div>
+<ul>${feedback.map(x=>`<li>${x}</li>`).join('')}</ul>
+<div class="notice">${recognitionNote}</div>`;
 
 saveProgress('预习检测馆-朗读',{
-score,
-hit,
-duration:Math.round(dur)
+score:total,
+accuracyScore,fluencyScore,pauseScore,expressionScore,
+coverage:Math.round(coverage*100),
+completionEvidence:Math.round(completionEvidence*100),
+maxTotal,
+keyHits:hitKeys.length,
+duration:round1(audio.duration),
+speechRate:round1(speechRate),
+pauseCount,
+longPauses:audio.longPauses,
+recognizedText:recognitionText.slice(0,1200)
 });
 }
 
-const Q=[
-{q:'“布衣毕昇”中“布衣”是？',o:['平民','官员','工匠','商人'],a:0},
-{q:'“火烧令坚”中“火”是？',o:['用火','火焰','火种','点火'],a:0},
-{q:'“奇字”指？',o:['生僻字','错字','外文','奇怪字'],a:0},
-{q:'“砥”的意思是？',o:['磨刀石','石头','底部','光滑'],a:0},
-{q:'“旋刻之”的意思？',o:['马上刻','慢慢刻','删除','旋转'],a:0},
-{q:'活字发明者是？',o:['毕昇','沈括','王羲之','杜甫'],a:0},
-{q:'文中活字材料是？',o:['胶泥','木头','石头','铁'],a:0},
-{q:'“字平如砥”说明字面怎样？',o:['平整','粗糙','弯曲','破损'],a:0},
-{q:'活字印刷的主要优点是？',o:['可重复使用','只能一次性使用','昂贵','缓慢'],a:0},
-{q:'《活板》介绍的是？',o:['印刷术','文学流派','绘画','建筑'],a:0}
+const QUESTION_BANK=[
+{id:'board-print',q:'“板印”指的是哪一种印刷方式？',o:['雕版印刷','活字印刷','石版印刷','铜版印刷'],a:0},
+{id:'yi-tong',q:'“已后典籍皆为板本”中的“已”同哪个字？',o:['以','己','亦','矣'],a:0},
+{id:'board-book',q:'“板本”指什么？',o:['版印书籍','手抄书籍','木板原料','刻字模板'],a:0},
+{id:'commoner',q:'“布衣毕昇”中的“布衣”指什么人？',o:['平民','官员','商人','僧人'],a:0},
+{id:'coin-edge',q:'“薄如钱唇”中的“钱唇”指什么？',o:['铜钱的边缘','铜钱的正面','铜钱的方孔','铜钱上的文字'],a:0},
+{id:'jian',q:'“火烧令坚”中的“坚”是什么意思？',o:['坚硬','坚持','牢固地站立','使人坚定'],a:0},
+{id:'huo',q:'“松脂、蜡和纸灰”中的“和”是什么意思？',o:['混合','和睦','应和','温和'],a:0},
+{id:'mao',q:'“其上以松脂、蜡和纸灰之类冒之”中的“冒”是什么意思？',o:['覆盖','冒险','升起','假充'],a:0},
+{id:'iron-frame',q:'文中的“铁范”指什么？',o:['铁制模框','铁制字印','铁制刻刀','铁制书架'],a:0},
+{id:'jiu-fire',q:'“持就火炀之”中的“就”是什么意思？',o:['靠近','完成','成就','立即'],a:0},
+{id:'yang',q:'“炀”在文中的意思是？',o:['烘烤','燃烧','晒干','冷却'],a:0},
+{id:'medicine',q:'文中的“药”指什么？',o:['松脂、蜡和纸灰等的混合物','治病的药材','用来染色的颜料','清洗铁板的液体'],a:0},
+{id:'rong',q:'“药稍镕”中的“镕”是什么意思？',o:['同“熔”，使固体受热变成液体','雕刻','凝固','磨平'],a:0},
+{id:'di',q:'“字平如砥”中的“砥”指什么？',o:['磨刀石','铁板','木板','石碑'],a:0},
+{id:'yizi',q:'“一板已自布字”中的“已自”是什么意思？',o:['已经','自己','从此','停止'],a:0},
+{id:'ju',q:'“则第二板已具”中的“具”是什么意思？',o:['准备好了','工具','具体','全部'],a:0},
+{id:'genghu',q:'“更互用之”中的“更互”是什么意思？',o:['交替、轮流','互相更改','重新制作','彼此交换'],a:0},
+{id:'jiu-done',q:'“瞬息可就”中的“就”是什么意思？',o:['完成','靠近','从事','迁就'],a:0},
+{id:'tie-label',q:'“以纸帖之”中的“帖”在这里怎样理解？',o:['用标签标记','粘贴字画','写字临帖','请帖'],a:0},
+{id:'rhyme',q:'“每韵为一帖”中的“韵”指什么？',o:['韵部','韵律','声音的高低','诗歌'],a:0},
+{id:'rare-char',q:'“奇字”指什么？',o:['生僻字','写错的字','奇怪的字体','外族文字'],a:0},
+{id:'wood-grain',q:'“木理有疏密”中的“木理”指什么？',o:['木头的纹理','木头的道理','木制活字','木材的种类'],a:0},
+{id:'fan',q:'“燔土”中的“燔”是什么意思？',o:['烧','雕刻','浸泡','晾晒'],a:0},
+{id:'qi',q:'“用讫再火令药镕”中的“讫”是什么意思？',o:['完毕','停止用火','已经','立即'],a:0},
+{id:'shu',q:'“殊不沾污”中的“殊”表示什么程度？',o:['根本、完全','特别美丽','不同','稍微'],a:0},
+{id:'quncong',q:'“其印为余群从所得”中的“群从”指什么？',o:['堂兄弟及诸子侄','众多随从','同乡百姓','工匠学徒'],a:0},
+{id:'baocang',q:'“至今宝藏”中的“宝藏”应怎样理解？',o:['珍藏','贵重财宝','埋藏地下','秘密收藏'],a:0},
+{id:'inventor',q:'活字印刷术的发明者是？',o:['毕昇','沈括','冯道','蔡伦'],a:0},
+{id:'material',q:'毕昇制作活字主要使用什么材料？',o:['胶泥','木头','铜块','石料'],a:0},
+{id:'two-boards',q:'文中“常作二铁板”的主要作用是？',o:['一板印刷，一板布字，交替使用','一板备用，一板收藏','一板刻字，一板磨字','一板加热，一板冷却'],a:0},
+{id:'many-copies',q:'活字印刷在什么情况下更能体现“极为神速”？',o:['印数十百千本时','只印一两本时','不需要排版时','只使用一块铁板时'],a:0},
+{id:'store-type',q:'不用活字时，文中怎样分类贮存？',o:['按韵部分类，用木格贮存','按字形大小分类','按使用次数分类','按刻字时间分类'],a:0},
+{id:'rare-solution',q:'遇到平时没有准备的生僻字，文中怎样处理？',o:['马上刻制并用草火烧成','改用相近的字','暂时空缺','重新制作整版'],a:0},
+{id:'remove-type',q:'印刷结束后，活字为什么容易脱落？',o:['再次加热使药熔化，再用手轻拂','用水浸泡铁板','用刀逐字撬下','等待铁板自然裂开'],a:0},
+{id:'main-content',q:'《活板》主要介绍了什么？',o:['活字印刷的制作、使用及优点','雕版印刷的起源','造纸术的流程','古代书籍的收藏方法'],a:0},
+{id:'sequence',q:'下列工序顺序正确的是？',o:['制字—设板—排版—炀版—印刷—拆版','设板—制字—印刷—排版—拆版—炀版','制字—排版—设板—印刷—炀版—拆版','排版—制字—设板—炀版—拆版—印刷'],a:0}
 ];
 
+let Q=[];
 let ans={};
+let quizStartedAt=0;
+let currentQuestionIds=[];
+const QUIZ_SIZE=10;
+const LEADERBOARD_KEY='pretestQuizLeaderboardV2';
+
+function shuffled(list){
+  const a=list.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function prepareQuestion(item){
+  const mixed=shuffled(item.o.map((text,index)=>({text,correct:index===item.a})));
+  return {
+    id:item.id,
+    q:item.q,
+    o:mixed.map(x=>x.text),
+    a:mixed.findIndex(x=>x.correct)
+  };
+}
+
+function chooseQuestionSet(avoidIds=[]){
+  let pool=QUESTION_BANK.filter(x=>!avoidIds.includes(x.id));
+  if(pool.length<QUIZ_SIZE) pool=QUESTION_BANK.slice();
+  const selected=shuffled(pool).slice(0,QUIZ_SIZE);
+  currentQuestionIds=selected.map(x=>x.id);
+  Q=selected.map(prepareQuestion);
+}
+
+function updateQuizProgress(){
+  const answered=Object.keys(ans).length;
+  const counter=document.getElementById('quizAnswered');
+  if(counter) counter.textContent=answered;
+}
 
 function loadQuiz(){
 quiz.innerHTML='';
@@ -524,24 +1115,109 @@ quiz.innerHTML='';
 Q.forEach((q,i)=>{
 let div=document.createElement('div');
 div.className='qitem';
-div.innerHTML='<b>'+(i+1)+'. '+q.q+'</b>';
+div.innerHTML=`<div class="question-head"><span class="question-no">${i+1}</span><span class="question-text">${q.q}</span></div>`;
+
+let optionGrid=document.createElement('div');
+optionGrid.className='option-grid';
 
 q.o.forEach((o,j)=>{
 let d=document.createElement('div');
 d.className='option';
-d.innerText=o;
+d.setAttribute('role','button');
+d.setAttribute('tabindex','0');
+d.setAttribute('aria-pressed','false');
+d.innerHTML=`<span class="option-letter">${String.fromCharCode(65+j)}</span><span class="option-text">${o}</span>`;
 
-d.onclick=()=>{
+const choose=()=>{
+if(!quizStartedAt) quizStartedAt=Date.now();
 ans[i]=j;
-div.querySelectorAll('.option').forEach(x=>x.classList.remove('active'));
+div.classList.add('answered');
+div.querySelectorAll('.option').forEach(x=>{
+  x.classList.remove('active');
+  x.setAttribute('aria-pressed','false');
+});
 d.classList.add('active');
+d.setAttribute('aria-pressed','true');
+updateQuizProgress();
 };
 
-div.appendChild(d);
+d.onclick=choose;
+d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}};
+optionGrid.appendChild(d);
 });
 
+div.appendChild(optionGrid);
 quiz.appendChild(div);
 });
+updateQuizProgress();
+}
+
+function formatDuration(seconds){
+  const s=Math.max(0,Math.round(Number(seconds)||0));
+  const m=Math.floor(s/60);
+  const r=s%60;
+  return m?`${m}分${String(r).padStart(2,'0')}秒`:`${r}秒`;
+}
+
+function getAttemptDuration(){
+  const start=quizStartedAt||Date.now();
+  return Math.max(1,Math.round((Date.now()-start)/1000));
+}
+
+function getLeaderboard(){
+  try{
+    const list=JSON.parse(localStorage.getItem(LEADERBOARD_KEY)||'[]');
+    return Array.isArray(list)?list:[];
+  }catch(e){return [];}
+}
+
+function saveLeaderboard(score,duration){
+  const st=getStudent();
+  if(!st||!st.name||!st.cls) return;
+  const key=`${st.cls}-${st.seat||''}-${st.name}`;
+  const item={
+    key,
+    cls:String(st.cls),
+    name:String(st.name),
+    score:Number(score)||0,
+    duration:Number(duration)||0,
+    updatedAt:Date.now()
+  };
+  let list=getLeaderboard();
+  const idx=list.findIndex(x=>x.key===key);
+  if(idx<0){
+    list.push(item);
+  }else{
+    const old=list[idx];
+    const better=item.score>old.score||(item.score===old.score&&item.duration<old.duration);
+    if(better) list[idx]=item;
+  }
+  list.sort((a,b)=>b.score-a.score||a.duration-b.duration||a.updatedAt-b.updatedAt||a.name.localeCompare(b.name,'zh-CN'));
+  localStorage.setItem(LEADERBOARD_KEY,JSON.stringify(list.slice(0,100)));
+}
+
+function renderLeaderboard(){
+  const box=document.getElementById('quizLeaderboard');
+  if(!box) return;
+  const list=getLeaderboard().sort((a,b)=>b.score-a.score||a.duration-b.duration||a.updatedAt-b.updatedAt).slice(0,10);
+  const current=studentKey();
+  if(!list.length){
+    box.innerHTML='<div class="leaderboard-empty">还没有闯关记录。<br>完成右侧内容测评后，前十名将在这里出现。</div>';
+    return;
+  }
+  const head='<div class="leaderboard-row leaderboard-head-row"><span>名次</span><span>班级</span><span>姓名</span><span style="text-align:center">得分</span><span style="text-align:right">用时</span></div>';
+  const rows=list.map((x,i)=>{
+    const rank=i+1;
+    const rankClass=rank<=3?` rank-${rank}`:'';
+    return `<div class="leaderboard-row ${x.key===current?'is-current':''}">
+      <span class="rank-medal${rankClass}">${rank}</span>
+      <span class="leaderboard-class" title="${esc(x.cls)}">${esc(x.cls)}</span>
+      <span class="leaderboard-name" title="${esc(x.name)}">${esc(x.name)}</span>
+      <span class="leaderboard-score">${Number(x.score)||0}</span>
+      <span class="leaderboard-time">${formatDuration(x.duration)}</span>
+    </div>`;
+  }).join('');
+  box.innerHTML=head+rows;
 }
 
 function submitQuiz(){
@@ -561,7 +1237,10 @@ chosen:ans[i]!==undefined?q.o[ans[i]]:'未作答'
 }
 });
 
-quizResult.innerHTML=`得分：${sc}分，错题：${wrong.length}题`;
+const duration=getAttemptDuration();
+const note=sc===100?'十题全部答对，通行证上的知识印章已点亮！':sc>=80?'基础掌握得很稳，再看看错题就更扎实了。':sc>=60?'已经闯过大半，建议对照课下注释订正错题。':'先别着急，翻回课文和注释，再试一次会更有把握。';
+quizResult.classList.add('has-result');
+quizResult.innerHTML=`<strong>${sc}分</strong> · 错题 ${wrong.length} 题<span class="result-note">本轮用时 ${formatDuration(duration)}。${note}</span>`;
 
 let records=JSON.parse(localStorage.getItem('pretestRecords')||'[]');
 
@@ -570,25 +1249,41 @@ id:Date.now(),
 studentKey:studentKey(),
 student:getStudent(),
 score:sc,
+duration,
+questionIds:currentQuestionIds.slice(),
 wrong,
 time:new Date().toLocaleString()
 });
 
 localStorage.setItem('pretestRecords',JSON.stringify(records));
+saveLeaderboard(sc,duration);
+renderLeaderboard();
 
 saveProgress('预习检测馆-内容测评',{
 score:sc,
-wrongCount:wrong.length
+wrongCount:wrong.length,
+duration,
+questionIds:currentQuestionIds.slice()
 });
 }
 
-function resetQuiz(){
-ans={};
-loadQuiz();
-quizResult.innerText='';
+function startNewQuiz(avoidPrevious=true){
+  const previous=avoidPrevious?currentQuestionIds.slice():[];
+  ans={};
+  chooseQuestionSet(previous);
+  quizStartedAt=0;
+  loadQuiz();
+  quizResult.innerText='';
+  quizResult.classList.remove('has-result');
 }
 
-loadQuiz();
+function resetQuiz(){
+  startNewQuiz(true);
+  window.scrollTo({top:document.querySelector('.quiz-panel').offsetTop-90,behavior:'smooth'});
+}
+
+startNewQuiz(false);
+renderLeaderboard();
 
 /* 探展通行证渲染函数（长条形两行） */
 function renderStudentPass() {
@@ -603,7 +1298,8 @@ function renderStudentPass() {
 
   const b1 = localStorage.getItem('badge1') === 'unlocked';
   const b2 = localStorage.getItem('badge2') === 'unlocked';
-  const b3 = localStorage.getItem('badge3') === 'unlocked';
+  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : localStorage.getItem('badge3') === 'unlocked';
+  const thinkingStar = !!(window.MTP2 && window.MTP2.getThinkingStar && window.MTP2.getThinkingStar());
   const passNumber = st.passNumber || 'FX-2026-0001';
 
   passDiv.innerHTML = `
@@ -616,9 +1312,11 @@ function renderStudentPass() {
       <span class="pass-badge-icon ${b1?'unlocked':''}">🛠️</span>
       <span class="pass-badge-icon ${b2?'unlocked':''}">📜</span>
       <span class="pass-badge-icon ${b3?'unlocked':''}">💡</span>
+      ${thinkingStar?'<span class="thinking-star-mark" title="思辨之星" aria-label="思辨之星">★</span>':''}
     </div>
   `;
 }
 </script>
-<script src="mengxi-assistant.js"></script></body>
+<script src="assets/hanzi-pinyin.js"></script>
+<script src="mengxi-assistant.js?v=2.31"></script></body>
 </html>

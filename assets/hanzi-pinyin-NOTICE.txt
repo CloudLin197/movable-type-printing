@@ -1,0 +1,6 @@
+梦溪离线汉字读音表来源说明
+
+本项目中的 hanzi-pinyin.js 由 TeX Live 所附 xpinyin-database.def 自动生成。
+原数据库文件标注：xpinyin v3.1，数据源为 Unicode Unihan_Readings.txt（Unicode 14.0.0），维护者 Qing Lee。
+原数据库按 LaTeX Project Public License（LPPL）1.3c 或更高版本分发。
+本项目仅将“汉字—拼音”字段转换为浏览器可读取的 JavaScript 对象，用于离线教学问答。

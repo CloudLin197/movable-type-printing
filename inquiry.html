@@ -114,22 +114,77 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
 
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(5px);align-items:center;justify-content:center;z-index:100;padding:20px;}
 .modal.active{display:flex;}
-.modal-content{background:#fef9f0;border-radius:28px;padding:28px 30px;max-width:620px;width:min(92vw,620px);max-height:86vh;overflow:auto;box-shadow:0 25px 50px rgba(0,0,0,.28);border:1px solid #dac29c;position:relative;}
+.modal-content{background:#fef9f0;border-radius:28px;padding:28px 30px;max-width:760px;width:min(94vw,760px);max-height:88vh;overflow:auto;box-shadow:0 25px 50px rgba(0,0,0,.28);border:1px solid #dac29c;position:relative;}
 .close-btn{background:none;border:none;font-size:2rem;position:absolute;top:8px;right:18px;cursor:pointer;color:#a58b6f;}
 .modal-content h3{color:#5d3e1e;margin-bottom:6px;font-size:1.55rem;padding-right:26px;}
 .modal-year{display:inline-block;background:#a67b5c;color:#fff7ed;border-radius:20px;padding:3px 12px;margin:6px 0 12px;}
 .modal-content p{color:#3e2e1f;font-size:1.04rem;line-height:1.8;margin:.6rem 0;}
+.modal-article p{margin:.78rem 0;text-align:justify;}
+.modal-article blockquote{margin:12px 0;padding:12px 16px;border-left:5px solid #a67b5c;background:#f5ecdf;border-radius:0 14px 14px 0;line-height:1.85;color:#4d3422;}
 .material-box{background:#f3ede5;padding:12px 14px;border-radius:16px;border:1px solid #e2d4c0;margin:12px 0;line-height:1.8;color:#4d3422;}
 .question{background:#efe4d7;padding:12px 14px;border-radius:16px;font-weight:bold;color:#8b5a2b;margin-top:14px;line-height:1.7;}
 .source-note{font-size:.9rem;color:#7d644b;border-top:1px dashed #d2bfa8;margin-top:14px;padding-top:10px;line-height:1.6;}
+.search-materials{margin-top:18px;padding:16px 0 0;border:0;border-top:2px dashed #c9ab80;border-radius:0;background:transparent;}
+.search-materials-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:bold;color:#5d3e1e;margin-bottom:10px;}
+.search-materials-hint{font-size:.88rem;color:#8a7157;font-weight:normal;}
+.search-links{display:flex;flex-wrap:wrap;gap:9px;}
+.search-link{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid #c9ab80;background:linear-gradient(180deg,#fffaf0,#f0e2ca);color:#5b3b20;text-decoration:none;font-size:.95rem;font-weight:bold;box-shadow:0 3px 8px rgba(91,59,32,.12);transition:.18s ease;}
+.search-link:hover,.search-link:focus-visible{background:linear-gradient(180deg,#fffdf7,#e8d2af);border-color:#a67b5c;transform:translateY(-2px);box-shadow:0 6px 14px rgba(91,59,32,.18);outline:none;}
+.search-link .search-kind{font-size:.78rem;font-weight:normal;color:#8a6846;padding-left:2px;}
+@media(max-width:600px){.search-links{display:grid;grid-template-columns:1fr;}.search-link{justify-content:space-between;border-radius:16px;padding:10px 13px;}}
 @keyframes fogLift{0%{filter:blur(6px);opacity:.4}50%{filter:blur(2px);opacity:.8}100%{filter:blur(0);opacity:1}}
 .fog-lift{animation:fogLift .9s ease-out forwards;}
+
+/* ===== 古韵无障碍导航：图片下方、与正文同宽 ===== */
+.hero{height:220px;position:relative;overflow:hidden;}
+.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2s ease;}
+.hero-mask{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.48),rgba(0,0,0,.56));z-index:2;}
+.hero-content{position:absolute;z-index:3;width:100%;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#f5e7c6;text-shadow:0 4px 18px rgba(0,0,0,.7);}
+.hero-content h1{font-size:42px;letter-spacing:4px;}
+.hero-content p{font-size:17px;margin-top:7px;letter-spacing:2px;}
+.help-button{position:absolute;z-index:5;top:16px;right:18px;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 15px 8px 10px;border-radius:24px;border:1px solid rgba(107,68,31,.38);background:linear-gradient(#fff9ed,#ead7b7);color:#5a3518;text-decoration:none;font-size:16px;font-weight:700;box-shadow:0 5px 14px rgba(0,0,0,.28);}
+.help-button:hover,.help-button:focus-visible{transform:translateY(-1px);filter:brightness(1.04);outline:2px solid #e2b66e;outline-offset:2px;}
+.help-button .help-q{width:27px;height:27px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #7a4a21;background:#fffaf0;font-family:Arial,sans-serif;font-weight:900;}
+.site-nav-shell{max-width:1200px;width:calc(100% - 40px);height:64px;margin:14px auto 0;border:1px solid #b88a55;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#4a2b16,#2f190d);box-shadow:0 8px 18px rgba(76,45,20,.22),inset 0 1px 0 rgba(255,244,215,.14);}
+.site-nav{height:100%;display:flex;align-items:stretch;}
+.site-nav a{--wash:rgba(191,130,61,.06);position:relative;flex:1 1 0;min-width:0;display:flex;align-items:center;justify-content:center;gap:9px;padding:0 12px;border-right:1px solid rgba(247,222,172,.18);background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;text-decoration:none;font-size:18px;font-weight:700;white-space:nowrap;text-shadow:0 2px 5px rgba(0,0,0,.65);transition:.2s ease;}
+.site-nav a:last-child{border-right:0;}
+.site-nav a::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:4px;border-radius:4px 4px 0 0;background:#e0ad5e;transform:scaleX(0);transition:transform .2s ease;}
+.site-nav a.active{background:linear-gradient(180deg,rgba(167,101,39,.52),rgba(89,45,17,.42));color:#fff7e6;box-shadow:inset 0 0 24px rgba(242,183,91,.12);}
+.site-nav a.active::after{transform:scaleX(1);}
+.site-nav a:hover,.site-nav a:focus-visible{background:linear-gradient(180deg,rgba(180,109,42,.58),rgba(96,49,18,.45));color:#fff9ec;outline:none;box-shadow:inset 0 0 28px rgba(242,183,91,.14);}
+.site-nav a:hover::after,.site-nav a:focus-visible::after{transform:scaleX(1);}
+.site-nav:hover a.active:not(:hover):not(:focus-visible){background:linear-gradient(180deg,var(--wash),rgba(0,0,0,.04));color:#f4e2bf;box-shadow:none;}
+.site-nav:hover a.active:not(:hover):not(:focus-visible)::after{transform:scaleX(0);}
+.nav-icon{width:30px;height:30px;flex:0 0 30px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(245,218,165,.44);background:rgba(255,238,202,.08);color:#f0d29b;}
+.nav-icon svg{width:17px;height:17px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.exhibit-hall{margin-top:12px!important;}
+@media(max-width:900px){
+  .hero{height:190px;}
+  .hero-content h1{font-size:32px;}
+  .site-nav-shell{width:calc(100% - 22px);height:62px;overflow-x:auto;overflow-y:hidden;border-radius:15px;}
+  .site-nav{min-width:920px;}
+  .site-nav a{flex:0 0 auto;min-width:145px;font-size:17px;padding:0 14px;}
+}
+@media(max-width:560px){
+  .help-button{top:10px;right:10px;padding:7px 10px;font-size:15px;}
+  .help-button .help-text-full{display:none;}
+  .site-nav-shell{height:58px;margin-top:10px;}
+  .site-nav{min-width:850px;}
+  .site-nav a{min-width:135px;font-size:16px;}
+  .nav-icon{width:28px;height:28px;flex-basis:28px;}
+}
+
 </style>
 <script>
-const SITE_PAGES=[['index.html','首页'],['pretest.html','活板初探馆'],['inquiry.html','研学探究馆'],['speech.html','活字解说馆'],['heritage.html','非遗传承馆'],['teacher.html','教师数据中心']];
+const SITE_PAGES=[["index.html", "首页", "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"></path><path d=\"M5.5 9.5V20h13V9.5\"></path><path d=\"M9.5 20v-6h5v6\"></path></svg>"], ["pretest.html", "活板初探馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5h7.5A2.5 2.5 0 0 1 14 8v10.5H6.5A2.5 2.5 0 0 0 4 21V5.5Z\"></path><path d=\"M20 5.5h-7.5A2.5 2.5 0 0 0 10 8v10.5h7.5A2.5 2.5 0 0 1 20 21V5.5Z\"></path></svg>"], ["inquiry.html", "研学探究馆", "<svg viewBox=\"0 0 24 24\"><circle cx=\"10.5\" cy=\"10.5\" r=\"5.5\"></circle><path d=\"M15 15 21 21\"></path><path d=\"M10.5 8v5\"></path><path d=\"M8 10.5h5\"></path></svg>"], ["speech.html", "活字解说馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z\"></path><path d=\"M7 11a5 5 0 0 0 10 0\"></path><path d=\"M12 16v4\"></path><path d=\"M9 20h6\"></path></svg>"], ["heritage.html", "非遗传承馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3c3.5 0 6 2.2 6 5.3 0 2.2-1.4 3.8-3.2 5.1-.8.6-1.3 1.4-1.3 2.3V19h-3v-3.3c0-.9-.5-1.7-1.3-2.3C7.4 12.1 6 10.5 6 8.3 6 5.2 8.5 3 12 3Z\"></path><path d=\"M9.5 22h5\"></path><path d=\"M9.5 19h5\"></path></svg>"], ["teacher.html", "教师数据中心", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 6h16v10H4z\"></path><path d=\"M8 20h8\"></path><path d=\"M12 16v4\"></path><path d=\"M7.5 10.5h3\"></path><path d=\"M13.5 10.5h3\"></path></svg>"]];
+
 function renderHero(active){
- document.write(`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p><div class="nav-menu">${SITE_PAGES.map(p=>`<a class="${p[0]===active?'active':''}" href="${p[0]}">${p[1]}</a>`).join('')}</div></div></div>`);
+ const hero=`<div class="hero"><div class="hero-bg">${[1,2,3,4,5,6,7].map(i=>`<img src="images/${i}.jpg" alt="">`).join('')}</div><div class="hero-mask"></div><div class="hero-content"><h1>活字印刷云展馆</h1><p>AI互动学习系统</p></div><a class="help-button" href="help.html" aria-label="使用帮助"><span class="help-q">?</span><span><span class="help-text-full">使用</span>帮助</span></a></div>`;
+ const nav=`<div class="site-nav-shell"><nav class="site-nav" aria-label="展馆导航">${SITE_PAGES.map(p=>`<a href="${p[0]}" class="${p[0]===active?'active':''}" ${p[0]===active?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${p[2]}</span><span>${p[1]}</span></a>`).join('')}</nav></div>`;
+ document.write(hero+nav);
 }
+
 function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;if(imgs.length){imgs[0].style.opacity=1;setInterval(()=>{imgs.forEach(x=>x.style.opacity=0);i=(i+1)%imgs.length;imgs[i].style.opacity=1;},3000);}}
 function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
 function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
@@ -138,6 +193,8 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
+<link rel="stylesheet" href="platform-v2.css">
+<script src="platform-v2.js?v=2.22"></script>
 </head>
 <body>
 <script>renderHero('inquiry.html');</script>
@@ -182,7 +239,7 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
         <div class="timeline-track" id="timelineTrack"></div>
       </div>
       <div class="timeline-thinking">
-        <strong>思考线索：</strong>从“整版雕刻”到“单字组合”，从“固定整体”到“可拆模块”，活字印刷真正开启的是一种可以迁移到生产、传播与数字创造中的模块化思维。
+        <strong>思考线索：</strong>印刷术的每一次革新，都推动着知识传播方式的变革。从手抄到雕版，从泥活字到数字化，中华民族不断创新的精神贯穿始终。从“整版雕刻”到“单字组合”，从“固定整体”到“可拆模块”，活字印刷真正开启的是一种可以迁移到生产、传播与数字创造中的模块化思维。
       </div>
       <div class="thought-chain"><div>活字</div><div>模块</div><div>组合</div><div>创造</div></div>
     </div>
@@ -196,10 +253,10 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
     <button class="close-btn" onclick="closeModal()">&times;</button>
     <h3 id="modalTitle"></h3>
     <div class="modal-year" id="modalYear"></div>
-    <div class="material-box" id="modalMaterial"></div>
-    <p id="modalText"></p>
+    <div id="modalText" class="modal-article"></div>
     <div class="question" id="modalQuestion"></div>
     <div class="source-note" id="modalSource"></div>
+    <div class="material-box" id="modalMaterial"></div>
   </div>
 </div>
 
@@ -210,7 +267,7 @@ startHero();
 renderStudentPass();
 
 const CORRECT_ORDER=['制字','设板','排版','炀板','印刷','拆板'];const ICON_MAP={'制字':'✍️','设板':'🪚','排版':'📐','炀板':'🔥','印刷':'🖨️','拆板':'🧹'};
-const stepData=[{id:'制字',icon:'✍️',title:'制字',desc:'工匠用胶泥雕刻活字，每字为一印。雕刻完成后，用火烧泥活字，使其变硬定型。',keywords:['胶泥','每字为一印','用火烧'],video:'videos/刻字.mp4'},{id:'设板',icon:'🪚',title:'设板',desc:'在平整铁板表面，均匀涂抹松脂、黄蜡与纸灰混合而成的粘连辅料，覆盖铁板，为排版做准备。',keywords:['铁板','混合','覆盖'],video:'videos/设板.mp4'},{id:'排版',icon:'📐',title:'排版',desc:'将一块铁模子放在铁板之上，人工往框内紧密摆放泥活字，最终让所有活字横向纵向整齐排布。',keywords:['铁模','密'],video:'videos/排版.mp4'},{id:'炀板',icon:'🔥',title:'炀板',desc:'把排好活字的铁板靠近火源烘烤，让板面混合辅料微微熔化；随后用平整木板按压，使字面平整如砥。',keywords:['靠近','熔化','平','像磨刀石'],video:'videos/炀板.mp4'},{id:'印刷',icon:'🖨️',title:'印刷',desc:'两块铁板轮流交替使用，一板印刷，一板布字，提高效率。',keywords:['轮流','交替'],video:'videos/印刷.mp4'},{id:'拆板',icon:'🧹',title:'拆板',desc:'用完再次烘烤铁板软化辅料，徒手轻轻拂动板面活字，泥活字自动脱落并回收。',keywords:['完','拂动'],video:'videos/拆板.mp4'}];
+const stepData=[{id:'制字',icon:'✍️',title:'制字',desc:'工匠用胶泥雕刻活字，每字为一印。雕刻完成后，用火烧泥活字，使其变硬定型。',keywords:['胶泥','每字为一印','用火烧'],video:'videos/制字.mp4'},{id:'设板',icon:'🪚',title:'设板',desc:'在平整铁板表面，均匀涂抹松脂、黄蜡与纸灰混合而成的粘连辅料，覆盖铁板，为排版做准备。',keywords:['铁板','混合','覆盖'],video:'videos/设板.mp4'},{id:'排版',icon:'📐',title:'排版',desc:'将一块铁模子放在铁板之上，人工往框内紧密摆放泥活字，最终让所有活字横向纵向整齐排布。',keywords:['铁模','密'],video:'videos/排版.mp4'},{id:'炀板',icon:'🔥',title:'炀板',desc:'把排好活字的铁板靠近火源烘烤，让板面混合辅料微微熔化；随后用平整木板按压，使字面平整如砥。',keywords:['靠近','熔化','平','像磨刀石'],video:'videos/炀板.mp4'},{id:'印刷',icon:'🖨️',title:'印刷',desc:'两块铁板轮流交替使用，一板印刷，一板布字，提高效率。',keywords:['轮流','交替'],video:'videos/印刷.mp4'},{id:'拆板',icon:'🧹',title:'拆板',desc:'用完再次烘烤铁板软化辅料，徒手轻轻拂动板面活字，泥活字自动脱落并回收。',keywords:['完','拂动'],video:'videos/拆板.mp4'}];
 let currentSteps=[],selectedIndex=null,isUnlocked=false,currentStepIndex=0,stepUnlocked={};stepData.forEach(s=>stepUnlocked[s.id]=false);const ctx=stepCanvas.getContext('2d');
 
 // 学生进度相关
@@ -377,12 +434,12 @@ function validateOrder(){
 
 checkBtn.onclick = validateOrder;
 
-function unlockGallery(){isUnlocked=true;gallerySection.classList.remove('locked');gallerySection.classList.add('unlocked');orderStatus.textContent='✅ 正确！展馆已解锁';orderStatus.className='status success';checkBtn.disabled=true;renderSteps();setStep(0);saveProgress('研学探究馆',{action:'完成工序排序'});saveProgressData();}
+function unlockGallery(){isUnlocked=true;gallerySection.classList.remove('locked');gallerySection.classList.add('unlocked');orderStatus.textContent='✅ 正确！展馆已解锁';orderStatus.className='status success';checkBtn.disabled=true;renderSteps();setStep(0);window.MTP2&&MTP2.unlockBadge(1);saveProgress('研学探究馆',{action:'完成工序排序'});saveProgressData();}
 function renderTabs(){stepTabs.innerHTML='';stepData.forEach((s,i)=>{let b=document.createElement('button');b.className='step-tab';b.innerHTML=`${s.icon} ${s.title}${stepUnlocked[s.id]?' ✅':''}`;b.onclick=()=>{if(isUnlocked)setStep(i)};stepTabs.appendChild(b);});}
 function setStep(i){currentStepIndex=i;document.querySelectorAll('.step-tab').forEach((t,j)=>{t.classList.toggle('active',j===i);t.innerHTML=`${stepData[j].icon} ${stepData[j].title}${stepUnlocked[stepData[j].id]?' ✅':''}`});let d=stepData[i];stepNumber.textContent=['①','②','③','④','⑤','⑥'][i];stepTitle.textContent=d.icon+' '+d.title;if(stepUnlocked[d.id]){stepInputArea.style.display='none';stepText.textContent=d.desc;playVideo(d.video);}else{stepInputArea.style.display='block';stepText.textContent='请描述该步骤的操作要领，输入关键词后解锁视频。';stepInput.value='';stepInputFeedback.textContent='';showCanvas('🔒 输入描述解锁视频');}}
 function checkInput(){let d=stepData[currentStepIndex],v=stepInput.value.trim();if(!v){stepInputFeedback.textContent='⚠️ 请先输入操作描述';stepInputFeedback.className='feedback error';return;}let miss=d.keywords.find(k=>!v.includes(k));if(!miss){stepUnlocked[d.id]=true;stepInputFeedback.textContent='✅ 描述正确，视频已解锁';stepInputFeedback.className='feedback success';saveProgress('研学探究馆',{action:'解锁工序视频',step:d.title});saveProgressData();setStep(currentStepIndex);checkAllStepUnlocked();}else{stepInputFeedback.textContent=`❌ 请补充关键操作细节（提示：需包含“${miss}”）`;stepInputFeedback.className='feedback error';}}
 stepInputBtn.onclick=checkInput;stepInput.addEventListener('keydown',e=>{if(e.key==='Enter')checkInput()});
-const videoFallbackMap={'videos/设板.mp4':['videos/设板.mp4','videos/设版.mp4'],'videos/拆板.mp4':['videos/拆板.mp4','videos/拆版.mp4']};let currentVideoList=[],currentVideoTry=0;
+const videoFallbackMap={'videos/制字.mp4':['videos/制字.mp4','videos/刻字.mp4'],'videos/刻字.mp4':['videos/刻字.mp4','videos/制字.mp4'],'videos/设板.mp4':['videos/设板.mp4','videos/设版.mp4'],'videos/拆板.mp4':['videos/拆板.mp4','videos/拆版.mp4']};let currentVideoList=[],currentVideoTry=0;
 stepVideo.addEventListener('error',()=>{if(currentVideoList.length&&currentVideoTry<currentVideoList.length-1){currentVideoTry++;loadAndPlayVideo(currentVideoList[currentVideoTry]);}});
 function loadAndPlayVideo(src){stepVideoSource.setAttribute('src',src);stepVideo.load();stepVideo.currentTime=0;stepVideo.muted=true;stepVideo.play().catch(()=>{});}
 function playVideo(src){stepCanvas.style.display='none';stepVideo.style.display='block';stepVideo.pause();currentVideoList=videoFallbackMap[src]||[src];currentVideoTry=0;loadAndPlayVideo(currentVideoList[0]);}
@@ -397,18 +454,164 @@ function unlockActiveInquiry(save = true){
 }
 
 const nodeData=[
- {id:'diao',icon:'📃',title:'雕版印刷',year:'约公元7世纪',material:'资料：整版雕刻，一页一版，版成即可反复印刷。',text:'雕版印刷把文字和图像固定在同一块木板上，适合大量复制同一内容，却不便修改和重组。',source:'可查找资料：雕版示意图、《金刚经》卷首图、整版雕刻流程图。',question:'💬 如果刻错一个字，整版会付出怎样的代价？'},
- {id:'bi',icon:'🔤',title:'毕昇泥活字',year:'1041—1048',material:'资料：《梦溪笔谈》记载“胶泥刻字”“火烧令坚”“一板印刷，一板已自布字”。',text:'毕昇把整版拆解为一个个可移动、可替换、可贮存、可重复使用的字印，印刷从“固定整体”转向“灵活模块”。',source:'可查找资料：《活板》原文节选、泥活字复原图、排版示意图。',question:'💬 活字的“活”，只是速度更快吗？还是思维方式变了？'},
- {id:'wang',icon:'🪵',title:'王祯木活字',year:'约1298年',material:'资料：王祯《农书》记载木活字及转轮排字盘。',text:'木活字延续了活字的模块逻辑，并通过转轮排字盘提高拣字效率，使“找字、排字、印字”更加系统化。',source:'可查找资料：转轮排字盘图片、王祯木活字介绍、木活字与泥活字对比表。',question:'💬 木活字解决了泥活字使用中的哪些痛点？'},
- {id:'metal',icon:'⚙️',title:'朝鲜金属活字',year:'13—15世纪',material:'资料：金属活字更耐磨、更适合反复印刷。',text:'金属材料增强了字模的耐用性，也让活字印刷继续向稳定化、标准化方向发展。',source:'可查找资料：金属活字图片、《直指心体要节》资料卡。',question:'💬 为什么人们会从泥、木继续发展到金属活字？'},
- {id:'guten',icon:'🔠',title:'古腾堡铅活字',year:'约15世纪',material:'资料：古腾堡使用金属活字与印刷机，推动欧洲书籍传播。',text:'古腾堡印刷体系与毕昇活字在技术逻辑上相通：都把文字拆成可组合的模块，再通过机械或人工排版实现复制传播。',source:'可查找资料：古腾堡印刷机、《四十二行圣经》图片、东西方活字对照图。',question:'💬 古腾堡铅活字与毕昇泥活字的共同技术逻辑是什么？'},
- {id:'machine',icon:'🏭',title:'机械化印刷',year:'16—19世纪',material:'资料：蒸汽印刷机、铸排机、机械排版。',text:'当活字模块与机器动力结合，印刷进入工业化时代，知识传播的速度和规模被进一步放大。',source:'可查找资料：蒸汽印刷机图片、近代报纸印刷场景、铸排机资料卡。',question:'💬 活字“模块思维”如何进入工业化生产？'},
- {id:'digital',icon:'💻',title:'数字时代',year:'20世纪至今',material:'资料：字体库、网页组件、程序模块、乐高积木式设计。',text:'今天的文字排版、程序开发、网页组件和工业零件，仍在使用“拆分模块—灵活组合—重复调用”的思想。',source:'可查找资料：Word字体界面、网页组件示意图、乐高积木、App模块化开发图。',question:'💬 我们今天还在使用“活字思维”吗？请举一个生活中的例子。'}
+ {
+  id:'diao',icon:'📃',title:'雕版印刷',year:'约公元7世纪',
+  paragraphs:[
+   '雕版印刷是将文字和图像反向雕刻于同一块木版之上，在版面上涂墨、覆纸、施压，即可印出正体文字或图画的复制技术。',
+   '这种“整版一体”的工艺，每块雕版可连印万次，效率远超手抄，适合大批量复制同一内容，但不便修改和重组。',
+   '现存最早的有明确年、月、日记载的雕版印刷品，是唐懿宗咸通九年（公元868年）的《金刚经》，1900年在甘肃敦煌莫高窟藏经洞发现，现藏于大英图书馆。',
+   '明代学者胡应麟概括：“雕本肇自隋时，行于唐世，扩于五代，精于宋人。”'
+  ],
+  resources:[
+   {label:'雕版示意图',query:'中国古代雕版印刷 示意图',type:'image'},
+   {label:'《金刚经》卷首图',query:'敦煌 唐代 金刚经 卷首图 868',type:'image'},
+   {label:'整版雕刻流程图',query:'雕版印刷 整版雕刻 工艺流程图',type:'image'}
+  ],
+  question:'💬 “整版一体”适合大量复制，却为什么不便修改和重组？'
+ },
+ {
+  id:'bi',icon:'🔤',title:'毕昇泥活字',year:'1041—1048年',
+  paragraphs:[
+   '北宋庆历年间，平民毕昇发明了胶泥活字印刷术。',
+   '据沈括《梦溪笔谈》记载：“用胶泥刻字，薄如钱唇，每字为一印，火烧令坚。”',
+   '毕昇把整版拆解为一个个可移动、可替换、可重复使用的字印，印刷从“固定整体”转向“灵活模块”。',
+   '一字多用、重复使用、省时省料，这是印刷技术史上的一次质的飞跃。',
+   '1990年在湖北省英山县发现毕昇墓碑，经考证为北宋皇祐四年（1052年）所立。'
+  ],
+  resources:[
+   {label:'《活板》原文节选',query:'沈括 活板 原文 梦溪笔谈',type:'web'},
+   {label:'泥活字复原图',query:'毕昇 泥活字 复原图',type:'image'},
+   {label:'活字排版示意图',query:'毕昇 活字印刷 排版 示意图',type:'image'}
+  ],
+  question:'💬 毕昇的发明为什么不只是材料变化，而是印刷思维的一次改变？'
+ },
+ {
+  id:'wang',icon:'🪵',title:'王祯木活字',year:'约1298年',
+  paragraphs:[
+   '元代王祯在宋代木活字基础上进一步革新。',
+   '大德二年（1298年），他在旌德制造3万余枚木活字，排印6万余字的《旌德县志》，“不出一月，百部齐成”。',
+   '王祯还发明了“转轮排字盘”——将木活字依韵排列于转轮架上，转动轮盘即可“以字就人”，大大加快了拣字速度。',
+   '他将这套方法写成《造活字印书法》，附载于《农书》之末，成为世界上最早系统叙述活字印刷术的文献。'
+  ],
+  resources:[
+   {label:'转轮排字盘图片',query:'王祯 转轮排字盘 图片',type:'image'},
+   {label:'王祯木活字介绍',query:'王祯 木活字 转轮排字盘 农书',type:'web'},
+   {label:'木活字与泥活字对比',query:'木活字 泥活字 对比',type:'web'}
+  ],
+  question:'💬 “以字就人”的转轮排字盘，解决了活字印刷中的什么难题？'
+ },
+ {
+  id:'metal',icon:'⚙️',title:'朝鲜金属活字',year:'13—15世纪',
+  paragraphs:[
+   '高丽王朝在13世纪发明了铜活字。',
+   '现存世界上最早的金属活字印刷物，是高丽末期1377年在清州兴德寺刊行的《白云和尚抄录佛祖直指心体要节》（简称《直指》），比欧洲古腾堡的《四十二行圣经》早了约78年。',
+   '此书现藏于法国国家图书馆，2001年列入联合国教科文组织“世界记忆遗产名录”。',
+   '金属活字更耐磨、尺寸稳定，使活字印刷进一步走向稳定化和标准化。'
+  ],
+  resources:[
+   {label:'朝鲜金属活字图片',query:'高丽 朝鲜 金属活字 图片',type:'image'},
+   {label:'《直指》资料',query:'直指心体要节 1377 金属活字',type:'web'},
+   {label:'《直指》实物图',query:'直指心体要节 实物 图片',type:'image'}
+  ],
+  question:'💬 从泥、木到金属，活字材料的变化主要解决了哪些使用问题？'
+ },
+ {
+  id:'guten',icon:'🔠',title:'古腾堡铅活字',year:'约15世纪',
+  paragraphs:[
+   '15世纪中叶，德国人约翰·古腾堡发明了铅活字印刷机和金属活字印刷术。',
+   '1452年至1455年，他在美因茨印制了著名的《四十二行圣经》。',
+   '印刷术从中国通过丝绸之路传到西亚、北非和欧洲，古腾堡时代的欧洲人已通过《马可·波罗游记》等渠道了解到中国的技术。',
+   '古腾堡与毕昇的技术逻辑相通：都将文字拆解为可组合的模块，再通过排版实现复制传播。'
+  ],
+  resources:[
+   {label:'古腾堡印刷机',query:'古腾堡 印刷机 复原图',type:'image'},
+   {label:'《四十二行圣经》图片',query:'古腾堡 四十二行圣经 图片',type:'image'},
+   {label:'东西方活字对照',query:'毕昇 古腾堡 活字印刷 对比',type:'web'}
+  ],
+  question:'💬 古腾堡与毕昇的材料和设备不同，但共同的技术逻辑是什么？'
+ },
+ {
+  id:'machine',icon:'🏭',title:'机械化印刷',year:'16—19世纪',
+  paragraphs:[
+   '1814年11月29日，德国人弗雷德里希·科尼希和安德里斯·鲍尔在伦敦用蒸汽驱动的双滚筒印刷机印刷了《泰晤士报》，活字模块与机械动力结合，印刷进入工业化时代。',
+   '此后，轮转印刷机、双色快速印刷机、铸排机等相继问世，手工拣字逐步迈向机械排版。'
+  ],
+  resources:[
+   {label:'蒸汽印刷机图片',query:'科尼希 鲍尔 蒸汽印刷机 1814 图片',type:'image'},
+   {label:'近代报纸印刷场景',query:'19世纪 报纸 机械印刷 场景',type:'image'},
+   {label:'铸排机资料',query:'铸排机 活字印刷 机械排版',type:'web'}
+  ],
+  question:'💬 当活字模块与机械动力结合后，印刷的速度和规模发生了什么变化？'
+ },
+ {
+  id:'digital',icon:'💻',title:'数字时代',year:'20世纪至今',
+  paragraphs:[
+   '20世纪50年代以来，印刷技术不断融合电子技术、激光技术、信息科学等新兴科技成果。',
+   '从汉字激光照排技术到数字印刷、3D打印，印刷从“铅与火”走向“光与电”。',
+   '字体库、网页组件、程序模块、App开发中的模块化设计，延续着“拆分—组合—复用”的逻辑。',
+   '2009年，中国雕版印刷技艺入选联合国教科文组织《世界人类非物质文化遗产代表作名录》；2010年，中国活字印刷术被列入急需保护的非物质文化遗产名录。'
+  ],
+  resources:[
+   {label:'汉字激光照排',query:'汉字激光照排 技术 图片',type:'web'},
+   {label:'数字印刷流程图',query:'数字印刷 技术 流程图',type:'image'},
+   {label:'3D打印示意图',query:'3D打印 技术 原理 示意图',type:'image'},
+   {label:'App模块化开发图',query:'App 模块化开发 架构图',type:'image'}
+  ],
+  question:'💬 数字时代的哪些技术仍在延续“拆分—组合—复用”的活字思维？'
+ }
 ];
 function renderTimeline(opened){timelineTrack.innerHTML='';nodeData.forEach((n,idx)=>{let group=document.createElement('div');group.className='node-group'+(opened?' fog-lift':'');let circle=document.createElement('div');circle.className='node-circle';circle.innerHTML=opened?n.icon:'🔒';if(idx===0||opened){circle.innerHTML=n.icon;circle.onclick=()=>openNode(n.id);}else{circle.style.background='#9e9e9e';circle.style.borderColor='#d0d0d0';circle.style.filter='grayscale(.6)';circle.style.cursor='not-allowed';circle.onclick=()=>alert('🔒 请先完成“工序探微”六个步骤，解锁活字探究。');}
 let label=document.createElement('div');label.className='node-label';label.textContent=n.title;let year=document.createElement('div');year.className='node-year';year.textContent=n.year;let hint=document.createElement('div');hint.className='node-hint';hint.textContent=(idx===0||opened)?'点击查看资料':'待解锁';if(!(idx===0||opened)){label.style.color='#9a8b7d';year.style.color='#ab9a8a';}
 group.appendChild(circle);group.appendChild(label);group.appendChild(year);group.appendChild(hint);timelineTrack.appendChild(group);});}
-function openNode(nodeId){let n=nodeData.find(x=>x.id===nodeId);if(!n)return;modalTitle.textContent=n.title;modalYear.textContent=n.year;modalMaterial.textContent=n.material;modalText.textContent=n.text;modalQuestion.textContent=n.question;modalSource.textContent=n.source;nodeModal.classList.add('active');saveProgress('研学探究馆',{action:'查看活字探究资料',node:n.title});}
+function buildSearchUrl(item){
+  const q=encodeURIComponent(item.query||item.label||'');
+  return item.type==='image'
+    ? `https://www.bing.com/images/search?q=${q}`
+    : `https://www.bing.com/search?q=${q}`;
+}
+function renderSearchMaterials(resources,nodeTitle){
+  modalMaterial.innerHTML='';
+  modalMaterial.className='material-box search-materials';
+  const title=document.createElement('div');
+  title.className='search-materials-title';
+  title.innerHTML='<span>🔎 可查找资料</span><span class="search-materials-hint">点击后联网搜索，将在新标签页打开。</span>';
+  const links=document.createElement('div');
+  links.className='search-links';
+  (resources||[]).forEach(item=>{
+    const a=document.createElement('a');
+    a.className='search-link';
+    a.href=buildSearchUrl(item);
+    a.target='_blank';
+    a.rel='noopener noreferrer';
+    const icon=item.type==='image'?'🖼️':'🌐';
+    const kind=item.type==='image'?'图片搜索':'网页搜索';
+    a.innerHTML=`<span>${icon} ${item.label}</span><span class="search-kind">${kind} ↗</span>`;
+    a.addEventListener('click',()=>saveProgress('研学探究馆',{action:'联网查找资料',node:nodeTitle,resource:item.label}));
+    links.appendChild(a);
+  });
+  title.appendChild(document.createTextNode(''));
+  modalMaterial.appendChild(title);
+  modalMaterial.appendChild(links);
+}
+function openNode(nodeId){
+  let n=nodeData.find(x=>x.id===nodeId);
+  if(!n)return;
+  modalTitle.textContent=n.title;
+  modalYear.textContent=n.year;
+  renderSearchMaterials(n.resources||[],n.title);
+  modalText.innerHTML='';
+  (n.paragraphs||[]).forEach(text=>{
+    const p=document.createElement('p');
+    p.textContent=text;
+    modalText.appendChild(p);
+  });
+  modalQuestion.textContent=n.question||'';
+  modalQuestion.style.display=n.question?'block':'none';
+  modalSource.textContent='';
+  modalSource.style.display='none';
+  nodeModal.classList.add('active');
+  saveProgress('研学探究馆',{action:'查看活字探究资料',node:n.title});
+}
 function closeModal(){nodeModal.classList.remove('active');}
 
 function initModuleLab(){
@@ -462,8 +665,46 @@ function initModuleLab(){
 }
 initModuleLab();
 
+function unlockInquiryForTeacher(){
+  if(!(window.MTP2 && MTP2.isTeacher())) return;
+
+  // 教师模式：一次性开放工序排序、六个工序视频和“活字探究”。
+  isUnlocked = true;
+  selectedIndex = null;
+  currentSteps = [...CORRECT_ORDER];
+  stepData.forEach(s => { stepUnlocked[s.id] = true; });
+
+  const gallery = document.getElementById('gallerySection');
+  const inquiry = document.getElementById('activeInquirySection');
+  [gallery, inquiry].forEach(section => {
+    if(!section) return;
+    section.classList.remove('locked');
+    section.classList.add('unlocked');
+  });
+  document.querySelectorAll('#gallerySection .lock-cover, #activeInquirySection .lock-cover')
+    .forEach(cover => { cover.style.display = 'none'; });
+
+  const status = document.getElementById('orderStatus');
+  if(status){
+    status.textContent = '👨‍🏫 教师模式：工序探微及全部视频已解锁';
+    status.className = 'status success';
+  }
+  const verifyButton = document.getElementById('checkBtn');
+  if(verifyButton) verifyButton.disabled = false;
+
+  renderSteps();
+  renderTabs();
+  setStep(Math.max(0, Math.min(currentStepIndex, stepData.length - 1)));
+  renderTimeline(true);
+}
+window.unlockInquiryForTeacher = unlockInquiryForTeacher;
+
 window.addEventListener('click',e=>{if(e.target===nodeModal)closeModal();});
 init();
+if(window.MTP2 && MTP2.isTeacher()){
+  // 等页面中的工序组件完成初始化后再应用教师全解锁状态。
+  setTimeout(unlockInquiryForTeacher, 0);
+}
 
 /* 探展通行证渲染函数（长条形两行） */
 function renderStudentPass() {
@@ -478,7 +719,8 @@ function renderStudentPass() {
 
   const b1 = localStorage.getItem('badge1') === 'unlocked';
   const b2 = localStorage.getItem('badge2') === 'unlocked';
-  const b3 = localStorage.getItem('badge3') === 'unlocked';
+  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : localStorage.getItem('badge3') === 'unlocked';
+  const thinkingStar = !!(window.MTP2 && window.MTP2.getThinkingStar && window.MTP2.getThinkingStar());
   const passNumber = st.passNumber || 'FX-2026-0001';
 
   passDiv.innerHTML = `
@@ -491,6 +733,7 @@ function renderStudentPass() {
       <span class="pass-badge-icon ${b1?'unlocked':''}">🛠️</span>
       <span class="pass-badge-icon ${b2?'unlocked':''}">📜</span>
       <span class="pass-badge-icon ${b3?'unlocked':''}">💡</span>
+      ${thinkingStar?'<span class="thinking-star-mark" title="思辨之星" aria-label="思辨之星">★</span>':''}
     </div>
   `;
 }
@@ -498,5 +741,6 @@ function renderStudentPass() {
 <!-- 引入 Three.js 核心库（如果页面之前没有加载） -->
 
 <!-- 引入梦溪助手 -->
-<script src="mengxi-assistant.js"></script></body>
+<script src="assets/hanzi-pinyin.js"></script>
+<script src="mengxi-assistant.js?v=2.29"></script></body>
 </html>
