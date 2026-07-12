@@ -1,13 +1,39 @@
 
 (function(){
 'use strict';
-const P={version:'2.17',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
+const P={version:'2.33',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
 const safeParse=(s,d=null)=>{try{return JSON.parse(s)}catch(e){return d}};
 const b64e=o=>{const s=encodeURIComponent(JSON.stringify(o)).replace(/%([0-9A-F]{2})/g,(_,p)=>String.fromCharCode('0x'+p));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
 const b64d=s=>{try{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s);let pct='';for(let i=0;i<raw.length;i++)pct+='%'+raw.charCodeAt(i).toString(16).padStart(2,'0');return JSON.parse(decodeURIComponent(pct))}catch(e){return null}};
+const SHARE_DATA_KEYS=['students','pretestRecords','progressRecords','studentActivity','speechWorks','heritageWorks','pretestQuizLeaderboardV2'];
+const bytesToB64=bytes=>{let out='';const step=0x8000;for(let i=0;i<bytes.length;i+=step)out+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(out).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+const b64ToBytes=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s),out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out};
+function collectSharedSnapshot(){const data={};SHARE_DATA_KEYS.forEach(k=>{const raw=localStorage.getItem(k);if(raw!==null)data[k]=safeParse(raw,[])});return{schema:'mtp-teacher-snapshot-v1',version:P.version,generatedAt:new Date().toISOString(),source:location.origin+location.pathname,data}}
+async function encodeSnapshot(snapshot){const text=JSON.stringify(snapshot);if('CompressionStream'in window){const stream=new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'));const buf=await new Response(stream).arrayBuffer();return'g.'+bytesToB64(new Uint8Array(buf))}return'j.'+b64e(snapshot)}
+async function decodeSnapshot(token){if(token.startsWith('g.')){if(!('DecompressionStream'in window))throw new Error('当前浏览器不支持解压数据快照');const bytes=b64ToBytes(token.slice(2));const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));return JSON.parse(await new Response(stream).text())}if(token.startsWith('j.'))return b64d(token.slice(2));return b64d(token)}
+function recordSignature(key,item){if(!item||typeof item!=='object')return JSON.stringify(item);if(key==='students')return item.key||`${item.cls||item.className||item.class||''}-${item.seat||''}-${item.name||''}`;if(key==='pretestQuizLeaderboardV2')return item.key||`${item.cls||''}-${item.name||''}`;return item.id||[item.studentKey||'',item.time||'',item.ts||'',item.page||'',item.score??'',item.title||'',item.text||'',item.content||''].join('|')}
+function mergeSnapshotArray(key,incoming){const current=safeParse(localStorage.getItem(key),'[]')||[];if(key==='pretestQuizLeaderboardV2'){const map=new Map();current.concat(incoming||[]).forEach(x=>{if(!x||typeof x!=='object')return;const sig=recordSignature(key,x),old=map.get(sig);if(!old||Number(x.score||0)>Number(old.score||0)||(Number(x.score||0)===Number(old.score||0)&&Number(x.duration||Infinity)<Number(old.duration||Infinity)))map.set(sig,x)});localStorage.setItem(key,JSON.stringify([...map.values()]));return}const map=new Map();current.concat(incoming||[]).forEach(x=>map.set(recordSignature(key,x),x));localStorage.setItem(key,JSON.stringify([...map.values()]))}
+function importSharedSnapshot(snapshot){if(!snapshot||snapshot.schema!=='mtp-teacher-snapshot-v1'||!snapshot.data)throw new Error('数据快照格式不正确');Object.entries(snapshot.data).forEach(([k,v])=>{if(!SHARE_DATA_KEYS.includes(k))return;if(Array.isArray(v))mergeSnapshotArray(k,v);else localStorage.setItem(k,JSON.stringify(v))});return snapshot}
+async function applyUrlSharedSnapshot(){const raw=location.hash.startsWith('#')?location.hash.slice(1):location.hash;if(!raw)return;const hp=new URLSearchParams(raw),tok=hp.get('snapshot');if(!tok)return;try{const snapshot=importSharedSnapshot(await decodeSnapshot(tok));hp.delete('snapshot');const cleanHash=hp.toString();history.replaceState({},'',location.pathname+location.search+(cleanHash?'#'+cleanHash:''));sessionStorage.setItem('mtpSharedSnapshotNotice',JSON.stringify({generatedAt:snapshot.generatedAt||'',version:snapshot.version||''}));location.reload()}catch(e){console.error(e);alert('教师数据快照读取失败：'+(e.message||'链接可能不完整，请重新复制分享链接。'))}}
 function getSession(){return safeParse(localStorage.getItem('platformSession'),null)}
-function setSession(s){localStorage.setItem('platformSession',JSON.stringify(s));if(s&&s.role==='student'&&s.student){['currentStudent','studentInfo','activeStudent','loginStudent'].forEach(k=>localStorage.setItem(k,JSON.stringify(s.student)))}if(s&&s.role==='teacher'){localStorage.setItem('teacherMode','true')}}
-function clearSession(){localStorage.removeItem('platformSession');localStorage.removeItem('teacherMode');['currentStudent','studentInfo','activeStudent','loginStudent'].forEach(k=>localStorage.removeItem(k))}
+function setSession(s){
+ localStorage.setItem('platformSession',JSON.stringify(s));
+ if(s&&s.role==='student'&&s.student){
+  localStorage.removeItem('teacherMode');
+  localStorage.removeItem('teacherLoggedIn');
+  ['currentStudent','studentInfo','activeStudent','loginStudent'].forEach(k=>localStorage.setItem(k,JSON.stringify(s.student)));
+ }
+ if(s&&s.role==='teacher'){
+  localStorage.setItem('teacherMode','true');
+  localStorage.setItem('teacherLoggedIn','true');
+ }
+}
+function clearSession(){
+ localStorage.removeItem('platformSession');
+ localStorage.removeItem('teacherMode');
+ localStorage.removeItem('teacherLoggedIn');
+ ['currentStudent','studentInfo','activeStudent','loginStudent'].forEach(k=>localStorage.removeItem(k));
+}
 function currentStudent(){return safeParse(localStorage.getItem('currentStudent'),null)}
 function studentKey(st=currentStudent()){return st?`${st.cls}-${st.seat}-${st.name}`:''}
 function genPass(st){const key=`${st.cls}|${st.seat}|${st.name}`;let h=2166136261;for(const ch of key){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}const year=new Date().getFullYear();return `FX-${year}-${String(Math.abs(h)%1000000).padStart(6,'0')}`}
@@ -15,10 +41,16 @@ function upsertStudent(st){if(!st)return null;const list=safeParse(localStorage.
 function extractGrade(cls=''){const m=String(cls).match(/(七|八|九|初一|初二|初三|高一|高二|高三|\d+)年?级?/);return m?m[0]:'未分年级'}
 function applyUrlSession(){const q=new URLSearchParams(location.search),tok=q.get('session');if(!tok)return;const s=b64d(tok);if(!s||!s.role)return;setSession(s);q.delete('session');history.replaceState({},'',location.pathname+(q.toString()?('?'+q):'')+location.hash)}
 applyUrlSession();
+applyUrlSharedSnapshot();
+// 兼容旧版教师登录键：旧版只写入 teacherLoggedIn，导致数据中心已登录，
+// 但其他页面无法识别教师身份。首次载入时自动迁移为统一会话。
+if(!getSession() && localStorage.getItem('teacherLoggedIn')==='true'){
+ setSession({role:'teacher',loginAt:new Date().toISOString(),migratedFrom:'teacherLoggedIn'});
+}
 window.MTP2={
  getSession,setSession,clearSession,currentStudent,studentKey,genPass,upsertStudent,
- isTeacher:()=>getSession()?.role==='teacher'||localStorage.getItem('teacherMode')==='true',
- shareLink(){const s=getSession();if(!s)return alert('请先登录后再生成分享链接。');const url=new URL(location.href);url.searchParams.set('session',b64e(s));navigator.clipboard?.writeText(url.href).then(()=>alert('已复制保持登录状态的分享链接。\n注意：教师分享链接相当于分享教师权限，请谨慎使用。')).catch(()=>prompt('复制下面的分享链接：',url.href));},
+ isTeacher:()=>getSession()?.role==='teacher'||localStorage.getItem('teacherMode')==='true'||localStorage.getItem('teacherLoggedIn')==='true',
+ async shareLink(){const s=getSession();if(!s)return alert('请先登录后再生成分享链接。');const url=new URL(location.href);url.searchParams.set('session',b64e(s));let message='已复制保持登录状态的分享链接。';if(s.role==='teacher'){const snapshot=collectSharedSnapshot(),token=await encodeSnapshot(snapshot),hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();const counts={students:(snapshot.data.students||[]).length,speech:(snapshot.data.speechWorks||[]).length,heritage:(snapshot.data.heritageWorks||[]).length};if(url.href.length>750000){alert('当前数据量较大，生成的分享链接可能被聊天软件截断。请改用教师数据中心的“导出全部数据 JSON”，在另一台设备中导入。');return}message=`已复制教师数据快照链接。\n链接包含当前浏览器中的 ${counts.students} 名学生记录、${counts.speech} 份解说词和 ${counts.heritage} 份非遗作品。\n打开后可查看生成链接时的数据；之后新增的提交不会自动同步。\n注意：链接同时包含教师权限和学生作品，请谨慎转发。`}try{await navigator.clipboard.writeText(url.href);alert(message)}catch(e){prompt('复制下面的分享链接：',url.href)}},
  logout(){clearSession();location.href='index.html'},
  badgeKey(n){const k=studentKey();return k?`badge${n}:${k}`:`badge${n}`},
  getBadge(n){return localStorage.getItem(this.badgeKey(n))==='unlocked'||localStorage.getItem(`badge${n}`)==='unlocked'},
@@ -37,7 +69,7 @@ function patchFunctions(){
  if(typeof window.logout==='function'){window.logout=function(){MTP2.logout()}}
 }
 function moveNavIntoHero(){const hero=document.querySelector('.hero'),nav=document.querySelector('.site-nav-shell');if(hero&&nav&&nav.parentElement!==hero)hero.appendChild(nav)}
-function addUserBar(){if(location.pathname.endsWith('index.html')||location.pathname.endsWith('/')||document.querySelector('.v2-userbar'))return;const s=getSession();const bar=document.createElement('div');bar.className='v2-userbar';let left='尚未登录';if(s?.role==='teacher')left='<span class="v2-teacher-flag">教师模式：全部展馆已解锁</span>';else if(s?.role==='student'&&s.student)left=`已登录：<b>${escapeHtml(s.student.cls)} ${escapeHtml(s.student.seat)}号 ${escapeHtml(s.student.name)}</b>　探展编号：<b>${escapeHtml(s.student.passNumber||'')}</b>${MTP2.getThinkingStar()?'<span class="v2-thinking-star" title="思辨之星">★ 思辨之星</span>':''}`;bar.innerHTML=`<div>${left}</div><div class="v2-userbar-actions"><button class="v2-mini-btn" onclick="MTP2.shareLink()">分享当前登录链接</button>${s?'<button class="v2-mini-btn" onclick="MTP2.logout()">退出登录</button>':''}</div>`;const hero=document.querySelector('.hero');hero?.insertAdjacentElement('afterend',bar)}
+function addUserBar(){if(location.pathname.endsWith('index.html')||location.pathname.endsWith('/')||document.querySelector('.v2-userbar'))return;const s=getSession();const bar=document.createElement('div');bar.className='v2-userbar';let left='尚未登录';if(s?.role==='teacher')left='<span class="v2-teacher-flag">教师模式：全部展馆已解锁</span>';else if(s?.role==='student'&&s.student)left=`已登录：<b>${escapeHtml(s.student.cls)} ${escapeHtml(s.student.seat)}号 ${escapeHtml(s.student.name)}</b>　探展编号：<b>${escapeHtml(s.student.passNumber||'')}</b>${MTP2.getThinkingStar()?'<span class="v2-thinking-star" title="思辨之星">★ 思辨之星</span>':''}`;bar.innerHTML=`<div>${left}</div><div class="v2-userbar-actions"><button class="v2-mini-btn" onclick="MTP2.shareLink()">${s?.role==='teacher'?'分享教师数据快照':'分享当前登录链接'}</button>${s?'<button class="v2-mini-btn" onclick="MTP2.logout()">退出登录</button>':''}</div>`;const hero=document.querySelector('.hero');hero?.insertAdjacentElement('afterend',bar)}
 function unlockTeacherView(){if(!MTP2.isTeacher())return;document.documentElement.classList.add('teacher-mode');document.querySelectorAll('.locked').forEach(el=>{el.classList.remove('locked');el.classList.add('unlocked')});document.querySelectorAll('.lock-cover').forEach(el=>el.style.display='none');document.querySelectorAll('button:disabled').forEach(b=>b.disabled=false);try{if(typeof window.unlockInquiryForTeacher==='function')window.unlockInquiryForTeacher();else{if(typeof window.unlockGallery==='function')window.unlockGallery();if(typeof window.unlockActiveInquiry==='function')window.unlockActiveInquiry()}}catch(e){}
 }
 function replaceBadgeEmoji(){document.querySelectorAll('.pass-badge-icon').forEach((el,i)=>{const n=(i%3)+1;if(!el.querySelector('img'))el.innerHTML=`<img src="${P.badgeFiles[n-1]}" alt="徽章${n}">`;if(MTP2.isTeacher()||MTP2.getBadge(n))el.classList.add('unlocked')});const old=document.querySelectorAll('#badge1Icon,#badge2Icon,#badge3Icon');old.forEach((el,i)=>{el.innerHTML=`<img src="${P.badgeFiles[i]}" alt="徽章${i+1}" style="width:100%;height:100%;object-fit:contain">`;if(MTP2.getBadge(i+1)||MTP2.isTeacher())el.classList.add('unlocked')})}
@@ -61,5 +93,5 @@ function refreshThinkingStarUI(){
 document.addEventListener('mengxiThinkingStarUnlocked',()=>setTimeout(refreshThinkingStarUI,0));
 
 function mediaCheck(){document.querySelectorAll('video source').forEach(s=>{if(!s.src&&s.dataset.src)s.src=s.dataset.src});}
-document.addEventListener('DOMContentLoaded',()=>{patchFunctions();moveNavIntoHero();addUserBar();addIndexSessionUI();patchTeacherLogin();enrichTeacherDashboard();unlockTeacherView();replaceBadgeEmoji();sortEnhance();mediaCheck();setTimeout(()=>{unlockTeacherView();replaceBadgeEmoji()},350)});
+document.addEventListener('DOMContentLoaded',()=>{patchFunctions();moveNavIntoHero();addUserBar();addIndexSessionUI();patchTeacherLogin();enrichTeacherDashboard();unlockTeacherView();replaceBadgeEmoji();sortEnhance();mediaCheck();const notice=sessionStorage.getItem('mtpSharedSnapshotNotice');if(notice){sessionStorage.removeItem('mtpSharedSnapshotNotice');setTimeout(()=>{const n=safeParse(notice,{})||{};alert('已载入教师分享的数据快照'+(n.generatedAt?'（生成时间：'+new Date(n.generatedAt).toLocaleString()+'）':'')+'。\n当前页面显示的是生成链接时的数据副本，后续新增提交不会自动同步。')},250)}setTimeout(()=>{unlockTeacherView();replaceBadgeEmoji()},350)});
 })();

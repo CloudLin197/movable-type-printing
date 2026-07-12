@@ -154,7 +154,7 @@ function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
 <link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.22"></script>
+<script src="platform-v2.js?v=2.33"></script>
 </head>
 <body>
 <script>renderHero('teacher.html');</script>
@@ -249,15 +249,17 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
   </div>
 </section>
 
-<button class="btn btn-primary" id="exportBtn" type="button">导出全部数据 JSON</button>
+<button class="btn btn-primary" id="shareSnapshotBtn" type="button">复制教师数据快照链接</button>
+<button class="btn" id="exportBtn" type="button">导出全部数据 JSON</button>
 <button class="btn" id="exportSummaryBtn" type="button">导出班级汇总 CSV</button>
 <button class="btn" id="clearBtn" type="button">清空全部本地数据</button>
+<div class="muted" style="margin-top:10px;line-height:1.8">数据快照链接会携带当前浏览器中已经收集的学生记录、测评数据、解说词和非遗作品。另一台设备打开后可以查看这批数据，但它是生成链接时的副本，不会持续自动同步。</div>
 <div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
 </div>
 <script>
 startHero();
 
-const DATA_KEYS=['students','pretestRecords','progressRecords','speechWorks','heritageWorks'];
+const DATA_KEYS=['students','pretestRecords','progressRecords','studentActivity','speechWorks','heritageWorks','pretestQuizLeaderboardV2'];
 let dashboardModel=null;
 
 function byId(id){return document.getElementById(id);}
@@ -533,7 +535,12 @@ function renderAll(){
 }
 function checkCode(){
   if(byId('teacherCode').value==='123456'){
+    const teacherSession={role:'teacher',loginAt:new Date().toISOString()};
+    // 同时写入新版统一会话与旧版兼容键，确保跳转到任一展馆后都能识别教师身份。
+    localStorage.setItem('platformSession',JSON.stringify(teacherSession));
+    localStorage.setItem('teacherMode','true');
     localStorage.setItem('teacherLoggedIn','true');
+    if(window.MTP2&&typeof MTP2.setSession==='function')MTP2.setSession(teacherSession);
     byId('loginPanel').style.display='none';byId('dash').style.display='block';renderDashboard();
   }else{
     byId('codeMsg').textContent='❌ 教师码错误';byId('codeMsg').className='feedback error';
@@ -541,6 +548,8 @@ function checkCode(){
 }
 function logoutTeacher(){
   localStorage.removeItem('teacherLoggedIn');
+  localStorage.removeItem('teacherMode');
+  localStorage.removeItem('platformSession');
   byId('dash').style.display='none';byId('loginPanel').style.display='block';byId('teacherCode').value='';
 }
 function exportData(){
@@ -592,11 +601,18 @@ byId('gradeFilter').addEventListener('change',()=>{
 byId('classFilter').addEventListener('change',renderAll);
 byId('importBtn').addEventListener('click',()=>byId('importFile').click());
 byId('importFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(file)importData(file);e.target.value='';});
+byId('shareSnapshotBtn').addEventListener('click',()=>window.MTP2?MTP2.shareLink():alert('分享组件尚未加载，请刷新页面后重试。'));
 byId('exportBtn').addEventListener('click',exportData);
 byId('exportSummaryBtn').addEventListener('click',exportSummaryCsv);
 byId('clearBtn').addEventListener('click',clearAll);
 
-if(localStorage.getItem('teacherLoggedIn')==='true'){
+let savedTeacherSession=null;
+try{savedTeacherSession=JSON.parse(localStorage.getItem('platformSession')||'null');}catch(e){}
+if(localStorage.getItem('teacherLoggedIn')==='true'||localStorage.getItem('teacherMode')==='true'||savedTeacherSession?.role==='teacher'){
+  const teacherSession=savedTeacherSession?.role==='teacher'?savedTeacherSession:{role:'teacher',loginAt:new Date().toISOString()};
+  localStorage.setItem('platformSession',JSON.stringify(teacherSession));
+  localStorage.setItem('teacherMode','true');
+  localStorage.setItem('teacherLoggedIn','true');
   byId('loginPanel').style.display='none';byId('dash').style.display='block';renderDashboard();
 }
 </script>
