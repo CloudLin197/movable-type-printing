@@ -141,7 +141,7 @@ function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
 <link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.33"></script>
+<script src="platform-v2.js?v=2.35"></script>
 </head>
 <body>
 <script>renderHero('speech.html');</script>
@@ -166,7 +166,7 @@ submitBtn.onclick=()=>{
   if(process<2){show('❌ 请至少使用两个课文工序原词。','error');return;}
   if(!['技术之活','设计之活','思维之活','技术','设计','思维'].some(w=>text.includes(w))){show('❌ 请补充对“活”的解读。','error');return;}
   if(!['毕昇','创新','创造','发明'].some(w=>text.includes(w))){show('❌ 请补充毕昇创新精神评价。','error');return;}
-  works.push({id:Date.now(),name,text,student:getStudent(),studentKey:studentKey(),likes:0,comments:[],time:new Date().toLocaleString()});
+  {const owner=getStudent();works.push({id:Date.now(),name,text,student:owner,studentKey:studentKey(),studentClass:owner?.cls||'',studentSeat:owner?.seat||'',studentName:owner?.name||'',likes:0,comments:[],time:new Date().toLocaleString()});}
   save();
   render();
   window.MTP2&&MTP2.unlockBadge(2);saveProgress('活字解说馆',{action:'提交解说词',length:text.length});
@@ -175,14 +175,14 @@ submitBtn.onclick=()=>{
   wordCount.textContent='当前字数：0/300';
 };
 function show(m,t){feedback.textContent=m;feedback.className='feedback '+t}
-function save(){localStorage.setItem('speechWorks',JSON.stringify(works));}
+function save(){localStorage.setItem('speechWorks',JSON.stringify(works));window.MTP2&&MTP2.syncStudentSnapshot();}
 function render(){
   workList.innerHTML='';
   if(!works.length){workList.innerHTML='<div class="empty">暂无作品，等待同学们上传。</div>';return;}
   [...works].sort((a,b)=>b.likes-a.likes).forEach((w,i)=>{
     let card=document.createElement('div');
     card.className='work-card';
-    card.innerHTML=`<div class="work-top"><div><b style="font-size:20px">${esc(w.name)}</b><div class="muted">${esc(w.time||'')}</div></div><div class="rank">第 ${i+1} 名</div></div><div class="work-text">${esc(w.text)}</div><button class="btn" onclick="likeWork(${w.id})">👍 点赞 ${w.likes}</button><button class="btn" onclick="toggleComment(${w.id})">💬 评论 ${w.comments.length}</button><button class="btn" onclick="deleteWork(${w.id})">删除</button><div class="comment-box" id="commentBox-${w.id}" style="display:none"><input id="commentInput-${w.id}" placeholder="请输入评论内容"><button class="btn btn-primary" onclick="addComment(${w.id})">提交评论</button>${w.comments.length? w.comments.map(c=>`<div class="comment-item">💬 ${esc(c)}</div>`).join(''):'<div class="muted">暂无评论</div>'}</div>`;
+    card.innerHTML=`<div class="work-top"><div><b style="font-size:20px">${esc(w.name)}</b><div class="muted">${esc(w.time||'')}</div></div><div class="rank">第 ${i+1} 名</div></div><div class="work-text">${esc(w.text)}</div><button class="btn" onclick="likeWork(${w.id})">👍 点赞 ${w.likes}</button><button class="btn" onclick="toggleComment(${w.id})">💬 评论 ${w.comments.length}</button>${(!window.MTPCloud||MTPCloud.canDelete(w,'speechWorks'))?`<button class="btn" onclick="deleteWork(${w.id})">删除</button>`:''}<div class="comment-box" id="commentBox-${w.id}" style="display:none"><input id="commentInput-${w.id}" placeholder="请输入评论内容"><button class="btn btn-primary" onclick="addComment(${w.id})">提交评论</button>${w.comments.length? w.comments.map(c=>`<div class="comment-item">💬 ${esc(c)}</div>`).join(''):'<div class="muted">暂无评论</div>'}</div>`;
     workList.appendChild(card);
   });
 }
@@ -191,6 +191,7 @@ function toggleComment(id){let b=document.getElementById('commentBox-'+id);b.sty
 function addComment(id){let inp=document.getElementById('commentInput-'+id),t=inp.value.trim();if(!t)return alert('请先输入评论');let w=works.find(x=>x.id===id);w.comments.push(t);save();render();}
 function deleteWork(id){if(confirm('确定删除这个作品吗？')){works=works.filter(x=>x.id!==id);save();render();}}
 render();
+
 
 /* 探展通行证渲染函数（长条形两行） */
 function renderStudentPass() {

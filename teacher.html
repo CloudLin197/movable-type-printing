@@ -154,7 +154,7 @@ function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
 <link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.33"></script>
+<script src="platform-v2.js?v=2.35"></script>
 </head>
 <body>
 <script>renderHero('teacher.html');</script>
@@ -249,11 +249,11 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
   </div>
 </section>
 
-<button class="btn btn-primary" id="shareSnapshotBtn" type="button">复制教师数据快照链接</button>
+<button class="btn btn-primary" id="shareSnapshotBtn" type="button">分享教师登录与全部本机数据</button>
 <button class="btn" id="exportBtn" type="button">导出全部数据 JSON</button>
 <button class="btn" id="exportSummaryBtn" type="button">导出班级汇总 CSV</button>
 <button class="btn" id="clearBtn" type="button">清空全部本地数据</button>
-<div class="muted" style="margin-top:10px;line-height:1.8">数据快照链接会携带当前浏览器中已经收集的学生记录、测评数据、解说词和非遗作品。另一台设备打开后可以查看这批数据，但它是生成链接时的副本，不会持续自动同步。</div>
+<div class="muted" style="margin-top:10px;line-height:1.8">本页显示当前浏览器中保存的全部学生数据。点击“分享教师登录与全部本机数据”，其他设备打开链接后即可载入生成链接时的教师状态、学生名单、测评记录、学习进程、解说词和非遗作品。</div>
 <div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
 </div>
 <script>
@@ -515,10 +515,19 @@ function renderStudentTable(rows){
 }
 function renderWorks(rows){
   const keys=new Set(rows.map(r=>r.key));
-  const speech=dashboardModel.data.speechWorks.filter(x=>keys.has(recordStudentKey(x))).sort((a,b)=>(b.likes||0)-(a.likes||0)).slice(0,10);
-  const heritage=dashboardModel.data.heritageWorks.filter(x=>keys.has(recordStudentKey(x))).sort((a,b)=>(b.likes||0)-(a.likes||0)).slice(0,10);
-  byId('speechList').innerHTML=speech.length?speech.map(w=>`<div class="mini-card"><b>${esc(w.name||recordStudentKey(w))}</b> 👍${w.likes||0}<br>${esc(w.text||'').slice(0,120)}${String(w.text||'').length>120?'…':''}</div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
-  byId('heritageList').innerHTML=heritage.length?heritage.map(w=>`<div class="mini-card"><b>${esc(w.title||recordStudentKey(w))}</b> 👍${w.likes||0}<br>${esc(w.content||'').slice(0,120)}${String(w.content||'').length>120?'…':''}</div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
+  const gradeValue=byId('gradeFilter').value||'',classValue=byId('classFilter').value||'';
+  function workKey(w){return recordStudentKey(w);}
+  function inScope(w){
+    const k=workKey(w);if(keys.has(k))return true;
+    if(!gradeValue&&!classValue)return true;
+    const info=parseClassInfo(w.student||{cls:w.studentClass||w.cls||'',seat:w.studentSeat||w.seat||'',name:w.studentName||''},k);
+    return (!gradeValue||info.grade===gradeValue)&&(!classValue||info.classLabel===classValue);
+  }
+  function owner(w){const s=w.student||{};const cls=s.cls||w.studentClass||'',seat=s.seat||w.studentSeat||'',name=s.name||w.studentName||'';return [cls,seat?seat+'号':'',name].filter(Boolean).join(' ')||workKey(w)||w.name||w.author||'未标注学生';}
+  const speech=dashboardModel.data.speechWorks.filter(inScope).sort((a,b)=>String(b.time||'').localeCompare(String(a.time||''),'zh-CN'));
+  const heritage=dashboardModel.data.heritageWorks.filter(inScope).sort((a,b)=>String(b.time||'').localeCompare(String(a.time||''),'zh-CN'));
+  byId('speechList').innerHTML=speech.length?`<div class="muted" style="margin-bottom:8px">共 ${speech.length} 份解说词</div>`+speech.map(w=>`<div class="mini-card"><b>${esc(owner(w))}</b>　小组：${esc(w.name||'—')}　${esc(w.time||'')}　👍${w.likes||0}<br><span style="white-space:pre-wrap">${esc(w.text||'')}</span></div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
+  byId('heritageList').innerHTML=heritage.length?`<div class="muted" style="margin-bottom:8px">共 ${heritage.length} 份非遗作品</div>`+heritage.map(w=>`<div class="mini-card"><b>${esc(w.title||'未命名作品')}</b>　提交者：${esc(owner(w))}　${esc(w.time||'')}　👍${w.likes||0}<br><span style="white-space:pre-wrap">${esc(w.content||'')}</span>${w.image?`<div style="margin-top:8px"><img src="${w.image}" alt="学生作品图片" style="max-width:100%;max-height:240px;border-radius:10px"></div>`:''}</div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
 }
 function renderScopeSummary(rows){
   const grade=byId('gradeFilter').value||'全部年级',cls=byId('classFilter').value||'全部班级',s=stats(rows);
@@ -587,6 +596,8 @@ function clearAll(){
     DATA_KEYS.concat(['currentStudent']).forEach(k=>localStorage.removeItem(k));renderDashboard();
   }
 }
+
+
 
 byId('loginBtn').addEventListener('click',checkCode);
 byId('teacherCode').addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});
