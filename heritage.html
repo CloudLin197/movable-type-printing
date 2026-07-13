@@ -145,13 +145,13 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css?v=2.43">
-<script src="platform-v2.js?v=2.43"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.45">
+<script src="platform-v2.js?v=2.45"></script>
 </head>
 <body>
 <script>renderHero('heritage.html');</script>
 
-<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🏛️ 非遗传承馆</h1><span class="sub">课后分层作业展示中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">恭喜你，展项设计师！</div><p style="line-height:1.9;font-size:17px">你已经集齐三枚"匠心徽章"，正式解锁"展项设计师"的荣誉称号。请任选一个项目，为展馆补充一块有深度的文化拼图。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📌 分层任务选择</div><div class="card heritage-task-card"><b>任务 A：福建非遗档案</b><p>须包含历史渊源、工艺流程、传承现状、保护措施；图文并茂，不少于300字。</p></div><div class="card heritage-task-card"><b>任务 B：非遗传承人“画像”</b><p>撰写人物小传，体现坚守精神与匠心品质，可配AI人物画像。</p></div><label>小组 / 姓名</label><input id="author"><label>选择任务</label><select id="taskType"><option value="A">任务 A：福建非遗档案</option><option value="B">任务 B：非遗传承人画像</option></select><label>作品标题</label><input id="title"><label>上传图片</label><input type="file" id="imageFile" accept="image/*"><img id="previewImg" class="preview-img"><label>作品正文</label><textarea id="content" maxlength="1200" placeholder="请输入不少于300字的作业内容。"></textarea><div class="muted" id="count" style="text-align:right">当前字数：0/1200</div><button class="btn btn-primary" id="submitBtn">提交到传承馆</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback"></div></section><section class="panel"><div class="panel-title">🖼️ 展馆作品展示</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('all',this)">全部作品</button><button class="tab-btn" onclick="switchTab('A',this)">非遗档案室</button><button class="tab-btn" onclick="switchTab('B',this)">匠心人物墙</button></div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
+<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🏛️ 非遗传承馆</h1><span class="sub">课后分层作业展示中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">第四站 · 非遗传承馆</div><p style="line-height:1.95;font-size:17px">这里是创造的舞台，也是研学的巅峰。请综合你查到的文献资料、观察到的工艺细节与内心沉淀的理解，提交一件凝聚心血的原创之作。完成即获第三枚“守艺承文”徽章。三枚徽章齐聚，你便能登上研学荣誉墙，成为活字印刷当代传承的见证者。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📌 分层任务选择</div><div class="card heritage-task-card"><b>任务 A：福建非遗档案</b><p>须包含历史渊源、工艺流程、传承现状、保护措施；图文并茂，不少于300字。</p></div><div class="card heritage-task-card"><b>任务 B：非遗传承人“画像”</b><p>撰写人物小传，体现坚守精神与匠心品质，可配AI人物画像。</p></div><label>小组 / 姓名</label><input id="author"><label>选择任务</label><select id="taskType"><option value="A">任务 A：福建非遗档案</option><option value="B">任务 B：非遗传承人画像</option></select><label>作品标题</label><input id="title"><label>上传图片</label><input type="file" id="imageFile" accept="image/*"><img id="previewImg" class="preview-img"><label>作品正文</label><textarea id="content" maxlength="1200" placeholder="请输入不少于300字的作业内容。"></textarea><div class="muted" id="count" style="text-align:right">当前字数：0/1200</div><button class="btn btn-primary" id="submitBtn">提交到传承馆</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback"></div></section><section class="panel"><div class="panel-title">🖼️ 展馆作品展示</div><div class="tab-bar"><button class="tab-btn active" onclick="switchTab('all',this)">全部作品</button><button class="tab-btn" onclick="switchTab('A',this)">非遗档案室</button><button class="tab-btn" onclick="switchTab('B',this)">匠心人物墙</button></div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
 <script>
 startHero();
 
@@ -217,5 +217,5 @@ function renderStudentPass() {
 }
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.41"></script></body>
+<script src="mengxi-assistant.js?v=2.44"></script></body>
 </html>

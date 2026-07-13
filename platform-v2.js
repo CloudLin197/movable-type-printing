@@ -1,10 +1,10 @@
 (function(){
 'use strict';
-const P={version:'2.43',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
+const P={version:'2.45',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
 const BADGE_META={
-  1:{name:'工艺探究徽章',desc:'完成工序排序与六项工序探微'},
+  1:{name:'循序知工徽章',desc:'完成工序排序与六项工序探微'},
   2:{name:'云端解说徽章',desc:'完成并提交活字印刷解说词'},
-  3:{name:'非遗传承徽章',desc:'完成一项课后分层传承任务'}
+  3:{name:'守艺承文徽章',desc:'完成一项课后分层传承任务'}
 };
 const DATA_KEYS=['students','pretestRecords','progressRecords','studentActivity','speechWorks','heritageWorks','pretestQuizLeaderboardV2'];
 const SNAPSHOT_SCHEMA='mtp-share-snapshot-v2';
@@ -179,7 +179,7 @@ function moveNavIntoHero(){const hero=document.querySelector('.hero'),nav=docume
 function createLoginModal(){
  if(document.getElementById('v2LoginModal'))return document.getElementById('v2LoginModal');
  const modal=document.createElement('div');modal.id='v2LoginModal';modal.className='v2-login-modal';modal.setAttribute('aria-hidden','true');
- modal.innerHTML=`<div class="v2-login-backdrop" data-login-close></div><section class="v2-login-card" role="dialog" aria-modal="true" aria-labelledby="v2LoginTitle"><button class="v2-login-close" type="button" data-login-close aria-label="关闭">×</button><header class="v2-login-pass-header"><div class="v2-pass-kicker">📜 福州活字印刷云展馆</div><h2 id="v2LoginTitle">研学探展证</h2><div class="v2-login-pass-en">Expedition Pass</div></header><p class="v2-login-lead" id="v2LoginReason">请先领取探展证，再继续完成学习任务。</p><div class="v2-login-grid"><label>班级<input id="v2LoginClass" autocomplete="organization" placeholder="例如：七年级1班"></label><label>座号<input id="v2LoginSeat" inputmode="numeric" placeholder="例如：08"></label><label class="v2-login-full">姓名<input id="v2LoginName" autocomplete="name" placeholder="请输入姓名"></label></div><div class="v2-login-pass"><div class="v2-login-pass-row"><span>探展编号</span><strong id="v2LoginPass">填写信息后自动生成</strong></div><div class="v2-login-pass-row v2-login-badge-row"><span>匠心徽章</span><span class="v2-login-badge-preview" aria-label="三枚待解锁徽章"><i><img src="${P.badgeFiles[0]}" alt="工艺探究徽章"></i><i><img src="${P.badgeFiles[1]}" alt="云端解说徽章"></i><i><img src="${P.badgeFiles[2]}" alt="非遗传承徽章"></i></span></div></div><div class="v2-login-msg" id="v2LoginMsg"></div><button class="v2-login-submit" id="v2LoginSubmit" type="button">🔍 领取证件，继续当前任务</button><p class="v2-login-note">学习成果仅保存在当前浏览器中</p></section>`;
+ modal.innerHTML=`<div class="v2-login-backdrop" data-login-close></div><section class="v2-login-card" role="dialog" aria-modal="true" aria-labelledby="v2LoginTitle"><button class="v2-login-close" type="button" data-login-close aria-label="关闭">×</button><div class="v2-pass-kicker">福州活字印刷云展馆</div><h2 id="v2LoginTitle">研学探展证</h2><p class="v2-login-lead" id="v2LoginReason">请先领取探展证，再继续完成学习任务。</p><div class="v2-login-grid"><label>班级<input id="v2LoginClass" autocomplete="organization" placeholder="例如：七年级1班"></label><label>座号<input id="v2LoginSeat" inputmode="numeric" placeholder="例如：08"></label><label class="v2-login-full">姓名<input id="v2LoginName" autocomplete="name" placeholder="请输入姓名"></label></div><div class="v2-login-pass"><span>探展编号</span><strong id="v2LoginPass">填写信息后自动生成</strong></div><div class="v2-login-msg" id="v2LoginMsg"></div><button class="v2-login-submit" id="v2LoginSubmit" type="button">领取探展证，继续当前任务</button><p class="v2-login-note">登录只用于记录本机学习成果，不会离开当前展馆。</p></section>`;
  document.body.appendChild(modal);
  const cls=modal.querySelector('#v2LoginClass'),seat=modal.querySelector('#v2LoginSeat'),name=modal.querySelector('#v2LoginName'),pass=modal.querySelector('#v2LoginPass'),msg=modal.querySelector('#v2LoginMsg');
  const updatePass=()=>{const c=cls.value.trim(),s=seat.value.trim(),n=name.value.trim();pass.textContent=(c&&s&&n)?genPass({cls:c,seat:s,name:n}):'填写信息后自动生成'};

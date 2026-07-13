@@ -94,6 +94,8 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
 .node-label{font-weight:bold;font-size:1rem;color:#4e3620;text-align:center;margin:.25rem 0;}
 .node-year{font-size:.84rem;color:#9b7b5a;text-align:center;}
 .node-hint{font-size:.78rem;color:#7d644b;text-align:center;margin-top:6px;line-height:1.4;}
+.node-hint-button{appearance:none;-webkit-appearance:none;border:0;background:transparent;padding:0;font-family:inherit;color:inherit;cursor:pointer;text-decoration:none;box-shadow:none;}
+.node-hint-button:hover,.node-hint-button:focus-visible{border:0;background:transparent;color:inherit;text-decoration:none;box-shadow:none;outline:none;}
 .timeline-thinking{margin-top:16px;background:#f3ede5;border:1px dashed #cbb79e;border-radius:18px;padding:14px 16px;line-height:1.8;color:#4d3422;}
 .module-lab{margin-top:16px;background:#fffaf3;border:1px solid #dacbbc;border-radius:22px;padding:18px;}
 .module-lab h3{font-size:1.18rem;color:#4d3422;margin-bottom:8px;text-align:center;}
@@ -227,15 +229,15 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css?v=2.43">
-<script src="platform-v2.js?v=2.43"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.45">
+<script src="platform-v2.js?v=2.45"></script>
 </head>
 <body>
 <script>renderHero('inquiry.html');</script>
 
 <div class="exhibit-hall">
 <header class="museum-header"><div class="museum-title"><h1>🪵 研学探究馆</h1><span class="sub">工序排序 · 视频解锁 · 活字探究</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header>
-<section class="section-box"><div class="panel-title">欢迎成为“活字印刷云展馆”的建设者！</div><p style="line-height:1.9;font-size:17px;color:#4d3422;">请在认真阅读课文《活板》的基础上，沿左侧研学路线依次完成三个学习任务。</p></section>
+<section class="section-box"><div class="panel-title">第二站 · 活板探究馆</div><p style="line-height:1.95;font-size:17px;color:#4d3422;">告别书页，走进工坊。在这里，你将亲历活字排版的全流程，逐一复原《活板》中的关键工序。请沿左侧研学路线，依次完成三项探究任务，在动手模拟中验证活字印刷的奥秘。探究终了，第一枚“循序知工”徽章等你摘取。</p></section>
 <div class="inquiry-workspace">
 <aside class="journey-guide" aria-label="研学步骤引导">
   <div class="journey-step is-active" id="guideStep1"><span class="journey-no">1</span><span class="journey-icon">序</span><h3>工序排序</h3><p>使用课文原词，还原活字印刷工序。</p><button type="button" onclick="goJourney('orderSection')">进入排序</button></div>
@@ -630,7 +632,7 @@ const nodeData=[
  }
 ];
 function renderTimeline(opened){timelineTrack.innerHTML='';nodeData.forEach((n,idx)=>{let group=document.createElement('div');group.className='node-group'+(opened?' fog-lift':'');let circle=document.createElement('div');circle.className='node-circle';circle.innerHTML=opened?n.icon:'🔒';if(idx===0||opened){circle.innerHTML=n.icon;circle.onclick=()=>openNode(n.id);}else{circle.style.background='#9e9e9e';circle.style.borderColor='#d0d0d0';circle.style.filter='grayscale(.6)';circle.style.cursor='not-allowed';circle.onclick=()=>alert('🔒 请先完成“工序探微”六个步骤，解锁活字探究。');}
-let label=document.createElement('div');label.className='node-label';label.textContent=n.title;let year=document.createElement('div');year.className='node-year';year.textContent=n.year;let hint=document.createElement('div');hint.className='node-hint';hint.textContent=(idx===0||opened)?'点击查看资料':'待解锁';if(!(idx===0||opened)){label.style.color='#9a8b7d';year.style.color='#ab9a8a';}
+let label=document.createElement('div');label.className='node-label';label.textContent=n.title;let year=document.createElement('div');year.className='node-year';year.textContent=n.year;let hint;if(idx===0||opened){hint=document.createElement('button');hint.type='button';hint.className='node-hint node-hint-button';hint.textContent='点击查看资料';hint.setAttribute('aria-label',`查看${n.title}资料`);hint.onclick=()=>openNode(n.id);}else{hint=document.createElement('div');hint.className='node-hint';hint.textContent='待解锁';label.style.color='#9a8b7d';year.style.color='#ab9a8a';}
 group.appendChild(circle);group.appendChild(label);group.appendChild(year);group.appendChild(hint);timelineTrack.appendChild(group);});}
 function buildSearchUrl(item){
   const q=encodeURIComponent(item.query||item.label||'');
@@ -812,5 +814,5 @@ function renderStudentPass() {
 
 <!-- 引入梦溪助手 -->
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.41"></script></body>
+<script src="mengxi-assistant.js?v=2.44"></script></body>
 </html>

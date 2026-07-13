@@ -162,147 +162,40 @@ repeating-linear-gradient(0deg,rgba(118,79,40,.025) 0 1px,transparent 1px 5px);b
 @media(prefers-reduced-motion:reduce){.v2-badge-glow,.v2-badge-award-image img,.v2-badge-rays{animation:none!important}.v2-badge-award-card{transition:opacity .15s ease!important}}
 
 
-/* ===== V2.42：修正首页帮助、探展证弹窗、时间轴和徽章比例 ===== */
-/* 首页使用帮助：与背景融合，不再使用亮白按钮 */
-.home-help-button{
-  background:linear-gradient(180deg,rgba(48,33,24,.62),rgba(28,18,13,.72))!important;
-  border-color:rgba(255,235,204,.22)!important;
-  color:rgba(255,246,231,.88)!important;
-  box-shadow:0 4px 12px rgba(0,0,0,.20)!important;
-  backdrop-filter:blur(7px)!important;
-  -webkit-backdrop-filter:blur(7px)!important;
-  opacity:.9!important;
-}
-.home-help-button .help-q{
-  border-color:rgba(255,237,205,.48)!important;
-  background:rgba(255,250,240,.08)!important;
-  color:#f2d8ad!important;
-}
-.home-help-button:hover,.home-help-button:focus-visible{
-  opacity:1!important;
-  background:linear-gradient(180deg,rgba(64,43,29,.76),rgba(37,24,17,.82))!important;
-  color:#fffaf1!important;
-  filter:none!important;
-  outline-color:rgba(238,205,151,.55)!important;
-}
-
-/* 登录页大徽章：圆圈与徽章成为一个整体，图案真正占满 */
-#student-login #badgeDisplay{gap:12px!important;margin-left:10px}
+/* ===== V2.45：探展证徽章去除圆圈并放大 ===== */
+#student-login #badgeDisplay{gap:18px!important;margin-left:12px;align-items:center!important}
 #student-login #badgeDisplay .badge-icon{
-  width:58px!important;height:58px!important;padding:0!important;
-  overflow:hidden!important;border-radius:50%!important;
-  border:1px solid rgba(246,222,177,.38)!important;
-  background:radial-gradient(circle at 36% 30%,rgba(255,250,235,.20),rgba(255,248,230,.045))!important;
-  box-shadow:inset 0 0 0 3px rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.18)!important;
+  width:72px!important;
+  height:72px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
 }
+#student-login #badgeDisplay .badge-icon::after{content:none!important;display:none!important}
 #student-login #badgeDisplay .badge-icon img{
-  width:100%!important;height:100%!important;object-fit:contain!important;
-  transform:scale(1.38)!important;transform-origin:center!important;
-  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  border-radius:0!important;
+  transform:scale(1.12);
+  transform-origin:center;
 }
-#student-login #badgeDisplay .badge-icon:not(.unlocked){opacity:.34!important}
 #student-login #badgeDisplay .badge-icon.unlocked{
-  opacity:1!important;filter:none!important;transform:translateY(-1px)!important;
-  box-shadow:0 0 0 2px rgba(239,200,123,.28),0 7px 18px rgba(0,0,0,.22),0 0 18px rgba(224,170,72,.36)!important;
+  opacity:1!important;
+  filter:none!important;
+  transform:none!important;
+  box-shadow:none!important;
 }
-
-/* 其他展馆的登录弹窗：复用首页探展证的深色玻璃质感 */
-.v2-login-backdrop{
-  background:rgba(20,12,8,.70)!important;
-  backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;
-}
-.v2-login-card{
-  width:min(510px,100%)!important;padding:27px 28px 23px!important;
-  border-radius:32px!important;
-  border:1px solid rgba(255,239,207,.25)!important;
-  background:
-    linear-gradient(145deg,rgba(66,45,30,.94),rgba(38,25,18,.96)),
-    repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 5px)!important;
-  color:#fff7ed!important;
-  box-shadow:0 28px 80px rgba(10,5,2,.52),inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 5px rgba(255,246,225,.025)!important;
-}
-.v2-login-card::before,.v2-login-card::after{
-  top:24px!important;bottom:24px!important;width:1px!important;
-  background:linear-gradient(180deg,transparent,rgba(231,194,137,.55) 20%,rgba(231,194,137,.55) 80%,transparent)!important;
-}
-.v2-login-close{
-  right:16px!important;top:14px!important;width:34px!important;height:34px!important;
-  background:rgba(255,255,255,.08)!important;color:#f2d6aa!important;
-  border:1px solid rgba(255,239,210,.16)!important;
-}
-.v2-login-close:hover{background:rgba(255,255,255,.16)!important;color:#fff8ec!important}
-.v2-login-pass-header{text-align:center;margin:0 20px 14px}
-.v2-pass-kicker{color:#f1d6a9!important;font-size:16px!important;letter-spacing:2px!important;margin-bottom:5px!important}
-.v2-login-card h2{color:#f7e4be!important;font-size:30px!important;letter-spacing:4px!important;margin:5px 0 2px!important}
-.v2-login-card h2::before,.v2-login-card h2::after{content:"──"!important;color:rgba(235,202,149,.72)!important;margin:0 7px!important}
-.v2-login-pass-en{font:12px/1.4 Georgia,serif;letter-spacing:3px;text-transform:uppercase;color:rgba(246,226,194,.55)}
-.v2-login-lead{color:rgba(255,241,218,.76)!important;line-height:1.65!important;margin:0 0 16px!important;font-size:14px!important}
-.v2-login-grid{gap:13px!important}
-.v2-login-grid label{color:#f5dfb9!important;font-weight:800!important;letter-spacing:1px!important}
-.v2-login-grid input{
-  border:1px solid rgba(255,255,255,.22)!important;border-radius:20px!important;
-  padding:12px 14px!important;background:rgba(255,255,255,.11)!important;
-  color:#fffaf1!important;-webkit-text-fill-color:#fffaf1!important;
-  box-shadow:inset 0 1px 2px rgba(0,0,0,.08)!important;
-}
-.v2-login-grid input::placeholder{color:rgba(255,247,237,.55)!important;-webkit-text-fill-color:rgba(255,247,237,.55)!important}
-.v2-login-grid input:focus{border-color:rgba(245,222,181,.76)!important;background:rgba(255,255,255,.16)!important;box-shadow:0 0 0 4px rgba(245,222,181,.12)!important}
-.v2-login-pass{
-  margin:15px 0 0!important;padding:11px 14px!important;border-radius:18px!important;
-  background:rgba(255,255,255,.075)!important;border:1px solid rgba(255,255,255,.14)!important;
-  display:block!important;color:rgba(245,225,193,.74)!important;
-}
-.v2-login-pass-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:32px}
-.v2-login-pass-row+.v2-login-pass-row{margin-top:7px;padding-top:8px;border-top:1px solid rgba(255,255,255,.09)}
-.v2-login-pass strong{color:#f7e2bd!important;letter-spacing:1px!important}
-.v2-login-badge-preview{display:flex;align-items:center;gap:7px}
-.v2-login-badge-preview i{
-  width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:50%;overflow:hidden;border:1px solid rgba(255,232,191,.25);
-  background:rgba(255,255,255,.07);opacity:.40;filter:grayscale(1);
-}
-.v2-login-badge-preview img{width:100%;height:100%;object-fit:contain;transform:scale(1.36);display:block}
-.v2-login-msg{color:#f0d9b2!important}.v2-login-msg.error{color:#ffb8aa!important}.v2-login-msg.success{color:#d7efbd!important}
-.v2-login-submit{
-  border-radius:28px!important;padding:12px 18px!important;
-  background:linear-gradient(135deg,#c29a68,#8b6549)!important;
-  color:#fff!important;box-shadow:0 5px 0 #4d3422,0 12px 25px rgba(0,0,0,.25)!important;
-}
-.v2-login-note{color:rgba(255,238,213,.52)!important;margin-top:12px!important}
-
-/* 时间轴标题与操作提示：始终横向阅读，不再挤成竖排 */
-.timeline-head{
-  display:block!important;margin-bottom:12px!important;padding:16px 17px!important;
-  border-radius:20px!important;background:linear-gradient(145deg,#fffaf1,#efe0c9)!important;
-}
-.timeline-title-group{display:block!important;min-width:0!important}
-.timeline-title-group h3{display:flex!important;align-items:center!important;gap:10px!important;margin:0!important;line-height:1.35!important}
-.timeline-title-group h3::before{flex:0 0 5px!important}
-.timeline-title-group>p{margin:5px 0 0 15px!important;color:#896847!important;font-size:13px!important;letter-spacing:.7px!important;line-height:1.5!important}
-.timeline-instruction{
-  display:flex!important;align-items:center!important;width:100%!important;min-width:0!important;
-  margin:13px 0 0!important;padding:9px 11px!important;border-radius:15px!important;
-  background:rgba(255,252,245,.80)!important;border:1px solid #d7bd98!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.78)!important;text-align:left!important;
-}
-.timeline-instruction::before{display:none!important;content:none!important}
-.timeline-gesture{
-  width:32px;height:32px;flex:0 0 32px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:50%;background:#91643b;color:#fff8ec;font-size:17px;box-shadow:0 3px 0 #68431f;
-}
-.timeline-tip-copy{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:3px 10px!important;min-width:0!important;line-height:1.45!important}
-.timeline-tip-copy b,.timeline-tip-copy em{white-space:nowrap!important;writing-mode:horizontal-tb!important;word-break:keep-all!important}
-.timeline-tip-copy b{font-size:14px!important;color:#5d3b21!important;letter-spacing:.5px!important}
-.timeline-tip-copy em{font-size:12px!important;font-weight:500!important;font-style:normal!important;color:#8a6d50!important}
-.timeline-arrow{margin-left:auto!important;flex:0 0 26px!important;width:26px!important;height:26px!important;background:#ead2ae!important;color:#75491f!important}
+#student-login #badgeDisplay .badge-icon.unlocked img{filter:drop-shadow(0 7px 10px rgba(0,0,0,.28)) drop-shadow(0 0 9px rgba(224,170,72,.32))!important}
+#student-login #badgeDisplay .badge-icon:not(.unlocked){opacity:.30!important;background:transparent!important;box-shadow:none!important}
 @media(max-width:560px){
-  #student-login #badgeDisplay .badge-icon{width:52px!important;height:52px!important}
-  .v2-login-card{padding:25px 20px 21px!important;border-radius:25px!important}
-  .v2-login-pass-header{margin-left:8px;margin-right:8px}
-  .v2-login-card h2{font-size:25px!important;letter-spacing:2px!important}
-  .v2-login-card h2::before,.v2-login-card h2::after{content:"—"!important;margin:0 5px!important}
-  .timeline-head{padding:14px!important}
-  .timeline-title-group>p{margin-left:15px!important}
-  .timeline-instruction{gap:9px!important}
-  .timeline-tip-copy{gap:1px 8px!important}
+  #student-login #badgeDisplay{gap:12px!important;margin-left:6px}
+  #student-login #badgeDisplay .badge-icon{width:60px!important;height:60px!important}
+}
+@media(max-width:560px){
+  #student-login .pass-info .info-row:nth-child(2){flex-direction:column;align-items:flex-start;gap:8px}
+  #student-login .pass-info .info-row:nth-child(2) #badgeDisplay{margin-left:0!important}
 }

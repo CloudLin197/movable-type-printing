@@ -223,21 +223,6 @@
     }
     .user .mx-bubble { background: linear-gradient(145deg,#b89568,#9f794c); color: #fffaf0; border-bottom-right-radius:5px; }
     .bot .mx-bubble { background: #f5eadb; color: #3d2c1e; border: 1px solid #e3d2b9; border-bottom-left-radius:5px; }
-    .mx-original-text{
-      min-width:min(300px,72vw);
-      font-family:"KaiTi","STKaiti","Noto Serif SC",serif;
-      color:#3c291c;
-    }
-    .mx-original-title{
-      text-align:center;font-size:20px;font-weight:900;letter-spacing:4px;color:#5b3820;
-    }
-    .mx-original-author{
-      margin:3px 0 10px;text-align:center;font-size:13px;letter-spacing:2px;color:#8b6848;
-    }
-    .mx-original-text p{
-      margin:0 0 8px;text-indent:2em;line-height:1.95;letter-spacing:.35px;
-    }
-    .mx-original-text p:last-child{margin-bottom:0}
     .mx-msg.bot.is-collapsible{flex-direction:column;align-items:flex-start;gap:4px}
     .mx-msg.bot.is-collapsible .mx-bubble{position:relative;max-height:126px;overflow:hidden;transition:max-height .28s ease}
     .mx-msg.bot.is-collapsible:not(.expanded) .mx-bubble::after{
@@ -279,10 +264,14 @@
       color: #4e3620;
       cursor: pointer;
       transition: .18s;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      text-align:center;
+      white-space: normal;
+      overflow:visible;
+      text-overflow:clip;
+      text-align:left;
+      min-height:46px;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
     }
     .mx-chip:hover { background: #e8d6b9; border-color:#c9aa80; transform: translateY(-1px); }
     .mx-chip.is-secondary{display:none}
@@ -355,6 +344,10 @@
     .mx-input button:disabled { opacity:.42;cursor:not-allowed;transform:none; }
     .mx-voice-hint { font-weight:700; }
     .mx-socratic-tag { display:inline-flex;align-items:center;gap:6px;margin:0 0 7px;padding:4px 9px;border:1px solid #c7a46f;border-radius:999px;background:#f5ead6;color:#6b4726;font-size:12px;font-weight:900;letter-spacing:.3px; }
+    .mx-original-text{font-family:"Noto Serif SC","Songti SC",serif;line-height:1.95;text-align:left;}
+    .mx-original-title{text-align:center;font-size:20px;font-weight:900;letter-spacing:4px;color:#50341f;margin-bottom:2px;}
+    .mx-original-author{text-align:center;font-size:13px;color:#876649;margin-bottom:10px;}
+    .mx-original-text p{margin:0 0 10px;text-indent:2em;}
     .mx-socratic-progress { display:block;margin-top:8px;padding:7px 9px;border-left:4px solid #8f6a3f;border-radius:7px;background:#f8f1e6;color:#5c432d;font-size:13px;line-height:1.6; }
 
     @media (max-width: 620px) {
@@ -1309,18 +1302,14 @@
     {k:['你好','梦溪','你是谁'],a:'小生梦溪，沈括身边的小书童。我可解答《活板》的字词、翻译、断句、印刷史等问题，也陪你讨论活字之“活”。'}
   ];
   const quick = [
-    { label:'字词解释', question:'“字平如砥”中的“砥”是什么意思？' },
-    { label:'重点字音', question:'“炀、砥、镕、拂、贮”分别怎么读？' },
-    { label:'《活板》原文', question:'请给出《活板》完整原文。' },
-    { label:'为何不用木字', question:'为什么不用木头做活字？' },
-    { label:'语句翻译', question:'“更互用之，瞬息可就”怎么翻译？', secondary:true },
-    { label:'一词多义：就', question:'“持就火炀之”和“瞬息可就”中的“就”意思相同吗？', secondary:true },
-    { label:'“活”在哪里', question:'“活”体现在哪里？', secondary:true },
-    { label:'沈括是谁', question:'沈括是谁？', secondary:true },
-    { label:'《梦溪笔谈》', question:'《梦溪笔谈》是什么书？', secondary:true },
-    { label:'“数印”的“印”', question:'“数印”中的“印”是什么？', secondary:true },
-    { label:'两次用火区别', question:'“火烧令坚”和“持就火炀之”有什么不同？', secondary:true },
-    { label:'为何密布字印', question:'为什么要“密布字印”？', secondary:true }
+    { label:'“字平如砥”的“砥”什么意思？', question:'“字平如砥”的“砥”什么意思？' },
+    { label:'“炀”要怎么读？', question:'“炀”要怎么读？' },
+    { label:'请给出《活板》完整原文。', question:'请给出《活板》完整原文。' },
+    { label:'为什么不用木头做活字？', question:'为什么不用木头做活字？' },
+    { label:'“每一字皆有数印”的“印”指什么？', question:'“每一字皆有数印”的“印”指什么？', secondary:true },
+    { label:'“火烧令坚”和“持就火炀之”有什么不同？', question:'“火烧令坚”和“持就火炀之”有什么不同？', secondary:true },
+    { label:'为什么要“密布字印”？', question:'为什么要“密布字印”？', secondary:true },
+    { label:'《梦溪笔谈》是一部什么书？', question:'《梦溪笔谈》是一部什么书？', secondary:true }
   ];
 
   // 快捷问题必须有确定答案，不能再经过模糊关键词评分或联网兜底。
@@ -1334,6 +1323,8 @@
   }
 
   const PRESET_QA = new Map([
+    ['字平如砥的砥什么意思', '“砥”读 dǐ，本义是磨刀石。“字平如砥”是说排好并按压后的字印表面，平整得像磨刀石一样。'],
+    ['炀要怎么读', '“炀”读 yáng。在“持就火炀之”中，“炀”是烘烤的意思，指把排好字印的铁板靠近火烘烤。'],
     ['沈括是谁', '沈括（1031—1095），字存中，号梦溪丈人，北宋科学家、政治家。他在天文、数学、地理、物理、医学等方面都有研究，晚年整理成《梦溪笔谈》。《活板》正是他记录毕昇活字印刷术的文章。'],
     ['梦溪笔谈是什么书', '《梦溪笔谈》是北宋沈括晚年撰写的一部笔记体著作，内容涉及天文、数学、地理、物理、医药、工程和社会见闻等。《活板》选自其中的《技艺》篇，它保存了毕昇泥活字印刷术的重要史料。'],
     ['六道工序是什么', '依照课文原词，活字印刷的关键工序可概括为：制字 → 设板 → 布字 → 炀版、平版 → 印刷 → 拆版。制字是制作字印；设板是在铁板上覆盖黏合材料；布字是把字印密布在铁范内；炀版后用平板按压，使字平如砥；印刷时两板交替；拆版时再次加热并拂下字印。'],
@@ -1349,6 +1340,8 @@
     if (PRESET_QA.has(key)) return PRESET_QA.get(key);
     // 容纳学生对快捷问题的自然改写。
     if (/数印(?:中|里|里面)?的?印(?:是|指|表示)?什么/.test(key)) return PRESET_QA.get('数印中的印是什么');
+    if (/字平如砥.*砥.*(?:什么|意思|解释)/.test(key)) return PRESET_QA.get('字平如砥的砥什么意思');
+    if (/炀.*(?:怎么读|读什么|读音)/.test(key)) return PRESET_QA.get('炀要怎么读');
     return '';
   }
 
@@ -2418,32 +2411,7 @@
     '不以木为之者，木理有疏密，沾水则高下不平，兼与药相粘，不可取；不若燔土，用讫再火令药镕，以手拂之，其印自落，殊不沾污。',
     '昇死，其印为予群从所得，至今宝藏。'
   ];
-  function normalizeOriginalText(s){return String(s||'').replace(/[\s，。；：、“”‘’「」『』《》〈〉（）()？！!?]/g,'');}
-
-  function asksForFullHuobanOriginal(text){
-    const q=String(text||'').trim();
-    const compact=normalizeOriginalText(q);
-    if(!compact)return false;
-    if(/^(?:请)?(?:给|发|展示|显示|找出)?(?:我)?(?:看)?(?:一下)?(?:活板|课文)?(?:完整)?(?:原文|全文)$/.test(compact))return true;
-    if(/(?:活板|课文)(?:完整)?(?:原文|全文|全文内容|完整课文|完整内容)/.test(compact))return true;
-    if(/(?:完整|整篇)(?:的)?活板/.test(compact))return true;
-    if(/(?:背诵|朗读)(?:篇目)?活板(?:原文|全文)?/.test(compact))return true;
-    return false;
-  }
-
-  function huobanFullOriginalHtml(){
-    const history=HUOBAN_SENTENCES.slice(0,3).join('');
-    const process=HUOBAN_SENTENCES.slice(3,15).join('');
-    const ending=HUOBAN_SENTENCES[15];
-    return '<div class="mx-original-text" data-mx-original="full">'
-      +'<div class="mx-original-title">《活板》</div>'
-      +'<div class="mx-original-author">沈括</div>'
-      +'<p>'+history+'</p>'
-      +'<p>'+process+'</p>'
-      +'<p>'+ending+'</p>'
-      +'</div>';
-  }
-
+  function normalizeOriginalText(s){return String(s||'').replace(/[\s，。；：、“”‘’「」『』（）()？！!?]/g,'');}
   const ORIGINAL_TOPICS=[
     {p:/文中.*(?:制字|刻字).*?(?:语句|原文|句子)|(?:制字|刻字).*?(?:哪句|哪一句|原文)/,i:[3]},
     {p:/文中.*设板.*?(?:语句|原文|句子)|设板.*?(?:哪句|哪一句|原文)/,i:[4]},
@@ -2459,7 +2427,10 @@
   ];
   function originalTextAnswer(text){
     const q=String(text||'').trim();
-    if(asksForFullHuobanOriginal(q))return huobanFullOriginalHtml();
+    const fullOriginal=/(?:《?活板》?|课文).*(?:完整原文|原文全文|全文)|(?:完整原文|原文全文|全文).*(?:《?活板》?|课文)|^(?:请)?(?:给出|展示|提供|查看)?《?活板》?(?:的)?原文[。！？!?]*$/.test(q);
+    if(fullOriginal){
+      return '<div class="mx-original-text"><div class="mx-original-title">《活板》</div><div class="mx-original-author">沈括</div><p>'+HUOBAN_SENTENCES.slice(0,2).join('')+'</p><p>'+HUOBAN_SENTENCES.slice(2,15).join('')+'</p><p>'+HUOBAN_SENTENCES[15]+'</p></div>';
+    }
     for(const item of ORIGINAL_TOPICS){if(item.p.test(q))return '课本原文在这里：<strong>'+item.i.map(i=>HUOBAN_SENTENCES[i]).join('</strong><br><strong>')+'</strong>';}
     const nq=normalizeOriginalText(q);let found=-1,best=0;
     HUOBAN_SENTENCES.forEach((s,i)=>{const ns=normalizeOriginalText(s);let score=0;if(nq.includes(ns))score=ns.length;else if(ns.includes(nq)&&nq.length>=6)score=nq.length;else{for(let n=Math.min(18,ns.length);n>=7;n--){let hit=false;for(let k=0;k<=ns.length-n;k++){const seg=ns.slice(k,k+n);if(nq.includes(seg)){score=n;hit=true;break;}}if(hit)break;}}if(score>best){best=score;found=i;}});
@@ -2743,15 +2714,12 @@
 
     // 长答案默认收起，既保留完整内容，也避免一条回复占满整个窗口。
     if (who === 'bot' && plainText(msg).length > 150) {
-      const isFullOriginal = /data-mx-original=["']full["']/.test(msg || '');
       row.classList.add('is-collapsible');
-      const toggle = el('button', 'mx-expand-answer', isFullOriginal ? '展开完整原文' : '展开完整回答');
+      const toggle = el('button', 'mx-expand-answer', '展开完整回答');
       toggle.type = 'button';
       toggle.onclick = () => {
         const expanded = row.classList.toggle('expanded');
-        toggle.textContent = expanded
-          ? (isFullOriginal ? '收起原文' : '收起回答')
-          : (isFullOriginal ? '展开完整原文' : '展开完整回答');
+        toggle.textContent = expanded ? '收起回答' : '展开完整回答';
         if (!expanded) chat.scrollTop = Math.max(0, row.offsetTop - 18);
       };
       row.appendChild(toggle);
@@ -2779,7 +2747,7 @@
           <div class="mx-head-img"><img src="assets/mengxi-ip.png" alt="梦溪"></div>
           <div>
             <h3>沈括书童 · 梦溪</h3>
-            <span>字词 · 字音 · 原文 · 探究</span>
+            <span>字词 · 翻译 · 工序 · 探究</span>
           </div>
         </div>
         <button class="mx-close" type="button" title="关闭对话" aria-label="关闭对话">&times;</button>

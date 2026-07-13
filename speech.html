@@ -140,13 +140,13 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css?v=2.43">
-<script src="platform-v2.js?v=2.43"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.45">
+<script src="platform-v2.js?v=2.45"></script>
 </head>
 <body>
 <script>renderHero('speech.html');</script>
 
-<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🎙️ 活字解说馆</h1><span class="sub">非遗讲解员创作中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">欢迎来到第三站——非遗解说馆！</div><p style="line-height:1.9;font-size:17px">作为展馆的“小小讲解员”，你需要为数字展馆创作一段约150字的解说词，向参观者介绍活字印刷的奥秘。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📜 任务要求</div><table class="table task-requirements-table"><tr><th>要素</th><th>具体要求</th></tr><tr><td>工序还原</td><td>须还原活字印刷的主要流程，按先后顺序描述制字、设板、排版、炀板、印刷、拆板等关键工序；可用自己的话表达，不必逐字照抄课文。</td></tr><tr><td>“活”的阐释</td><td>三选一，至少阐释一个层次，并用具体工序或原文依据说清楚：①“技术之活”——字印可拆、可换、可重复使用；②“设计之活”——按需制字、两板更互、分类贮字；③“思维之活”——由整版固定转向单字模块组合。</td></tr><tr><td>历史评价</td><td>联系课文开头的“雕版印刷”，说明从整版雕刻到单字组合的突破，以及它对印刷技术发展和知识传播的重要意义。</td></tr></table><label>小组名称</label><input id="groupName" placeholder="例如：第一小组"><label>解说词内容</label><textarea id="speechInput" maxlength="300" style="min-height:170px" placeholder="请输入150字左右解说词"></textarea><div class="muted" id="wordCount" style="text-align:right">当前字数：0/300</div><button class="btn btn-primary" id="submitBtn">提交解说词</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback speech-feedback"></div></section><section class="panel"><div class="panel-title">🏆 优秀讲解员作品榜</div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
+<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🎙️ 活字解说馆</h1><span class="sub">非遗讲解员创作中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">第三站 · 非遗解说馆</div><p style="line-height:1.95;font-size:17px">请化身“小小讲解员”，为数字展馆撰写一段约150字的解说词，用你自己的声音向参观者传递活字印刷的构造之巧、排印之便与变革之深。一段灵动而精准的解说，将为你点亮“云端解说”徽章，也让更多人在你的文字里，看见非遗生生不息的光芒。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📜 任务要求</div><table class="table task-requirements-table"><tr><th>要素</th><th>具体要求</th></tr><tr><td>工序还原</td><td>须还原活字印刷的主要流程，按先后顺序描述制字、设板、排版、炀板、印刷、拆板等关键工序；可用自己的话表达，不必逐字照抄课文。</td></tr><tr><td>“活”的阐释</td><td>三选一，至少阐释一个层次，并用具体工序或原文依据说清楚：①“技术之活”——字印可拆、可换、可重复使用；②“设计之活”——按需制字、两板更互、分类贮字；③“思维之活”——由整版固定转向单字模块组合。</td></tr><tr><td>历史评价</td><td>联系课文开头的“雕版印刷”，说明从整版雕刻到单字组合的突破，以及它对印刷技术发展和知识传播的重要意义。</td></tr></table><label>小组名称</label><input id="groupName" placeholder="例如：第一小组"><label>解说词内容</label><textarea id="speechInput" maxlength="300" style="min-height:170px" placeholder="请输入150字左右解说词"></textarea><div class="muted" id="wordCount" style="text-align:right">当前字数：0/300</div><button class="btn btn-primary" id="submitBtn">提交解说词</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback speech-feedback"></div></section><section class="panel"><div class="panel-title">🏆 优秀讲解员作品榜</div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
 <script>
 startHero();
 
@@ -251,5 +251,5 @@ function renderStudentPass() {
 }
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.41"></script></body>
+<script src="mengxi-assistant.js?v=2.44"></script></body>
 </html>
