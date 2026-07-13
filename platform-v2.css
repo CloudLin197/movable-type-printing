@@ -23,3 +23,286 @@
 .thinking-star-mark{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:radial-gradient(circle at 35% 28%,#fff8b9 0 18%,#f1bd3d 46%,#a9680d 100%);border:2px solid #fff0a8;color:#fff9db;font-size:22px;line-height:1;text-shadow:0 1px 2px rgba(91,48,0,.65);box-shadow:0 0 0 2px #9f6825,0 4px 9px rgba(104,61,13,.28);animation:v2-thinking-star-in .45s ease both}
 .v2-thinking-star{display:inline-flex;align-items:center;gap:4px;margin-left:10px;padding:3px 9px;border-radius:14px;background:#fff0b8;border:1px solid #c88a23;color:#80500d;font-weight:800;white-space:nowrap}
 @keyframes v2-thinking-star-in{from{opacity:0;transform:scale(.55) rotate(-18deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+
+
+/* ===== V2.36：导航融合、未登录入口与研学步骤引导 ===== */
+.site-nav-shell{
+  border:0!important;
+  border-radius:0 0 16px 16px!important;
+  background:linear-gradient(180deg,rgba(34,22,15,.62),rgba(22,14,10,.84))!important;
+  backdrop-filter:blur(9px) saturate(.92)!important;
+  -webkit-backdrop-filter:blur(9px) saturate(.92)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  overflow:hidden!important;
+}
+.site-nav a{
+  border-right:1px solid rgba(255,255,255,.09)!important;
+  background:transparent!important;
+  color:rgba(255,244,224,.86)!important;
+  text-shadow:0 2px 5px rgba(0,0,0,.7)!important;
+}
+.site-nav a::after{display:none!important;}
+.site-nav a.active{
+  background:rgba(255,247,230,.16)!important;
+  color:#fffaf0!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),inset 0 -18px 30px rgba(255,255,255,.035)!important;
+}
+.site-nav a:hover,.site-nav a:focus-visible{
+  background:rgba(255,247,230,.22)!important;
+  color:#fff!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.11)!important;
+}
+.site-nav:hover a.active:not(:hover):not(:focus-visible){background:rgba(255,247,230,.12)!important;color:#fff7e8!important;box-shadow:none!important;}
+.nav-icon{border:0!important;background:rgba(255,255,255,.07)!important;color:#f6dfb8!important;box-shadow:none!important;}
+.v2-login-link{display:inline-flex;align-items:center;gap:7px;color:#70461f;font-weight:800;text-decoration:none;padding:5px 10px;border-radius:14px;background:#f4e5cf;border:1px dashed #b98e61;}
+.v2-login-link:hover,.v2-login-link:focus-visible{background:#ead1aa;outline:2px solid rgba(142,92,43,.24);outline-offset:2px;}
+.v2-login-prompt{cursor:pointer!important;transition:.18s ease!important;}
+.v2-login-prompt:hover,.v2-login-prompt:focus-visible{transform:translateY(-1px);filter:brightness(1.06);outline:2px solid rgba(255,241,205,.7);outline-offset:2px;}
+
+/* ===== V2.37：柔和导航、研学探展证弹窗与古朴步骤引导 ===== */
+.site-nav-shell{
+  background:linear-gradient(180deg,rgba(54,37,26,.70),rgba(29,19,14,.82))!important;
+  box-shadow:0 7px 20px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.065)!important;
+}
+.site-nav a{
+  color:rgba(255,246,231,.80)!important;
+  border-right-color:rgba(255,255,255,.065)!important;
+  transition:background .24s ease,color .24s ease,opacity .24s ease,transform .24s ease!important;
+}
+.site-nav a.active{
+  background:rgba(244,225,193,.105)!important;
+  color:#fff8ea!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.055)!important;
+}
+.site-nav a:hover,.site-nav a:focus-visible{
+  background:linear-gradient(180deg,rgba(255,244,224,.26),rgba(220,179,123,.13))!important;
+  color:#fffdf7!important;
+  transform:translateY(-1px)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 4px 12px rgba(0,0,0,.12)!important;
+}
+.site-nav:hover a.active:not(:hover):not(:focus-visible){
+  background:rgba(19,12,9,.20)!important;
+  color:rgba(255,241,218,.61)!important;
+  opacity:.78!important;
+  box-shadow:inset 0 0 16px rgba(0,0,0,.12)!important;
+}
+.nav-icon{background:rgba(255,255,255,.055)!important;color:rgba(246,223,184,.88)!important;transition:.24s ease!important}
+.site-nav a:hover .nav-icon,.site-nav a:focus-visible .nav-icon{background:rgba(255,250,239,.15)!important;color:#fff2d5!important}
+.v2-login-link{font-family:inherit;cursor:pointer}
+body.v2-modal-open{overflow:hidden!important}
+.v2-login-modal{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:22px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s ease}
+.v2-login-modal.open{opacity:1;visibility:visible;pointer-events:auto}
+.v2-login-backdrop{position:absolute;inset:0;background:rgba(30,19,12,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.v2-login-card{position:relative;width:min(540px,100%);padding:30px 30px 24px;border-radius:28px;border:1px solid #c9a977;background:
+linear-gradient(rgba(255,250,240,.96),rgba(245,232,211,.97)),
+repeating-linear-gradient(0deg,rgba(118,79,40,.025) 0 1px,transparent 1px 5px);box-shadow:0 28px 80px rgba(20,10,4,.38),inset 0 0 0 5px rgba(255,255,255,.33);color:#3f2a1c;transform:translateY(14px) scale(.97);transition:transform .24s ease}
+.v2-login-modal.open .v2-login-card{transform:translateY(0) scale(1)}
+.v2-login-card::before,.v2-login-card::after{content:"";position:absolute;top:18px;bottom:18px;width:3px;border-radius:3px;background:linear-gradient(180deg,transparent,#a87842 18%,#a87842 82%,transparent);opacity:.55}
+.v2-login-card::before{left:14px}.v2-login-card::after{right:14px}
+.v2-login-close{position:absolute;right:18px;top:14px;width:36px;height:36px;border:0;border-radius:50%;background:#efe0c8;color:#674120;font:700 25px/1 Arial;cursor:pointer;transition:.2s}
+.v2-login-close:hover{background:#dec39c;transform:rotate(6deg)}
+.v2-pass-kicker{text-align:center;color:#87603c;font-size:15px;letter-spacing:2px;margin-bottom:5px}
+.v2-login-card h2{text-align:center;color:#5f381c;font-size:32px;letter-spacing:5px;margin:0 0 8px}
+.v2-login-card h2::before,.v2-login-card h2::after{content:"—";margin:0 8px;color:#b1814f;font-weight:400}
+.v2-login-lead{text-align:center;color:#76583e;line-height:1.7;margin:0 0 18px}
+.v2-login-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.v2-login-grid label{display:block;margin:0;color:#5a3a22;font-weight:800;letter-spacing:.5px}
+.v2-login-grid input{margin-top:7px;width:100%;border:1px solid #cdb18b;border-radius:15px;padding:12px 13px;background:#fffaf2;color:#402a1a;font:16px/1.4 inherit;outline:none;box-shadow:inset 0 1px 3px rgba(91,55,25,.06)}
+.v2-login-grid input:focus{border-color:#9e6c38;box-shadow:0 0 0 3px rgba(158,108,56,.13)}
+.v2-login-full{grid-column:1/-1}
+.v2-login-pass{margin:16px 0 0;padding:12px 15px;border-radius:15px;background:#ead9bc;border:1px dashed #b58b5d;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#6d4a2c}
+.v2-login-pass strong{color:#4b2e18;letter-spacing:1px}
+.v2-login-msg{min-height:25px;margin:9px 0 2px;text-align:center;font-weight:800;line-height:1.5}.v2-login-msg.error{color:#a94634}.v2-login-msg.success{color:#527447}
+.v2-login-submit{width:100%;border:0;border-radius:22px;padding:12px 18px;background:linear-gradient(135deg,#9d6837,#6f431f);color:#fff9ed;font:800 17px/1.4 inherit;letter-spacing:1px;cursor:pointer;box-shadow:0 5px 0 #4b2c16,0 10px 20px rgba(72,41,18,.18);transition:.18s}
+.v2-login-submit:hover{transform:translateY(-1px);filter:brightness(1.05)}.v2-login-submit:active{transform:translateY(4px);box-shadow:0 1px 0 #4b2c16}
+.v2-login-note{text-align:center;margin:13px 0 0;color:#8a7058;font-size:13px}
+@media(max-width:560px){.v2-login-card{padding:27px 22px 21px;border-radius:22px}.v2-login-grid{grid-template-columns:1fr}.v2-login-full{grid-column:auto}.v2-login-card h2{font-size:27px;letter-spacing:3px}.v2-login-pass{align-items:flex-start;flex-direction:column}}
+
+/* 研学步骤：仅用木色、宣纸色和铜色，去除绿色完成态 */
+.journey-guide{gap:15px!important}
+.journey-step{border:1px solid #c8a77b!important;border-radius:18px!important;background:linear-gradient(160deg,#fffaf0 0%,#efe0c6 100%)!important;box-shadow:0 5px 0 #c7aa82,0 10px 22px rgba(72,45,24,.10)!important;overflow:visible!important}
+.journey-step::before{content:"";position:absolute;inset:5px;border:1px solid rgba(125,83,41,.13);border-radius:13px;pointer-events:none}
+.journey-step:not(:last-child)::after{color:#9a7045!important}
+.journey-step .journey-no{background:linear-gradient(145deg,#8d5c2d,#67401e)!important;color:#fff5df!important;box-shadow:0 3px 0 #4e3019!important;border:1px solid rgba(255,235,195,.35)}
+.journey-step .journey-icon{width:54px;height:54px;margin:10px auto!important;border-radius:50%;display:flex!important;align-items:center;justify-content:center;font-size:25px!important;font-weight:900;color:#70461f;background:radial-gradient(circle at 35% 30%,#fff6df,#e0c397 68%,#b28653);border:2px solid #9a6c39;box-shadow:inset 0 0 0 3px rgba(255,250,235,.5),0 4px 10px rgba(80,48,23,.16)}
+.journey-step h3{color:#4d2f1a!important;letter-spacing:1px}.journey-step p{color:#70553b!important}
+.journey-step button{background:linear-gradient(135deg,#8d5b2c,#6b401e)!important;color:#fff8e9!important;box-shadow:0 3px 0 #4e2c16!important;transition:.18s!important}
+.journey-step button:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.journey-step.is-active{border-color:#8d5c2d!important;background:linear-gradient(160deg,#fff8e7,#e6cda7)!important;box-shadow:0 6px 0 #a97945,0 12px 24px rgba(75,43,20,.16)!important}
+.journey-step.is-done{background:linear-gradient(160deg,#f8edd7,#e3c69a)!important;border-color:#a67843!important;box-shadow:0 5px 0 #b58a57,0 10px 20px rgba(73,45,23,.12)!important}
+.journey-step.is-done .journey-no{background:linear-gradient(145deg,#a87842,#70431f)!important}
+.journey-step.is-done .journey-no::after{content:"✓";font-size:16px;margin-left:2px}
+.journey-step.is-locked{filter:sepia(.22) grayscale(.25)!important;opacity:.62!important;background:linear-gradient(160deg,#f2eadc,#ddd0bd)!important}
+.speech-feedback{margin-top:14px!important;line-height:1.75!important}
+.speech-feedback.error{padding:14px 16px;border-radius:16px;background:#fff2e6;border:1px solid #d8a77a;color:#8e3e2e}
+.speech-issue-copy{font-weight:800}
+.speech-mengxi-btn{margin-top:10px!important;background:linear-gradient(135deg,#8f5b2c,#6c421f)!important;color:#fff8e9!important;border-color:#70451f!important;box-shadow:0 4px 0 #4f2e17!important}
+/* 徽章未解锁时明确呈现锁定态，完成对应任务后才点亮 */
+.badge-icon{width:31px!important;height:31px!important;display:inline-flex!important;align-items:center;justify-content:center;position:relative;border-radius:50%;overflow:visible}
+.badge-icon img{width:100%!important;height:100%!important;object-fit:contain!important}
+.badge-icon:not(.unlocked){filter:grayscale(1) sepia(.15)!important;opacity:.22!important}
+.badge-icon:not(.unlocked)::after{content:"";position:absolute;inset:-3px;border:1px dashed rgba(255,236,203,.42);border-radius:50%}
+.pass-badge-icon:not(.unlocked) img{filter:grayscale(1) sepia(.18)!important;opacity:.20!important}
+
+
+/* ===== V2.41：弱化帮助入口、首页大徽章与解锁浮层 ===== */
+.help-button{background:linear-gradient(180deg,rgba(56,39,28,.72),rgba(35,23,17,.78))!important;border-color:rgba(245,222,185,.22)!important;color:rgba(255,245,228,.84)!important;box-shadow:0 4px 12px rgba(0,0,0,.20)!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;opacity:.86!important}
+.help-button .help-q{border-color:rgba(255,237,205,.48)!important;background:rgba(255,250,240,.08)!important;color:#f2d8ad!important}
+.help-button:hover,.help-button:focus-visible{opacity:1!important;background:linear-gradient(180deg,rgba(72,49,33,.82),rgba(43,28,20,.88))!important;filter:none!important;outline-color:rgba(231,198,143,.55)!important}
+#student-login #badgeDisplay{gap:14px!important;margin-left:10px}
+#student-login #badgeDisplay .badge-icon{width:56px!important;height:56px!important;padding:5px!important;border:1px solid rgba(246,222,177,.35)!important;background:radial-gradient(circle,rgba(255,248,230,.16),rgba(255,248,230,.035))!important;box-shadow:inset 0 0 0 3px rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.18)!important}
+#student-login #badgeDisplay .badge-icon:not(.unlocked){opacity:.34!important}
+#student-login #badgeDisplay .badge-icon.unlocked{opacity:1!important;filter:none!important;transform:translateY(-1px);box-shadow:0 0 0 2px rgba(239,200,123,.26),0 7px 18px rgba(0,0,0,.22),0 0 18px rgba(224,170,72,.34)!important}
+.v2-badge-celebration{position:fixed;inset:0;z-index:120000;display:grid;place-items:center;padding:20px;background:rgba(27,17,11,.38);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .25s ease,visibility .25s ease;overflow:hidden}
+.v2-badge-celebration.show{opacity:1;visibility:visible}.v2-badge-glow{position:absolute;width:min(680px,90vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(244,202,111,.28),rgba(244,202,111,.08) 35%,transparent 68%);animation:v2BadgeGlow 2.4s ease-in-out infinite}
+.v2-badge-award-card{position:relative;width:min(430px,100%);padding:29px 28px 25px;border-radius:30px;border:1px solid #d4ae70;background:linear-gradient(160deg,rgba(255,252,243,.98),rgba(239,222,192,.98));box-shadow:0 30px 85px rgba(28,13,4,.43),inset 0 0 0 5px rgba(255,255,255,.42);text-align:center;color:#4d301b;transform:translateY(35px) scale(.72);opacity:0;transition:transform .46s cubic-bezier(.18,.9,.27,1.2),opacity .3s ease;overflow:hidden}
+.v2-badge-celebration.show .v2-badge-award-card{transform:translateY(0) scale(1);opacity:1}.v2-badge-award-card:before{content:"";position:absolute;inset:9px;border:1px solid rgba(145,96,45,.18);border-radius:22px;pointer-events:none}.v2-badge-award-close{position:absolute;z-index:3;top:13px;right:15px;width:34px;height:34px;border:0;border-radius:50%;background:rgba(117,79,43,.10);color:#77502d;font:24px/1 Arial;cursor:pointer}.v2-badge-award-kicker{position:relative;z-index:2;color:#987044;font-size:13px;font-weight:800;letter-spacing:3px}.v2-badge-award-image{position:relative;z-index:2;width:170px;height:170px;margin:13px auto 6px;display:grid;place-items:center}.v2-badge-award-image img{position:relative;z-index:2;width:126px;height:126px;object-fit:contain;filter:drop-shadow(0 12px 15px rgba(78,42,16,.26));animation:v2BadgeFloat 2s ease-in-out infinite}.v2-badge-rays{position:absolute;inset:4px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(193,132,45,.28) 0 8deg,transparent 8deg 18deg);mask:radial-gradient(circle,transparent 0 38%,#000 39% 68%,transparent 69%);-webkit-mask:radial-gradient(circle,transparent 0 38%,#000 39% 68%,transparent 69%);animation:v2BadgeSpin 14s linear infinite}.v2-badge-award-card h2{position:relative;z-index:2;margin:0;color:#91632f;font-size:20px;letter-spacing:4px}.v2-badge-award-card h3{position:relative;z-index:2;margin:6px 0 7px;color:#4f2e17;font-size:28px;letter-spacing:2px}.v2-badge-award-card p{position:relative;z-index:2;margin:0 auto 18px;max-width:310px;color:#76583b;line-height:1.75}.v2-badge-award-ok{position:relative;z-index:2;border:0;border-radius:999px;padding:10px 28px;background:linear-gradient(135deg,#95602f,#6c401d);color:#fff9ec;font:800 16px/1.4 inherit;letter-spacing:1px;cursor:pointer;box-shadow:0 4px 0 #4d2b15}.v2-badge-award-ok:active{transform:translateY(3px);box-shadow:0 1px 0 #4d2b15}
+@keyframes v2BadgeFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.025)}}@keyframes v2BadgeSpin{to{transform:rotate(360deg)}}@keyframes v2BadgeGlow{50%{transform:scale(1.08);opacity:.72}}
+@media(max-width:560px){#student-login #badgeDisplay .badge-icon{width:49px!important;height:49px!important}#student-login #badgeDisplay{gap:9px!important}.v2-badge-award-card{padding:25px 20px 22px}.v2-badge-award-image{width:145px;height:145px}.v2-badge-award-image img{width:108px;height:108px}.v2-badge-award-card h3{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.v2-badge-glow,.v2-badge-award-image img,.v2-badge-rays{animation:none!important}.v2-badge-award-card{transition:opacity .15s ease!important}}
+
+
+/* ===== V2.42：修正首页帮助、探展证弹窗、时间轴和徽章比例 ===== */
+/* 首页使用帮助：与背景融合，不再使用亮白按钮 */
+.home-help-button{
+  background:linear-gradient(180deg,rgba(48,33,24,.62),rgba(28,18,13,.72))!important;
+  border-color:rgba(255,235,204,.22)!important;
+  color:rgba(255,246,231,.88)!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.20)!important;
+  backdrop-filter:blur(7px)!important;
+  -webkit-backdrop-filter:blur(7px)!important;
+  opacity:.9!important;
+}
+.home-help-button .help-q{
+  border-color:rgba(255,237,205,.48)!important;
+  background:rgba(255,250,240,.08)!important;
+  color:#f2d8ad!important;
+}
+.home-help-button:hover,.home-help-button:focus-visible{
+  opacity:1!important;
+  background:linear-gradient(180deg,rgba(64,43,29,.76),rgba(37,24,17,.82))!important;
+  color:#fffaf1!important;
+  filter:none!important;
+  outline-color:rgba(238,205,151,.55)!important;
+}
+
+/* 登录页大徽章：圆圈与徽章成为一个整体，图案真正占满 */
+#student-login #badgeDisplay{gap:12px!important;margin-left:10px}
+#student-login #badgeDisplay .badge-icon{
+  width:58px!important;height:58px!important;padding:0!important;
+  overflow:hidden!important;border-radius:50%!important;
+  border:1px solid rgba(246,222,177,.38)!important;
+  background:radial-gradient(circle at 36% 30%,rgba(255,250,235,.20),rgba(255,248,230,.045))!important;
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.18)!important;
+}
+#student-login #badgeDisplay .badge-icon img{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+  transform:scale(1.38)!important;transform-origin:center!important;
+  display:block!important;
+}
+#student-login #badgeDisplay .badge-icon:not(.unlocked){opacity:.34!important}
+#student-login #badgeDisplay .badge-icon.unlocked{
+  opacity:1!important;filter:none!important;transform:translateY(-1px)!important;
+  box-shadow:0 0 0 2px rgba(239,200,123,.28),0 7px 18px rgba(0,0,0,.22),0 0 18px rgba(224,170,72,.36)!important;
+}
+
+/* 其他展馆的登录弹窗：复用首页探展证的深色玻璃质感 */
+.v2-login-backdrop{
+  background:rgba(20,12,8,.70)!important;
+  backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;
+}
+.v2-login-card{
+  width:min(510px,100%)!important;padding:27px 28px 23px!important;
+  border-radius:32px!important;
+  border:1px solid rgba(255,239,207,.25)!important;
+  background:
+    linear-gradient(145deg,rgba(66,45,30,.94),rgba(38,25,18,.96)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.022) 0 1px,transparent 1px 5px)!important;
+  color:#fff7ed!important;
+  box-shadow:0 28px 80px rgba(10,5,2,.52),inset 0 1px 0 rgba(255,255,255,.12),inset 0 0 0 5px rgba(255,246,225,.025)!important;
+}
+.v2-login-card::before,.v2-login-card::after{
+  top:24px!important;bottom:24px!important;width:1px!important;
+  background:linear-gradient(180deg,transparent,rgba(231,194,137,.55) 20%,rgba(231,194,137,.55) 80%,transparent)!important;
+}
+.v2-login-close{
+  right:16px!important;top:14px!important;width:34px!important;height:34px!important;
+  background:rgba(255,255,255,.08)!important;color:#f2d6aa!important;
+  border:1px solid rgba(255,239,210,.16)!important;
+}
+.v2-login-close:hover{background:rgba(255,255,255,.16)!important;color:#fff8ec!important}
+.v2-login-pass-header{text-align:center;margin:0 20px 14px}
+.v2-pass-kicker{color:#f1d6a9!important;font-size:16px!important;letter-spacing:2px!important;margin-bottom:5px!important}
+.v2-login-card h2{color:#f7e4be!important;font-size:30px!important;letter-spacing:4px!important;margin:5px 0 2px!important}
+.v2-login-card h2::before,.v2-login-card h2::after{content:"──"!important;color:rgba(235,202,149,.72)!important;margin:0 7px!important}
+.v2-login-pass-en{font:12px/1.4 Georgia,serif;letter-spacing:3px;text-transform:uppercase;color:rgba(246,226,194,.55)}
+.v2-login-lead{color:rgba(255,241,218,.76)!important;line-height:1.65!important;margin:0 0 16px!important;font-size:14px!important}
+.v2-login-grid{gap:13px!important}
+.v2-login-grid label{color:#f5dfb9!important;font-weight:800!important;letter-spacing:1px!important}
+.v2-login-grid input{
+  border:1px solid rgba(255,255,255,.22)!important;border-radius:20px!important;
+  padding:12px 14px!important;background:rgba(255,255,255,.11)!important;
+  color:#fffaf1!important;-webkit-text-fill-color:#fffaf1!important;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.08)!important;
+}
+.v2-login-grid input::placeholder{color:rgba(255,247,237,.55)!important;-webkit-text-fill-color:rgba(255,247,237,.55)!important}
+.v2-login-grid input:focus{border-color:rgba(245,222,181,.76)!important;background:rgba(255,255,255,.16)!important;box-shadow:0 0 0 4px rgba(245,222,181,.12)!important}
+.v2-login-pass{
+  margin:15px 0 0!important;padding:11px 14px!important;border-radius:18px!important;
+  background:rgba(255,255,255,.075)!important;border:1px solid rgba(255,255,255,.14)!important;
+  display:block!important;color:rgba(245,225,193,.74)!important;
+}
+.v2-login-pass-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:32px}
+.v2-login-pass-row+.v2-login-pass-row{margin-top:7px;padding-top:8px;border-top:1px solid rgba(255,255,255,.09)}
+.v2-login-pass strong{color:#f7e2bd!important;letter-spacing:1px!important}
+.v2-login-badge-preview{display:flex;align-items:center;gap:7px}
+.v2-login-badge-preview i{
+  width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;overflow:hidden;border:1px solid rgba(255,232,191,.25);
+  background:rgba(255,255,255,.07);opacity:.40;filter:grayscale(1);
+}
+.v2-login-badge-preview img{width:100%;height:100%;object-fit:contain;transform:scale(1.36);display:block}
+.v2-login-msg{color:#f0d9b2!important}.v2-login-msg.error{color:#ffb8aa!important}.v2-login-msg.success{color:#d7efbd!important}
+.v2-login-submit{
+  border-radius:28px!important;padding:12px 18px!important;
+  background:linear-gradient(135deg,#c29a68,#8b6549)!important;
+  color:#fff!important;box-shadow:0 5px 0 #4d3422,0 12px 25px rgba(0,0,0,.25)!important;
+}
+.v2-login-note{color:rgba(255,238,213,.52)!important;margin-top:12px!important}
+
+/* 时间轴标题与操作提示：始终横向阅读，不再挤成竖排 */
+.timeline-head{
+  display:block!important;margin-bottom:12px!important;padding:16px 17px!important;
+  border-radius:20px!important;background:linear-gradient(145deg,#fffaf1,#efe0c9)!important;
+}
+.timeline-title-group{display:block!important;min-width:0!important}
+.timeline-title-group h3{display:flex!important;align-items:center!important;gap:10px!important;margin:0!important;line-height:1.35!important}
+.timeline-title-group h3::before{flex:0 0 5px!important}
+.timeline-title-group>p{margin:5px 0 0 15px!important;color:#896847!important;font-size:13px!important;letter-spacing:.7px!important;line-height:1.5!important}
+.timeline-instruction{
+  display:flex!important;align-items:center!important;width:100%!important;min-width:0!important;
+  margin:13px 0 0!important;padding:9px 11px!important;border-radius:15px!important;
+  background:rgba(255,252,245,.80)!important;border:1px solid #d7bd98!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.78)!important;text-align:left!important;
+}
+.timeline-instruction::before{display:none!important;content:none!important}
+.timeline-gesture{
+  width:32px;height:32px;flex:0 0 32px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:50%;background:#91643b;color:#fff8ec;font-size:17px;box-shadow:0 3px 0 #68431f;
+}
+.timeline-tip-copy{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:3px 10px!important;min-width:0!important;line-height:1.45!important}
+.timeline-tip-copy b,.timeline-tip-copy em{white-space:nowrap!important;writing-mode:horizontal-tb!important;word-break:keep-all!important}
+.timeline-tip-copy b{font-size:14px!important;color:#5d3b21!important;letter-spacing:.5px!important}
+.timeline-tip-copy em{font-size:12px!important;font-weight:500!important;font-style:normal!important;color:#8a6d50!important}
+.timeline-arrow{margin-left:auto!important;flex:0 0 26px!important;width:26px!important;height:26px!important;background:#ead2ae!important;color:#75491f!important}
+@media(max-width:560px){
+  #student-login #badgeDisplay .badge-icon{width:52px!important;height:52px!important}
+  .v2-login-card{padding:25px 20px 21px!important;border-radius:25px!important}
+  .v2-login-pass-header{margin-left:8px;margin-right:8px}
+  .v2-login-card h2{font-size:25px!important;letter-spacing:2px!important}
+  .v2-login-card h2::before,.v2-login-card h2::after{content:"—"!important;margin:0 5px!important}
+  .timeline-head{padding:14px!important}
+  .timeline-title-group>p{margin-left:15px!important}
+  .timeline-instruction{gap:9px!important}
+  .timeline-tip-copy{gap:1px 8px!important}
+}

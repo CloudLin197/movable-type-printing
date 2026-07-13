@@ -141,22 +141,24 @@
 
     .mengxi-panel {
       position: fixed;
-      bottom: 208px;
+      bottom: 196px;
       right: 24px;
-      width: 420px;
-      max-height: min(650px,calc(100vh - 230px));
-      background: #fef9f0;
-      border-radius: 24px;
-      box-shadow: 0 20px 45px rgba(60,30,10,.34);
-      border: 1px solid #dac29c;
+      width: 388px;
+      max-height: min(610px,calc(100vh - 218px));
+      background:
+        radial-gradient(circle at 100% 0,rgba(190,148,90,.10),transparent 34%),
+        #fffaf2;
+      border-radius: 22px;
+      box-shadow: 0 22px 58px rgba(53,28,10,.30);
+      border: 1px solid rgba(184,148,99,.78);
       z-index: 9999;
       display: flex;
       flex-direction: column;
       overflow: hidden;
       opacity: 0;
       pointer-events: none;
-      transform: translateY(20px) scale(.95);
-      transition: .3s cubic-bezier(.18,.89,.32,1.15);
+      transform: translateY(18px) scale(.96);
+      transition: .28s cubic-bezier(.18,.89,.32,1.12);
       font-family: "KaiTi","Noto Serif SC",serif;
     }
     .mengxi-panel.open { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
@@ -164,223 +166,224 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 16px;
-      background: linear-gradient(180deg,#e7d7b6,#d7bf93);
-      border-bottom: 1px solid #c9aa7a;
+      padding: 11px 12px 11px 14px;
+      background:
+        linear-gradient(135deg,rgba(255,251,241,.40),transparent 54%),
+        linear-gradient(180deg,#dfc99f,#cfad77);
+      border-bottom: 1px solid rgba(152,109,60,.50);
     }
-    .mx-title-wrap { display: flex; align-items: center; gap: 12px; }
+    .mx-title-wrap { display: flex; align-items: center; gap: 10px; min-width:0; }
     .mx-head-img {
-      width: 50px;
-      height: 50px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       overflow: hidden;
       background: #f5efe6;
-      border: 2px solid #b88750;
+      border: 2px solid rgba(139,91,45,.72);
+      box-shadow:0 3px 9px rgba(79,44,18,.16);
       flex-shrink: 0;
     }
     .mx-head-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
-    .mx-title-wrap h3 { font-size: 19px; color: #4e3620; margin: 0; letter-spacing: 2px; }
-    .mx-title-wrap span { font-size: 13px; color: #725237; display: block; margin-top: 2px; }
-    .mx-close { background: none; border: none; font-size: 28px; color: #6f4e2e; cursor: pointer; padding: 0 5px; line-height: 1; }
+    .mx-title-wrap h3 { font-size: 18px; color: #432b19; margin: 0; letter-spacing: 1.5px; line-height:1.2; }
+    .mx-title-wrap span { font-family:"Noto Serif SC","Songti SC",serif;font-size: 11px; color: #6f4c2f; display: block; margin-top: 3px; letter-spacing:.25px; }
+    .mx-close {
+      width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;
+      background: rgba(255,249,236,.34); border: 1px solid rgba(112,72,36,.18); border-radius:50%;
+      font-size: 24px; color: #654323; cursor: pointer; padding: 0; line-height: 1;
+      transition:.18s ease;
+    }
+    .mx-close:hover{background:rgba(255,249,236,.66);transform:rotate(4deg)}
     .mx-chat {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
-      background: #fffbf5;
+      padding: 14px 14px 10px;
+      background:
+        linear-gradient(rgba(255,252,246,.92),rgba(255,251,243,.92)),
+        repeating-linear-gradient(0deg,rgba(116,78,40,.025) 0 1px,transparent 1px 22px);
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      min-height: 220px;
-      max-height: 320px;
+      gap: 9px;
+      min-height: 190px;
+      max-height: 314px;
+      scrollbar-width:thin;
+      scrollbar-color:#cfb58f transparent;
     }
+    .mx-chat::-webkit-scrollbar{width:6px}.mx-chat::-webkit-scrollbar-thumb{background:#cfb58f;border-radius:10px}
     .mx-msg { display: flex; }
     .mx-msg.user { justify-content: flex-end; }
     .mx-msg.bot { justify-content: flex-start; }
     .mx-bubble {
-      max-width: 84%;
-      padding: 11px 14px;
-      border-radius: 18px;
-      font-size: 15px;
-      line-height: 1.65;
-      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+      max-width: 88%;
+      padding: 9px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.58;
+      box-shadow: 0 2px 7px rgba(72,42,20,.06);
       word-break: break-word;
     }
-    .user .mx-bubble { background: #d3c1a1; color: #2e2416; }
-    .bot .mx-bubble { background: #f2e8d9; color: #3e2e1f; border: 1px solid #e3d3b8; }
-    .mx-chips { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 16px 9px; background:#fffbf5; }
+    .user .mx-bubble { background: linear-gradient(145deg,#b89568,#9f794c); color: #fffaf0; border-bottom-right-radius:5px; }
+    .bot .mx-bubble { background: #f5eadb; color: #3d2c1e; border: 1px solid #e3d2b9; border-bottom-left-radius:5px; }
+    .mx-original-text{
+      min-width:min(300px,72vw);
+      font-family:"KaiTi","STKaiti","Noto Serif SC",serif;
+      color:#3c291c;
+    }
+    .mx-original-title{
+      text-align:center;font-size:20px;font-weight:900;letter-spacing:4px;color:#5b3820;
+    }
+    .mx-original-author{
+      margin:3px 0 10px;text-align:center;font-size:13px;letter-spacing:2px;color:#8b6848;
+    }
+    .mx-original-text p{
+      margin:0 0 8px;text-indent:2em;line-height:1.95;letter-spacing:.35px;
+    }
+    .mx-original-text p:last-child{margin-bottom:0}
+    .mx-msg.bot.is-collapsible{flex-direction:column;align-items:flex-start;gap:4px}
+    .mx-msg.bot.is-collapsible .mx-bubble{position:relative;max-height:126px;overflow:hidden;transition:max-height .28s ease}
+    .mx-msg.bot.is-collapsible:not(.expanded) .mx-bubble::after{
+      content:"";position:absolute;left:0;right:0;bottom:0;height:42px;
+      background:linear-gradient(180deg,rgba(245,234,219,0),#f5eadb 78%);pointer-events:none;
+    }
+    .mx-msg.bot.is-collapsible.expanded .mx-bubble{max-height:1600px}
+    .mx-expand-answer{
+      border:0;background:transparent;color:#8a6038;font-family:inherit;font-size:12px;font-weight:700;
+      cursor:pointer;padding:2px 7px;margin-left:5px;border-radius:10px;
+    }
+    .mx-expand-answer:hover{background:#f1e3cf;color:#63401f}
+    .mx-quickbar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:9px 14px 4px;background:#fffaf3;border-top:1px solid rgba(221,204,180,.72);
+      color:#795738;font-family:"Noto Serif SC","Songti SC",serif;font-size:12px;font-weight:700;
+    }
+    .mx-quick-more{
+      border:0;background:transparent;color:#91683f;cursor:pointer;font-family:inherit;font-size:12px;
+      padding:3px 7px;border-radius:10px;
+    }
+    .mx-quick-more:hover{background:#f0e3d1}
+    .mx-chips {
+      display: grid;
+      grid-template-columns: repeat(2,minmax(0,1fr));
+      gap: 6px;
+      padding: 4px 14px 10px;
+      background:#fffaf3;
+    }
     .mx-chip {
-      background: #f3ede5;
-      border: 1px solid #dacbbc;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 13px;
+      min-width:0;
+      background: #f3eadf;
+      border: 1px solid #dfcdb5;
+      border-radius: 13px;
+      padding: 7px 9px;
+      font-size: 12px;
+      line-height:1.3;
       font-family: inherit;
       color: #4e3620;
       cursor: pointer;
-      transition: .2s;
+      transition: .18s;
       white-space: nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-align:center;
     }
-    .mx-chip:hover { background: #e0cfaa; transform: translateY(-1px); }
+    .mx-chip:hover { background: #e8d6b9; border-color:#c9aa80; transform: translateY(-1px); }
+    .mx-chip.is-secondary{display:none}
+    .mx-chips.expanded .mx-chip.is-secondary{display:block}
     .mx-voice-status {
-      min-height: 35px;
-      padding: 7px 16px;
+      min-height: 33px;
+      padding: 7px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       color: #715236;
-      background: #f6eddf;
+      background: #f4eadc;
       border-top: 1px solid #eadbc5;
-      font-size: 13px;
-      line-height: 1.4;
-    }
-    .mx-voice-status::before {
-      content: "●";
-      color: #9b7a55;
       font-size: 12px;
+      line-height: 1.35;
+      transition:.2s ease;
     }
+    .mx-voice-status.is-hidden{display:none}
+    .mx-voice-status::before { content: "●"; color: #9b7a55; font-size: 10px; }
     .mx-voice-status.listening::before { color: #b83f32; animation: mx-listen-blink .8s ease-in-out infinite; }
     @keyframes mx-listen-blink { 50% { opacity: .25; transform: scale(1.35); } }
 
     .mx-guide-progress {
-      margin-top: 10px;
-      padding-top: 8px;
+      margin-top: 9px;
+      padding-top: 7px;
       border-top: 1px dashed rgba(155,122,85,.42);
       font-family: "Noto Serif SC","Songti SC",serif;
     }
-    .mx-guide-label {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      color:#7b5a39;
-      font-size:12px;
-      line-height:1.4;
-      margin-bottom:5px;
-    }
+    .mx-guide-label { display:flex;align-items:center;justify-content:space-between;gap:10px;color:#7b5a39;font-size:12px;line-height:1.4;margin-bottom:5px; }
     .mx-guide-label b { color:#5f4329; font-size:12px; }
-    .mx-guide-track {
-      height:7px;
-      overflow:hidden;
-      border-radius:999px;
-      background:#e6d7c1;
-      box-shadow:inset 0 1px 2px rgba(69,40,20,.12);
-    }
-    .mx-guide-track i {
-      display:block;
-      height:100%;
-      border-radius:inherit;
-      background:linear-gradient(90deg,#9d7955,#c49a62);
-      transition:width .35s ease;
-    }
+    .mx-guide-track { height:7px;overflow:hidden;border-radius:999px;background:#e6d7c1;box-shadow:inset 0 1px 2px rgba(69,40,20,.12); }
+    .mx-guide-track i { display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#9d7955,#c49a62);transition:width .35s ease; }
     .mx-input {
       display: grid;
-      grid-template-columns: 1fr 44px 44px 64px;
-      gap: 7px;
-      padding: 11px 12px 13px;
+      grid-template-columns: 1fr 40px 40px 58px;
+      gap: 6px;
+      padding: 10px 11px 11px;
       border-top: 1px solid #ddd0b8;
       background: #faf5ec;
     }
     .mx-input input {
       min-width: 0;
-      padding: 10px 14px;
+      padding: 9px 12px;
       border: 1px solid #b99a73;
-      border-radius: 22px;
+      border-radius: 18px;
       background: #fffdf8;
       color: #2f2117 !important;
       -webkit-text-fill-color: #2f2117 !important;
       caret-color: #7b4a24;
       font-family: inherit;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       outline: none;
       opacity: 1;
     }
-    .mx-input input::placeholder {
-      color: #8a725d !important;
-      -webkit-text-fill-color: #8a725d !important;
-      opacity: 1;
-      font-weight: 400;
-    }
-    .mx-input input:focus { border-color:#8d5d31; background:#fff; box-shadow:0 0 0 3px rgba(141,93,49,.16); }
-    .mx-input input::selection { background:#d8bd92; color:#24170f; -webkit-text-fill-color:#24170f; }
-    .mx-input button {
-      min-width: 0;
-      border: none;
-      border-radius: 22px;
-      font-weight: bold;
-      font-family: inherit;
-      cursor: pointer;
-      transition: .2s;
-    }
-    .mx-send { background: #8b6b4b; color: white; font-size: 14px; }
-    .mx-send:hover { background: #6b4f34; }
+    .mx-input input::placeholder { color: #927c68 !important;-webkit-text-fill-color:#927c68 !important;opacity:1;font-weight:400; }
+    .mx-input input:focus { border-color:#8d5d31;background:#fff;box-shadow:0 0 0 3px rgba(141,93,49,.13); }
+    .mx-input input::selection { background:#d8bd92;color:#24170f;-webkit-text-fill-color:#24170f; }
+    .mx-input button { min-width:0;border:none;border-radius:18px;font-weight:bold;font-family:inherit;cursor:pointer;transition:.18s; }
+    .mx-send { background: #806044; color: white; font-size: 13px; }
+    .mx-send:hover { background: #65472f; }
     .mx-mic,.mx-speaker {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #eee1ce;
-      color: #644325;
-      border: 1px solid #d2b995 !important;
-      font-family: Arial,"Noto Sans SC",sans-serif !important;
-      font-size: 19px;
+      display:inline-flex;align-items:center;justify-content:center;background:#eee1ce;color:#644325;
+      border:1px solid #d2b995 !important;font-family:Arial,"Noto Sans SC",sans-serif !important;font-size:17px;
     }
     .mx-mic:hover,.mx-speaker:hover { background: #e1cba8; }
-    .mx-mic.listening { background:#b74e40; color:#fff; border-color:#92362c !important; animation:mx-mic-pulse 1s infinite; }
+    .mx-mic.listening { background:#b74e40;color:#fff;border-color:#92362c !important;animation:mx-mic-pulse 1s infinite; }
     @keyframes mx-mic-pulse { 50% { box-shadow:0 0 0 6px rgba(183,78,64,.16); } }
-    .mx-speaker.muted { opacity:.58; filter:grayscale(1); }
-    .mx-input button:disabled { opacity:.42; cursor:not-allowed; transform:none; }
+    .mx-speaker.muted { opacity:.58;filter:grayscale(1); }
+    .mx-input button:disabled { opacity:.42;cursor:not-allowed;transform:none; }
     .mx-voice-hint { font-weight:700; }
-    .mx-socratic-tag {
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      margin:0 0 7px;
-      padding:4px 9px;
-      border:1px solid #c7a46f;
-      border-radius:999px;
-      background:#f5ead6;
-      color:#6b4726;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.3px;
-    }
-    .mx-socratic-progress {
-      display:block;
-      margin-top:8px;
-      padding:7px 9px;
-      border-left:4px solid #8f6a3f;
-      border-radius:7px;
-      background:#f8f1e6;
-      color:#5c432d;
-      font-size:13px;
-      line-height:1.6;
-    }
+    .mx-socratic-tag { display:inline-flex;align-items:center;gap:6px;margin:0 0 7px;padding:4px 9px;border:1px solid #c7a46f;border-radius:999px;background:#f5ead6;color:#6b4726;font-size:12px;font-weight:900;letter-spacing:.3px; }
+    .mx-socratic-progress { display:block;margin-top:8px;padding:7px 9px;border-left:4px solid #8f6a3f;border-radius:7px;background:#f8f1e6;color:#5c432d;font-size:13px;line-height:1.6; }
 
     @media (max-width: 620px) {
       .mengxi-panel {
-        width: calc(100% - 20px);
-        right: 10px;
-        bottom: 178px;
-        max-height: calc(100vh - 195px);
+        width: calc(100% - 16px);
+        right: 8px;
+        bottom: 154px;
+        max-height: calc(100vh - 170px);
+        border-radius:20px;
       }
-      .mengxi-float { width: 118px; right: 8px; bottom: 12px; }
+      .mengxi-float { width: 108px; right: 6px; bottom: 8px; }
       .mengxi-callout {
-        top: -16px;
-        right: 82px;
-        width: 172px;
-        min-height: 56px;
-        grid-template-columns: 36px 1fr;
-        gap: 8px;
-        padding: 8px 11px 8px 8px;
+        top: -18px;
+        right: 74px;
+        width: 160px;
+        min-height: 52px;
+        grid-template-columns: 34px 1fr;
+        gap: 7px;
+        padding: 7px 10px 7px 7px;
       }
-      .mengxi-callout .mx-call-icon { width:34px;height:34px; }
-      .mengxi-callout .mx-call-icon svg { width:18px;height:18px; }
-      .mx-call-main { font-size:16px;letter-spacing:.8px; }
-      .mx-call-sub { font-size:11px;margin-top:3px; }
-      .mengxi-callout::after { right:-17px;bottom:12px;transform:scale(.85);transform-origin:right center; }
-      .mx-chat { max-height: 38vh; }
-      .mx-input { grid-template-columns:1fr 42px 42px; }
-      .mx-send { grid-column:1/4; min-height:40px; }
+      .mengxi-callout .mx-call-icon { width:32px;height:32px; }
+      .mengxi-callout .mx-call-icon svg { width:17px;height:17px; }
+      .mx-call-main { font-size:15px;letter-spacing:.6px; }
+      .mx-call-sub { font-size:10px;margin-top:3px; }
+      .mengxi-callout::after { right:-17px;bottom:12px;transform:scale(.82);transform-origin:right center; }
+      .mx-chat { max-height: 39vh;min-height:170px; }
+      .mx-chips{grid-template-columns:repeat(2,minmax(0,1fr));}
+      .mx-input { grid-template-columns:1fr 40px 40px; }
+      .mx-send { grid-column:1/4; min-height:38px; }
     }
 `;
   document.head.appendChild(style);
@@ -920,7 +923,7 @@
     },
     {
       p:[/六道工序|六个工序|工序.*(?:是什么|有哪些|哪六|顺序|流程|排序)/],
-      a:'活字印刷的六道工序是：刻字 → 设板 → 排版 → 炀板 → 印刷 → 拆板。刻字是制作单个字印；设板是在铁板上铺松脂、蜡和纸灰等黏合材料；排版是把字印密布在铁范内；炀板是靠火烘烤使黏合材料稍熔，再把字面压平；印刷是上墨覆纸；拆板是再次加热并拂下字印，分类收存以便复用。'
+      a:'依照课文原词，可以概括为：制字 → 设板 → 布字 → 炀版、平版 → 印刷 → 拆版。制字是“用胶泥刻字，火烧令坚”；设板是在铁板上覆盖松脂、蜡和纸灰等混合物；布字是把字印密布在铁范内；炀版后再用平板按压，使字平如砥；印刷时两板交替；拆版时再次加热并用手轻拂，使字印脱落收存。'
     },
     {
       p:[/活字.*活.*(?:哪里|在哪|体现|表现|为什么)|[“\"「『]?活[”\"」』]?(?:字)?(?:体现|表现)?(?:在)?哪里|为什么叫活板|活板.*活/],
@@ -940,7 +943,7 @@
     },
     {
       p:[/文章.*说明顺序|说明顺序是什么|按什么顺序.*说明|写作顺序/],
-      a:'文章先简述雕版印刷的发展，再介绍毕昇发明活字印刷；主体部分主要按照工艺流程说明制字、设板、排版、炀板、印刷和拆板，同时补充字印储存、生僻字制作等细节。整体是“历史概述＋工序顺序＋补充说明”。'
+      a:'文章先简述雕版印刷的发展，再介绍毕昇发明活字印刷；主体部分主要按照工艺流程说明制字、设板、布字、炀版、平版、印刷和拆版，同时补充字印储存、生僻字制作等细节。整体是“历史概述＋工序顺序＋补充说明”。'
     },
     {
       p:[/说明方法|用了哪些说明方法|薄如钱唇.*说明方法|字平如砥.*说明方法/],
@@ -1294,7 +1297,7 @@
     {k:['则字平如砥','翻译','砥'],a:'“则以一平板按其面，则字平如砥”译文：就用一块平板按在字印的面上，于是所有排在板上的字印就平整得像磨刀石一样。'},
     {k:['瞬息可就','翻译','更互'],a:'“更互用之，瞬息可就”译文：两块铁板交替使用，极短的时间就可以完成印刷。'},
     {k:['每韵为一帖','木格贮之','翻译'],a:'“不用，则以纸帖之，每韵为一帖，木格贮之”译文：不用的时候，就用纸条给它们做标签，每一个韵部的字做一个标签，用木格子把它们储藏起来。'},
-    {k:['六道工序','工序','排序','流程'],a:'活字印刷六道工序：胶泥制字 → 设版覆药 → 布字排版 → 就火炀板 → 按平印刷 → 拆版归字。“先造字，再排版；先上墨，再印刷；印完归字可复用”。'},
+    {k:['六道工序','工序','排序','流程'],a:'活字印刷的关键工序可概括为：制字 → 设板 → 布字 → 炀版、平版 → 印刷 → 拆版。“先造字，再排版；先上墨，再印刷；印完归字可复用”。'},
     {k:['活','特点','活在哪里'],a:'“活”体现在：（1）每字一印——字是活的（2）密布字印——排版是活的（3）每一字皆有数印——字印数目是活的（4）有奇字素无备者，旋刻之——做法是活的（5）更互用之——用法是活的（6）以手拂之，其印自落——拆法是活的'},
     {k:['模块化','思维','组合','复用'],a:'活字印刷的深层价值是“模块化思维”：将整版文字拆成标准化活字，按需组合、替换、复用。如同现代积木、代码模块、零件装配。'},
     {k:['字音','炀','砥','镕','拂','韵'],a:'重点字音：炀（yáng）烘烤；砥（dǐ）磨刀石；镕（róng）熔化；拂（fú）轻轻擦拭；韵（yùn）音韵；贮（zhù）储存。'},
@@ -1305,7 +1308,20 @@
     {k:['徽章','解锁','任务'],a:'本平台有三枚主题勋章；此外，学生完成关于“活”的深度交流并形成自己的结论后，还会在登录信息中点亮“思辨之星”。'},
     {k:['你好','梦溪','你是谁'],a:'小生梦溪，沈括身边的小书童。我可解答《活板》的字词、翻译、断句、印刷史等问题，也陪你讨论活字之“活”。'}
   ];
-  const quick = ['沈括是谁？','《梦溪笔谈》是什么书？','活板印刷具体分几步？','为什么要“密布字印”？','“数印”中的“印”是什么？','“火烧令坚”和“持就火炀之”有什么不同？','“活”体现在哪里？','为什么不用木头做活字？'];
+  const quick = [
+    { label:'字词解释', question:'“字平如砥”中的“砥”是什么意思？' },
+    { label:'重点字音', question:'“炀、砥、镕、拂、贮”分别怎么读？' },
+    { label:'《活板》原文', question:'请给出《活板》完整原文。' },
+    { label:'为何不用木字', question:'为什么不用木头做活字？' },
+    { label:'语句翻译', question:'“更互用之，瞬息可就”怎么翻译？', secondary:true },
+    { label:'一词多义：就', question:'“持就火炀之”和“瞬息可就”中的“就”意思相同吗？', secondary:true },
+    { label:'“活”在哪里', question:'“活”体现在哪里？', secondary:true },
+    { label:'沈括是谁', question:'沈括是谁？', secondary:true },
+    { label:'《梦溪笔谈》', question:'《梦溪笔谈》是什么书？', secondary:true },
+    { label:'“数印”的“印”', question:'“数印”中的“印”是什么？', secondary:true },
+    { label:'两次用火区别', question:'“火烧令坚”和“持就火炀之”有什么不同？', secondary:true },
+    { label:'为何密布字印', question:'为什么要“密布字印”？', secondary:true }
+  ];
 
   // 快捷问题必须有确定答案，不能再经过模糊关键词评分或联网兜底。
   // 同时把引号、空格和句末标点统一去掉，避免按钮文字中的中文引号导致匹配失败。
@@ -1320,7 +1336,7 @@
   const PRESET_QA = new Map([
     ['沈括是谁', '沈括（1031—1095），字存中，号梦溪丈人，北宋科学家、政治家。他在天文、数学、地理、物理、医学等方面都有研究，晚年整理成《梦溪笔谈》。《活板》正是他记录毕昇活字印刷术的文章。'],
     ['梦溪笔谈是什么书', '《梦溪笔谈》是北宋沈括晚年撰写的一部笔记体著作，内容涉及天文、数学、地理、物理、医药、工程和社会见闻等。《活板》选自其中的《技艺》篇，它保存了毕昇泥活字印刷术的重要史料。'],
-    ['六道工序是什么', '活字印刷的六道工序是：刻字 → 设板 → 排版 → 炀板 → 印刷 → 拆板。刻字是制作字印；设板是在铁板上铺黏合材料；排版是把字印排入铁范；炀板是靠火烘烤并按平字面；印刷是上墨覆纸；拆板是再次加热，取下字印并分类保存。'],
+    ['六道工序是什么', '依照课文原词，活字印刷的关键工序可概括为：制字 → 设板 → 布字 → 炀版、平版 → 印刷 → 拆版。制字是制作字印；设板是在铁板上覆盖黏合材料；布字是把字印密布在铁范内；炀版后用平板按压，使字平如砥；印刷时两板交替；拆版时再次加热并拂下字印。'],
     ['字平如砥为什么要平', '“砥”是细磨刀石。“字平如砥”是说排版后所有字印的上表面要像磨刀石一样平整。印刷时字面要统一着墨、覆纸并受压；如果高低不平，高处会印得过黑，低处可能模糊或缺字，所以必须按平。'],
     ['数印中的印是什么', '这里的“印”指字印、字模，不是印章，也不是印刷次数。“每一字皆有数印”就是每个字都准备几个字模；“之”“也”等常用字还要准备二十多个，避免同一版重复用字时不够。'],
     ['数印里的印是什么', '这里的“印”指字印、字模，不是印章，也不是印刷次数。“每一字皆有数印”就是每个字都准备几个字模；“之”“也”等常用字还要准备二十多个，避免同一版重复用字时不够。'],
@@ -1341,7 +1357,7 @@
   // 事实型问题直接回答；“活”这一类开放性问题，先检查学生是否已经完成研学探究馆，
   // 再根据学生的表达自然追问、补充证据和给予鼓励，不显示机械的“第几步”。
   const NATURAL_INQUIRY_KEY = 'mengxiNaturalInquiryV217';
-  const INQUIRY_STEP_IDS = ['制字','设板','排版','炀板','印刷','拆板'];
+  const INQUIRY_STEP_IDS = ['制字','设板','布字','炀版','印刷','拆版'];
   let naturalInquiry = loadNaturalInquiry();
 
   function currentStudentForInquiry() {
@@ -2382,6 +2398,83 @@
 
   function resetSpeechCoach() { speechCoach = null; saveSpeechCoach(); }
 
+
+  // V2.36：《活板》原文定位与上下文直答
+  const HUOBAN_SENTENCES = [
+    '板印书籍，唐人尚未盛为之。',
+    '自冯瀛王始印五经，已后典籍皆为板本。',
+    '庆历中，有布衣毕昇，又为活板。',
+    '其法：用胶泥刻字，薄如钱唇，每字为一印，火烧令坚。',
+    '先设一铁板，其上以松脂、蜡和纸灰之类冒之。',
+    '欲印，则以一铁范置铁板上，乃密布字印。',
+    '满铁范为一板，持就火炀之，药稍镕。',
+    '则以一平板按其面，则字平如砥。',
+    '若止印三二本，未为简易；若印数十百千本，则极为神速。',
+    '常作二铁板，一板印刷，一板已自布字。',
+    '此印者才毕，则第二板已具，更互用之，瞬息可就。',
+    '每一字皆有数印，如“之”“也”等字，每字有二十余印，以备一板内有重复者。',
+    '不用，则以纸帖之，每韵为一帖，木格贮之。',
+    '有奇字素无备者，旋刻之，以草火烧，瞬息可成。',
+    '不以木为之者，木理有疏密，沾水则高下不平，兼与药相粘，不可取；不若燔土，用讫再火令药镕，以手拂之，其印自落，殊不沾污。',
+    '昇死，其印为予群从所得，至今宝藏。'
+  ];
+  function normalizeOriginalText(s){return String(s||'').replace(/[\s，。；：、“”‘’「」『』《》〈〉（）()？！!?]/g,'');}
+
+  function asksForFullHuobanOriginal(text){
+    const q=String(text||'').trim();
+    const compact=normalizeOriginalText(q);
+    if(!compact)return false;
+    if(/^(?:请)?(?:给|发|展示|显示|找出)?(?:我)?(?:看)?(?:一下)?(?:活板|课文)?(?:完整)?(?:原文|全文)$/.test(compact))return true;
+    if(/(?:活板|课文)(?:完整)?(?:原文|全文|全文内容|完整课文|完整内容)/.test(compact))return true;
+    if(/(?:完整|整篇)(?:的)?活板/.test(compact))return true;
+    if(/(?:背诵|朗读)(?:篇目)?活板(?:原文|全文)?/.test(compact))return true;
+    return false;
+  }
+
+  function huobanFullOriginalHtml(){
+    const history=HUOBAN_SENTENCES.slice(0,3).join('');
+    const process=HUOBAN_SENTENCES.slice(3,15).join('');
+    const ending=HUOBAN_SENTENCES[15];
+    return '<div class="mx-original-text" data-mx-original="full">'
+      +'<div class="mx-original-title">《活板》</div>'
+      +'<div class="mx-original-author">沈括</div>'
+      +'<p>'+history+'</p>'
+      +'<p>'+process+'</p>'
+      +'<p>'+ending+'</p>'
+      +'</div>';
+  }
+
+  const ORIGINAL_TOPICS=[
+    {p:/文中.*(?:制字|刻字).*?(?:语句|原文|句子)|(?:制字|刻字).*?(?:哪句|哪一句|原文)/,i:[3]},
+    {p:/文中.*设板.*?(?:语句|原文|句子)|设板.*?(?:哪句|哪一句|原文)/,i:[4]},
+    {p:/文中.*(?:布字|密布字印).*?(?:语句|原文|句子)|(?:布字|密布字印).*?(?:哪句|哪一句|原文)/,i:[5]},
+    {p:/文中.*炀版.*?(?:语句|原文|句子)|炀版.*?(?:哪句|哪一句|原文)/,i:[6]},
+    {p:/文中.*平版.*?(?:语句|原文|句子)|平版.*?(?:哪句|哪一句|原文)/,i:[7]},
+    {p:/文中.*(?:印刷|二铁板|更互).*?(?:语句|原文|句子)|(?:二铁板|更互用之).*?(?:哪句|哪一句|原文)/,i:[8,9,10]},
+    {p:/文中.*(?:拆版|用讫|以手拂之).*?(?:语句|原文|句子)|(?:拆版|用讫|以手拂之).*?(?:哪句|哪一句|原文)/,i:[14]},
+    {p:/文中.*(?:贮字|收存|每韵).*?(?:语句|原文|句子)|(?:贮字|每韵为一帖).*?(?:哪句|哪一句|原文)/,i:[11,12]},
+    {p:/文中.*(?:奇字|生僻字).*?(?:语句|原文|句子)|(?:奇字|生僻字).*?(?:哪句|哪一句|原文)/,i:[13]},
+    {p:/文中.*(?:不用木|不以木为之).*?(?:语句|原文|句子)|不以木为之.*?(?:哪句|哪一句|原文)/,i:[14]},
+    {p:/(?:最后一段|最后一句|毕昇死后|字印去向).*?(?:原文|怎么写|是哪句|哪一句)/,i:[15]}
+  ];
+  function originalTextAnswer(text){
+    const q=String(text||'').trim();
+    if(asksForFullHuobanOriginal(q))return huobanFullOriginalHtml();
+    for(const item of ORIGINAL_TOPICS){if(item.p.test(q))return '课本原文在这里：<strong>'+item.i.map(i=>HUOBAN_SENTENCES[i]).join('</strong><br><strong>')+'</strong>';}
+    const nq=normalizeOriginalText(q);let found=-1,best=0;
+    HUOBAN_SENTENCES.forEach((s,i)=>{const ns=normalizeOriginalText(s);let score=0;if(nq.includes(ns))score=ns.length;else if(ns.includes(nq)&&nq.length>=6)score=nq.length;else{for(let n=Math.min(18,ns.length);n>=7;n--){let hit=false;for(let k=0;k<=ns.length-n;k++){const seg=ns.slice(k,k+n);if(nq.includes(seg)){score=n;hit=true;break;}}if(hit)break;}}if(score>best){best=score;found=i;}});
+    if(found<0)return '';
+    const asksMeaning=/意思|翻译|解释|怎么理解|为什么|作用|好处/.test(q);
+    const asksContext=/前一句|后一句|上下文|前后文|前后语句|前后句/.test(q);
+    const looksPasted=best>=10&&!asksMeaning;
+    if(!asksContext&&!looksPasted)return '';
+    const parts=[];
+    if(found>0)parts.push('前一句：<strong>'+HUOBAN_SENTENCES[found-1]+'</strong>');
+    parts.push('这句：<strong>'+HUOBAN_SENTENCES[found]+'</strong>');
+    if(found<HUOBAN_SENTENCES.length-1)parts.push('后一句：<strong>'+HUOBAN_SENTENCES[found+1]+'</strong>');
+    return '你找到了原文中的这一处。它的前后语句是：<br>'+parts.join('<br>');
+  }
+
   function isSpeechWritingTrigger(text) {
     if (!isSpeechHallPage()) return false;
     return /解说词|怎么写|写什么|不会写|开头|结尾|帮我写|范文|框架|150字|字数|任务要求|工序.*串|技术之活|设计之活|思维之活/.test(text || '');
@@ -2390,10 +2483,10 @@
   function speechDraftStats(text) {
     const clean = (text || '').replace(/\s/g,'');
     const count = clean.length;
-    const hasProcess = /设板|布字|炀版|炀板|平版|印刷|拆版/.test(text);
+    const hasProcess = /设板|布字|炀版|炀版|平版|印刷|拆版/.test(text);
     const hasLiving = /技术之活|设计之活|思维之活|灵活|模块|组合|交替|复用/.test(text);
-    const hasSpirit = /毕昇|创新|敢想|实践|创造|精神|智慧/.test(text);
-    return {count,hasProcess,hasLiving,hasSpirit};
+    const hasHistory = /雕版|整版|板印/.test(text) && /历史|传播|知识|文明|发展|变革|意义|重要|推动|普及|流传/.test(text);
+    return {count,hasProcess,hasLiving,hasHistory};
   }
 
   function currentSpeechDraft() {
@@ -2408,7 +2501,7 @@
     const missing=[];
     if(!stats.hasProcess) missing.push('工序还原');
     if(!stats.hasLiving) missing.push('“活”的阐释');
-    if(!stats.hasSpirit) missing.push('毕昇创新精神评价');
+    if(!stats.hasHistory) missing.push('从雕版到活字的历史意义');
     if (!missing.length) {
       return `真不错，你的输入框里已经有约${stats.count}字，三个任务要素都找得到。先自己用1、2、3标出“工序—活—评价”分别在哪一句，再轻声读一遍，听听连接是否自然。小生不替你重写全文，但会陪你看看哪一处还像课文翻译。${guideProgress(100,'骨架已由你完成')}`;
     }
@@ -2416,7 +2509,7 @@
   }
 
   function startSpeechCoach() {
-    speechCoach = {stage:0, process:'', living:'', award:'', studentKey:guidedStudentKey(), updatedAt:Date.now()};
+    speechCoach = {stage:0, process:'', living:'', history:'', studentKey:guidedStudentKey(), updatedAt:Date.now()};
     saveSpeechCoach();
     return `${mengxiWarm('writing', 0)}整个活字印刷流程里，你最熟悉的是哪一步？先用自己的一句话说说它在做什么，不用担心顺序，也不用怕说得不漂亮。${guideProgress(18,'先说出最熟悉的一步')}`;
   }
@@ -2460,7 +2553,7 @@
       return `“创新精神”四个字很大，咱们先把它落到手上。在大家都习惯整版雕刻时，毕昇却把文字拆成单字，还要反复试材料、火候和拆版。你觉得他最难跨出的第一步是什么？${guideProgress(55,'把精神落到行动')}`;
     }
     if (/150字|多少字|字数/.test(q)) {
-      return `别被150字吓到呀，把它看成三小块：工序约60字，“活”的解释约50字，毕昇评价约40字。先写三句话，不够再慢慢展开。把已有文字发来，小生只帮你数一数、找缺项，不会替你补成品。${guideProgress(42,'把字数拆成内容任务')}`;
+      return `别被150字吓到呀，把它看成三小块：工序约55字，“活”的解释约45字，从雕版到活字的历史意义约50字。先写三句话，不够再慢慢展开。把已有文字发来，小生只帮你数一数、找缺项，不会替你补成品。${guideProgress(42,'把字数拆成内容任务')}`;
     }
     if (/像课文翻译|不像解说词/.test(q)) {
       return `把眼前的读者想成一位第一次听《活板》的游客。挑一句，把“密布字印”换成更好懂的说法，比如“把字模一个挨一个排进铁框”。先只改这一句，发给小生听听。${guideProgress(56,'把书面翻译改成口语讲解')}`;
@@ -2477,7 +2570,7 @@
       const missing=[];
       if(!stats.hasProcess) missing.push('工序还原');
       if(!stats.hasLiving) missing.push('“活”的阐释');
-      if(!stats.hasSpirit) missing.push('毕昇创新精神评价');
+      if(!stats.hasHistory) missing.push('从雕版到活字的历史意义');
       if (!missing.length) {
         resetSpeechCoach();
         return `${mengxiWarm('finish', 2)}你已经写了约${stats.count}字，三个任务要素都找得到。先用1、2、3标出“工序—活—评价”分别在哪一句，再读一遍听听连接是否自然。小生不替你改写全文，但会陪你看看哪一句最值得展开。${guideProgress(100,'骨架已由你完成')}`;
@@ -2500,17 +2593,17 @@
     if (speechCoach.stage === 1) {
       if (/技术|操作|交替|速度|设计|字库|数印|按韵|思维|拆分|模块|组合|复用|活/.test(q)) {
         speechCoach.living=q; speechCoach.stage=2; saveSpeechCoach();
-        return `${mengxiWarm('praise', 2)}这个角度已经有内容了。接下来只写一句“颁奖词”：若给毕昇发一个奖，你会给他什么奖？别只写“创新奖”，还要用一句理由说明他打破了什么旧做法。${guideProgress(64,'已有“活”，正在形成评价')}`;
+        return `${mengxiWarm('praise', 2)}这个角度已经有内容了。接下来把课文开头的“雕版印刷”和活字放在一起比一比：雕版是整版固定，活字是单字组合。请用一句话说明，这种变化为什么会推动印刷技术发展或知识传播。${guideProgress(64,'已有“活”，正在形成评价')}`;
       }
       return `咱们先做一个小小的选择：操作上的灵活、安排上的巧妙、想法上的突破——三选一。选完只解释一句，不用写得漂亮，真实就好。${guideProgress(46,'把抽象概念缩成一个角度')}`;
     }
 
     if (speechCoach.stage === 2) {
       if (q.length >= 8) {
-        speechCoach.award=q; speechCoach.stage=3; saveSpeechCoach();
-        return `你手上的三块积木已经齐啦：①工序；②你选的“活”；③对毕昇的评价。按“工序→活在哪里→为什么值得敬佩”的顺序，用“先、接着、因此、这体现了”等词把它们拼成一段。一定要由你自己来拼，拼完发给小生看看有没有漏项。${guideProgress(82,'三块积木已齐，开始自己组合')}`;
+        speechCoach.history=q; speechCoach.stage=3; saveSpeechCoach();
+        return `你手上的三块积木已经齐啦：①工序；②你选的“活”；③从雕版到活字的历史意义。按“工序→活在哪里→怎样推动技术发展与知识传播”的顺序，用“先、接着、因此、这体现了”等词把它们拼成一段。一定要由你自己来拼，拼完发给小生看看有没有漏项。${guideProgress(82,'三块积木已齐，开始自己组合')}`;
       }
-      return `颁奖词不用一开口就很宏大。可以从“最懂拆解”“最会让字重复使用”“最敢打破整版思路”里找一点灵感，不过奖名和理由，得由你亲手写。${guideProgress(66,'把评价落到具体创新')}`;
+      return `历史意义不用一开口就很宏大。先抓住一个变化：从“整版固定”到“单字可拆可组”。再想一想，它怎样让改版、复用和传播变得更方便。${guideProgress(66,'把评价落到具体创新')}`;
     }
 
     return `已经走到组合这一步啦。把现有内容都发来，小生会帮你数文字、检查三个任务要素和工序顺序，但会把最后的表达权留给你。${guideProgress(86,'等待你的完整初稿')}`;
@@ -2554,6 +2647,10 @@
     // V2.28：课下注释词先引导学生回看注释，同时直接给出准确释义。
     const noteAnswer = textbookNoteAnswer(text);
     if (noteAnswer) return noteAnswer;
+
+    // V2.36：询问原文、制字语句或给出原句时，先直接定位并补全前后文。
+    const originalAnswer = originalTextAnswer(text);
+    if (originalAnswer) return originalAnswer;
 
     // V2.22：所有《活板》内容理解题优先进入自然引导；解说词任务进入写作教练。
     const fullLessonGuidance = handleHuobanGuidance(text);
@@ -2643,6 +2740,23 @@
     const row = el('div', 'mx-msg ' + who);
     const b = el('div', 'mx-bubble', msg);
     row.appendChild(b);
+
+    // 长答案默认收起，既保留完整内容，也避免一条回复占满整个窗口。
+    if (who === 'bot' && plainText(msg).length > 150) {
+      const isFullOriginal = /data-mx-original=["']full["']/.test(msg || '');
+      row.classList.add('is-collapsible');
+      const toggle = el('button', 'mx-expand-answer', isFullOriginal ? '展开完整原文' : '展开完整回答');
+      toggle.type = 'button';
+      toggle.onclick = () => {
+        const expanded = row.classList.toggle('expanded');
+        toggle.textContent = expanded
+          ? (isFullOriginal ? '收起原文' : '收起回答')
+          : (isFullOriginal ? '展开完整原文' : '展开完整回答');
+        if (!expanded) chat.scrollTop = Math.max(0, row.offsetTop - 18);
+      };
+      row.appendChild(toggle);
+    }
+
     chat.appendChild(row);
     chat.scrollTop = chat.scrollHeight;
     return row;
@@ -2665,16 +2779,17 @@
           <div class="mx-head-img"><img src="assets/mengxi-ip.png" alt="梦溪"></div>
           <div>
             <h3>沈括书童 · 梦溪</h3>
-            <span>事实题准确答 · 理解题陪你想</span>
+            <span>字词 · 字音 · 原文 · 探究</span>
           </div>
         </div>
         <button class="mx-close" type="button" title="关闭对话" aria-label="关闭对话">&times;</button>
       </div>
       <div class="mx-chat" aria-live="polite"></div>
+      <div class="mx-quickbar"><span>常用提问</span><button class="mx-quick-more" type="button" aria-expanded="false">更多 ▾</button></div>
       <div class="mx-chips"></div>
-      <div class="mx-voice-status"><span class="mx-voice-hint">点击麦克风后把问题完整说完，停顿约 4 秒再提交</span></div>
+      <div class="mx-voice-status is-hidden"><span class="mx-voice-hint">正在准备语音功能……</span></div>
       <div class="mx-input">
-        <input aria-label="输入问题" placeholder="输入问题，或点击麦克风说话……">
+        <input aria-label="输入问题" placeholder="问梦溪一个问题……">
         <button class="mx-mic" type="button" title="开始语音提问" aria-label="开始语音提问">🎙</button>
         <button class="mx-speaker" type="button" title="关闭语音回答" aria-label="关闭语音回答">🔊</button>
         <button class="mx-send" type="button">发送</button>
@@ -2699,6 +2814,7 @@
 
     const chat = panel.querySelector('.mx-chat');
     const chips = panel.querySelector('.mx-chips');
+    const quickMoreBtn = panel.querySelector('.mx-quick-more');
     const input = panel.querySelector('input');
     const sendBtn = panel.querySelector('.mx-send');
     const micBtn = panel.querySelector('.mx-mic');
@@ -2719,13 +2835,21 @@
       speakerBtn.setAttribute('aria-label', speakerBtn.title);
     }
 
+    let voiceStatusTimer = null;
     function setVoiceStatus(text, isListening) {
+      if (voiceStatusTimer) clearTimeout(voiceStatusTimer);
       voiceStatus.querySelector('.mx-voice-hint').textContent = text;
       voiceStatus.classList.toggle('listening', !!isListening);
       micBtn.classList.toggle('listening', !!isListening);
       micBtn.textContent = isListening ? '■' : '🎙';
       micBtn.title = isListening ? '停止聆听' : '开始语音提问';
       micBtn.setAttribute('aria-label', micBtn.title);
+
+      const idle = !isListening && /^(可以继续输入问题|可继续输入|点击麦克风后|点击麦克风即可说话)/.test(text || '');
+      voiceStatus.classList.toggle('is-hidden', idle);
+      if (!isListening && /语音回答已开启|语音回答已关闭|已停止聆听/.test(text || '')) {
+        voiceStatusTimer = setTimeout(() => voiceStatus.classList.add('is-hidden'), 2200);
+      }
     }
 
     // 梦溪是小男孩书童：优先选择设备中的中文少年/男声音色。
@@ -2845,14 +2969,20 @@
       if (focusInput) setTimeout(() => input.focus(), 80);
     }
 
-    addMsg(chat, 'bot', '同学你好呀，我是沈括身边的小书童梦溪。你有读不准的字、想不明白的句子，都可以来找我。遇到《活板》的理解题，我不会急着把答案递给你，而会陪你翻原文、找线索、慢慢想明白；到了活字解说馆，我也会陪你搭句子，但把最珍贵的表达留给你自己。');
+    addMsg(chat, 'bot', '同学你好，我是梦溪。可问我《活板》的字音、翻译、工序，也可以一起探究“活”在哪里。');
 
-    quick.forEach(q => {
-      const chip = el('button', 'mx-chip', q);
+    quick.forEach(item => {
+      const chip = el('button', 'mx-chip' + (item.secondary ? ' is-secondary' : ''), item.label);
       chip.type = 'button';
-      chip.onclick = () => { input.value = q; send(false); };
+      chip.title = item.question;
+      chip.onclick = () => { input.value = item.question; send(false); };
       chips.appendChild(chip);
     });
+    quickMoreBtn.onclick = () => {
+      const expanded = chips.classList.toggle('expanded');
+      quickMoreBtn.textContent = expanded ? '收起 ▴' : '更多 ▾';
+      quickMoreBtn.setAttribute('aria-expanded', String(expanded));
+    };
 
     async function replyTo(q, fromVoice) {
       setVoiceStatus('梦溪正在理解问题；需要时会联网检索并整理答案……', false);
@@ -3108,6 +3238,18 @@
     const togglePanel = () => {
       panel.classList.toggle('open');
       if (panel.classList.contains('open')) input.focus();
+    };
+    window.MengxiAssistant = {
+      open(prefill='', autoSend=true) {
+        openPanel(true);
+        const text=String(prefill||'').trim();
+        if(text){input.value=text;if(autoSend)setTimeout(()=>send(false),90);}
+      },
+      close() {
+        panel.classList.remove('open');
+        if (recognition) cancelVoiceSession();
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      }
     };
     float.onclick = togglePanel;
     float.addEventListener('keydown', e => {

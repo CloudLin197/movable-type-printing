@@ -1,17 +1,105 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>使用帮助</title><style>*{box-sizing:border-box}body{margin:0;font-family:"KaiTi","Noto Serif SC",serif;background:#f5efe6;color:#3b281c}.top{height:170px;position:relative;background:url("images/2.jpg") center/cover}.top:after{content:"";position:absolute;inset:0;background:rgba(30,15,7,.58)}.top h1{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;color:#f6e5bf;font-size:40px;letter-spacing:5px}.back{position:absolute;z-index:3;top:16px;right:18px;padding:10px 18px;border-radius:22px;background:#fff4df;color:#583417;text-decoration:none;font-weight:bold}.wrap{max-width:1200px;width:calc(100% - 40px);margin:18px auto 36px;background:#fffaf2;border:1px solid #dec8a8;border-radius:30px;padding:28px;box-shadow:0 18px 35px rgba(90,55,25,.18)}h2{color:#6b3e1d;border-left:7px solid #a87542;padding-left:12px}.card{background:#f3eadc;border:1px solid #dfcfb7;border-radius:20px;padding:18px;margin:14px 0;line-height:1.9;font-size:17px}.btn{display:inline-block;margin-top:12px;padding:10px 20px;border-radius:22px;background:#8b5a2b;color:#fff;text-decoration:none;font-weight:bold}</style><link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.35"></script>
-</head><body><div class="top"><h1>使用帮助</h1><a class="back" href="index.html">返回首页</a></div><main class="wrap"><h2>学生使用流程</h2><div class="card">1. 在首页填写班级、座号和姓名，领取研学探展证。<br>2. 依次进入“活板初探馆、研学探究馆、活字解说馆、非遗传承馆”。<br>3. 完成各馆任务后，系统会自动保存本机学习进度和徽章。</div><h2>导航使用说明</h2><div class="card">导航栏位于顶部图片下方，与正文区域同宽。当前所在展馆会默认高亮；将鼠标移到其他展馆时，只高亮鼠标所在栏目，移开后恢复当前栏目高亮。</div><h2>教师入口</h2><div class="card">教师可进入“教师数据中心”，输入教师码：123456，查看本机保存的学习记录、作品和完成情况。</div><a class="btn" href="index.html">返回首页</a>
-<section class="section-box">
-  <div class="panel-title">梦溪语音与问答</div>
-  <p style="line-height:1.9">梦溪支持文字与语音提问。点击麦克风后可以把问题完整说完，系统会在连续停顿约4秒后再提交，不会刚停顿一下就抢先回答；也可以再次点击停止按钮立即结束。梦溪会先判断你问的是课文内容、工序原理、句子翻译，还是字音字义，再给出对应回答。</p>
-</section>
-<section class="help-card"><h2>梦溪字词问答</h2><p>梦溪现已内置离线汉字读音表和初中语文常见文言字词专题库。可以直接询问“瀛字怎么读”“砥还在哪些课文出现”“令字的读音”等。遇到多音字时，梦溪会先说明常见读音，再结合《活板》原句判断本文读音、解释词义和句意。例如“令”在“火烧令坚”中读 lìng，解释为“使、让”。</p></section>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>使用帮助 · 活字印刷云展馆</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:"KaiTi","Noto Serif SC",serif;background:
+radial-gradient(circle at 12% 8%,rgba(184,135,77,.10),transparent 30%),
+linear-gradient(180deg,#f5eee2,#eee2d1);color:#3b281c;min-height:100vh}
+.help-hero{height:230px;position:relative;overflow:hidden;background:url("images/2.jpg") center 44%/cover}
+.help-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,15,8,.50),rgba(35,20,11,.72))}
+.help-hero-content{position:absolute;z-index:2;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff4dc;text-align:center;text-shadow:0 4px 18px rgba(0,0,0,.65)}
+.help-hero-content .seal{width:54px;height:54px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,234,196,.82);border-radius:12px;transform:rotate(-4deg);font-size:25px;font-weight:900;margin-bottom:12px;background:rgba(117,62,24,.28)}
+.help-hero h1{font-size:44px;letter-spacing:7px;margin:0}
+.help-hero p{font-size:17px;letter-spacing:2px;margin:10px 0 0;color:rgba(255,244,222,.84)}
+.help-wrap{max-width:1120px;width:calc(100% - 34px);margin:-34px auto 38px;position:relative;z-index:3}
+.help-intro{padding:22px 26px;border-radius:24px;background:rgba(255,250,241,.97);border:1px solid #d4ba94;box-shadow:0 18px 45px rgba(73,43,20,.16);display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.help-intro-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;background:linear-gradient(145deg,#ead1a9,#b98047);border:3px solid #fff6e4;box-shadow:0 0 0 1px #9e6e3b,0 7px 15px rgba(84,49,20,.18)}
+.help-intro h2{margin:0 0 5px;color:#5d371d;font-size:25px;letter-spacing:2px}
+.help-intro p{margin:0;line-height:1.8;color:#6f543d}
+.help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:20px}
+.help-card{position:relative;padding:22px 22px 20px;border-radius:22px;background:linear-gradient(160deg,#fffaf1,#f0e2cd);border:1px solid #d8c09e;box-shadow:0 7px 0 #d4b992,0 13px 28px rgba(77,48,25,.09);overflow:hidden}
+.help-card::before{content:"";position:absolute;inset:7px;border:1px solid rgba(126,84,43,.10);border-radius:16px;pointer-events:none}
+.help-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px;position:relative}
+.help-card-icon{width:42px;height:42px;flex:0 0 42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff7e9;background:linear-gradient(145deg,#9b6532,#6d411f);box-shadow:0 3px 0 #4e2d16}
+.help-card h2{margin:0;color:#5c371d;font-size:22px;letter-spacing:1px}
+.help-card p,.help-card li{line-height:1.85;font-size:16px;color:#5f4935}
+.help-card ol,.help-card ul{margin:6px 0 0;padding-left:1.4em}
+.help-card strong{color:#75451e}
+.teacher-code{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:7px 13px;border-radius:15px;background:#e3c596;border:1px dashed #9f6e38;color:#4d2d17;font-weight:900;letter-spacing:1px}
+.mengxi-card{grid-column:1/-1;background:
+linear-gradient(120deg,rgba(255,250,241,.97),rgba(235,216,186,.97)),url("assets/mengxi-ip.png") right 22px bottom -12px/145px auto no-repeat;padding-right:180px}
+.mengxi-card .tips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.mengxi-card .tip{padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.55);border:1px solid rgba(151,105,56,.22);line-height:1.6;color:#674a31}
+.help-actions{text-align:center;margin-top:28px}
+.home-btn{display:inline-flex;align-items:center;gap:10px;padding:12px 25px;border-radius:24px;background:linear-gradient(135deg,#97602f,#6d421f);color:#fff8e9;text-decoration:none;font-weight:900;font-size:17px;letter-spacing:1px;box-shadow:0 5px 0 #4d2c16,0 12px 24px rgba(77,43,20,.18);transition:.18s}
+.home-btn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.help-footer{text-align:center;color:#8a7057;margin:23px 0 0;font-size:14px;letter-spacing:1px}
+@media(max-width:780px){.help-hero{height:200px}.help-hero h1{font-size:34px;letter-spacing:4px}.help-grid{grid-template-columns:1fr}.mengxi-card{grid-column:auto;padding-right:22px;background:linear-gradient(160deg,#fffaf1,#ead8bb)}.mengxi-card .tips{grid-template-columns:1fr}.help-intro{grid-template-columns:1fr;text-align:center}.help-intro-icon{margin:auto}}
+</style>
+<link rel="stylesheet" href="platform-v2.css?v=2.42">
+<script src="platform-v2.js?v=2.42"></script>
+</head>
+<body>
+<header class="help-hero">
+  <div class="help-hero-content"><div class="seal">助</div><h1>使用帮助</h1><p>一页看懂登录、探展、作答与梦溪问答</p></div>
+</header>
+<main class="help-wrap">
+  <section class="help-intro">
+    <div class="help-intro-icon">📜</div>
+    <div><h2>从领取探展证开始</h2><p>学生登录后，测评、探究、解说词和非遗作品会记录在当前浏览器中；完成相应任务后，三枚匠心徽章才会依次点亮。</p></div>
+  </section>
 
-<section class="help-card"><h2>人物、著作与时代问答</h2><p>梦溪现已增加沈括、《梦溪笔谈》、毕昇、活字印刷术和北宋庆历时代背景知识。可以询问“沈括是谁”“《梦溪笔谈》为什么叫这个名字”“毕昇为什么被称为布衣”“活字印刷术和雕版印刷有什么区别”“庆历中是什么时候”等。梦溪会按问题层级直接回答，并能接住“他有哪些成就”“这本书写了什么”“它有什么局限”等连续追问。</p></section>
+  <div class="help-grid">
+    <section class="help-card">
+      <div class="help-card-head"><span class="help-card-icon">一</span><h2>学生使用流程</h2></div>
+      <ol><li>点击页面上的“未登录”，在弹出的研学探展证中填写班级、座号和姓名。</li><li>依次完成活板初探、研学探究、活字解说与非遗传承任务。</li><li>需要分享时，点击“分享本账号与作品”，链接会携带生成时的个人学习数据。</li></ol>
+    </section>
 
-<section class="help-card"><h2>《活板》自然引导</h2><p>字音、字义、翻译、人物和年代等事实问题，梦溪会直接、准确回答；工序逻辑、材料选择、技术比较、文眼作用等内容理解题，梦溪会先接住学生的想法，再通过情境推演、原文证据和追问帮助学生自己形成结论。学生回答跑偏时，梦溪不会简单判错，而会温和地把思路拉回课文。对“活体现在哪里”这类核心问题，完成探究馆任务并形成有依据的总结后，可点亮思辨之星。</p></section>
-<section class="help-card"><h2>解说词写作教练</h2><p>在活字解说馆询问“怎么写解说词”“不会写开头”“150字怎么安排”等问题时，梦溪不会提供整篇范文，而会把任务拆成工序还原、“活”的阐释和毕昇精神评价三块，引导学生先说、再组合，并根据学生草稿提示字数和缺失要素。</p></section>
-<section class="help-card"><h2>联网检索</h2><p>本地课文知识库没有命中时，梦溪会在当前对话框中检索公开百科资料，整理成简短答案后直接回复，不会把学生跳转到外部网页。联网检索结果用于补充知识，课文核心问题仍优先采用内置教学答案。</p></section>
-</main><script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.29"></script>
-</body></html>
+    <section class="help-card">
+      <div class="help-card-head"><span class="help-card-icon">导</span><h2>导航与任务状态</h2></div>
+      <p>当前展馆会以柔和底色标记。鼠标移到其他展馆时，所指展馆会亮起，当前展馆同时稍暗，便于看清即将前往的位置。</p><p>灰色徽章表示任务尚未完成；只有达到对应任务要求后，徽章才会恢复彩色。</p>
+    </section>
+
+    <section class="help-card">
+      <div class="help-card-head"><span class="help-card-icon">师</span><h2>教师入口</h2></div>
+      <p>教师进入“教师数据中心”后，可查看当前浏览器保存的全部学生测评、探究进度、解说词和非遗作品；教师模式下各展馆全部解锁，可演示所有功能。</p>
+      <div class="teacher-code">教师码：123456</div>
+    </section>
+
+    <section class="help-card">
+      <div class="help-card-head"><span class="help-card-icon">享</span><h2>分享数据说明</h2></div>
+      <p>学生分享链接携带本人数据；教师分享链接携带当前浏览器中全部教师状态和学生数据。链接呈现的是生成那一刻的数据副本，之后有新提交时需重新生成。</p>
+    </section>
+
+    <section class="help-card mengxi-card">
+      <div class="help-card-head"><span class="help-card-icon">溪</span><h2>梦溪书童 · 文字与语音问答</h2></div>
+      <p>点击右下角梦溪即可交流。语音提问时，把问题完整说完，系统会在连续停顿约4秒后提交；也可以点击停止按钮立即结束。梦溪会先判断你问的是字音字义、原文语句、工序原理，还是解说词修改，再给出相应帮助。</p>
+      <div class="tips">
+        <div class="tip"><strong>事实问题</strong><br>字音、字义、原文前后句会直接准确回答。</div>
+        <div class="tip"><strong>理解问题</strong><br>先接住想法，再用原文、情境和追问引导。</div>
+        <div class="tip"><strong>写作问题</strong><br>指出缺失要素，陪你修改，但不替你整篇代写。</div>
+      </div>
+    </section>
+
+    <section class="help-card">
+      <div class="help-card-head"><span class="help-card-icon">字</span><h2>字词与原文问答</h2></div>
+      <p>可直接询问“和在这里怎么读”“制字的原文是什么”“这句话前一句和后一句是什么”。梦溪会提醒关注课下注释，同时给出读音、词义或对应原文。</p>
+    </section>
+
+    <section class="help-card">
+      <div class="help-card-head"><span class="help-card-icon">评</span><h2>解说词修改</h2></div>
+      <p>提交解说词后，系统会检查工序还原、“活”的具体阐释和历史评价。发现缺失时，可点击“请梦溪陪我修改”，梦溪会根据当前草稿继续追问和引导。</p>
+    </section>
+  </div>
+
+  <div class="help-actions"><a class="home-btn" href="index.html"><span>⌂</span> 返回首页</a></div>
+  <div class="help-footer">福建非遗博物院 · 活字印刷云展馆</div>
+</main>
+<script src="assets/hanzi-pinyin.js"></script>
+<script src="mengxi-assistant.js?v=2.41"></script>
+</body>
+</html>

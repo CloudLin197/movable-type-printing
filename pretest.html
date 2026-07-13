@@ -395,6 +395,13 @@ color:#4d3422;
   .nav-icon{width:28px;height:28px;flex-basis:28px;}
 }
 
+
+/* V2.36 错题反馈弹框 */
+.wrong-modal{position:fixed;inset:0;z-index:9998;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(33,22,15,.62);backdrop-filter:blur(5px)}
+.wrong-modal.open{display:flex}.wrong-dialog{width:min(760px,96vw);max-height:88vh;overflow:auto;background:linear-gradient(180deg,#fffaf1,#f2e5d2);border-radius:26px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.36);border:1px solid rgba(138,91,45,.26)}
+.wrong-dialog h2{color:#5a351c;margin:0 0 8px;font-size:27px}.wrong-warm{line-height:1.8;background:#fff5dc;border-left:6px solid #b67a3f;padding:12px 15px;border-radius:0 16px 16px 0;color:#654525;margin:12px 0 16px}
+.wrong-list{display:grid;gap:12px}.wrong-item{background:#fffdf8;border:1px solid #dec9aa;border-radius:17px;padding:14px 16px;line-height:1.65}.wrong-item strong{color:#6f3e1e}.wrong-choice{color:#a34f41}.correct-choice{color:#47773d}.wrong-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}.wrong-actions .btn{margin-top:0}.wrong-close{position:sticky;float:right;top:0;width:36px;height:36px;border:0;border-radius:50%;background:#5c3820;color:#fff;font-size:23px;cursor:pointer}
+@media(max-width:600px){.wrong-modal{padding:10px}.wrong-dialog{padding:18px}.wrong-actions .btn{width:100%}}
 </style>
 
 <script>
@@ -454,7 +461,7 @@ return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';
 
 function ensureStudentTip(){
 let s=getStudent();
-return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';
+return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，点击“未登录”领取研学探展证。';
 }
 
 function saveProgress(page,detail={}){
@@ -474,8 +481,8 @@ function esc(s){
 return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
 </script>
-<link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.35"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.42">
+<script src="platform-v2.js?v=2.42"></script>
 </head>
 
 <body>
@@ -572,7 +579,7 @@ return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"
     <div class="quiz-seal" aria-hidden="true">卷</div>
     <div class="quiz-copy">
       <strong>课文知识小闯关</strong>
-      <span>每轮随机抽取10题并打乱选项；重新作答会更换题目与选项。</span>
+      <span>每轮随机抽取10题并打乱选项，90分通过；重新作答会更换题目与选项。</span>
     </div>
   </div>
   <div class="quiz-progress" aria-live="polite"><strong id="quizAnswered">0</strong><span>/10 已作答</span></div>
@@ -588,6 +595,20 @@ return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"
 </div>
 
 <div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
+</div>
+
+<div class="wrong-modal" id="wrongModal" role="dialog" aria-modal="true" aria-labelledby="wrongModalTitle">
+  <div class="wrong-dialog">
+    <button class="wrong-close" type="button" aria-label="关闭错题反馈" onclick="closeWrongModal()">×</button>
+    <h2 id="wrongModalTitle">📖 这几处再看一眼</h2>
+    <div class="wrong-warm" id="wrongWarm"></div>
+    <div class="wrong-list" id="wrongList"></div>
+    <div class="wrong-actions">
+      <button class="btn" type="button" onclick="reviewTextFromModal()">回看课文与注释</button>
+      <button class="btn" type="button" onclick="askMengxiFromModal()">和梦溪书童聊一聊</button>
+      <button class="btn btn-primary" type="button" onclick="retryFromModal()">换一组题再闯关</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1031,42 +1052,55 @@ recognizedText:recognitionText.slice(0,1200)
 }
 
 const QUESTION_BANK=[
-{id:'board-print',q:'“板印”指的是哪一种印刷方式？',o:['雕版印刷','活字印刷','石版印刷','铜版印刷'],a:0},
-{id:'yi-tong',q:'“已后典籍皆为板本”中的“已”同哪个字？',o:['以','己','亦','矣'],a:0},
-{id:'board-book',q:'“板本”指什么？',o:['版印书籍','手抄书籍','木板原料','刻字模板'],a:0},
-{id:'commoner',q:'“布衣毕昇”中的“布衣”指什么人？',o:['平民','官员','商人','僧人'],a:0},
-{id:'coin-edge',q:'“薄如钱唇”中的“钱唇”指什么？',o:['铜钱的边缘','铜钱的正面','铜钱的方孔','铜钱上的文字'],a:0},
-{id:'jian',q:'“火烧令坚”中的“坚”是什么意思？',o:['坚硬','坚持','牢固地站立','使人坚定'],a:0},
-{id:'huo',q:'“松脂、蜡和纸灰”中的“和”是什么意思？',o:['混合','和睦','应和','温和'],a:0},
-{id:'mao',q:'“其上以松脂、蜡和纸灰之类冒之”中的“冒”是什么意思？',o:['覆盖','冒险','升起','假充'],a:0},
-{id:'iron-frame',q:'文中的“铁范”指什么？',o:['铁制模框','铁制字印','铁制刻刀','铁制书架'],a:0},
-{id:'jiu-fire',q:'“持就火炀之”中的“就”是什么意思？',o:['靠近','完成','成就','立即'],a:0},
-{id:'yang',q:'“炀”在文中的意思是？',o:['烘烤','燃烧','晒干','冷却'],a:0},
-{id:'medicine',q:'文中的“药”指什么？',o:['松脂、蜡和纸灰等的混合物','治病的药材','用来染色的颜料','清洗铁板的液体'],a:0},
-{id:'rong',q:'“药稍镕”中的“镕”是什么意思？',o:['同“熔”，使固体受热变成液体','雕刻','凝固','磨平'],a:0},
-{id:'di',q:'“字平如砥”中的“砥”指什么？',o:['磨刀石','铁板','木板','石碑'],a:0},
-{id:'yizi',q:'“一板已自布字”中的“已自”是什么意思？',o:['已经','自己','从此','停止'],a:0},
-{id:'ju',q:'“则第二板已具”中的“具”是什么意思？',o:['准备好了','工具','具体','全部'],a:0},
-{id:'genghu',q:'“更互用之”中的“更互”是什么意思？',o:['交替、轮流','互相更改','重新制作','彼此交换'],a:0},
-{id:'jiu-done',q:'“瞬息可就”中的“就”是什么意思？',o:['完成','靠近','从事','迁就'],a:0},
-{id:'tie-label',q:'“以纸帖之”中的“帖”在这里怎样理解？',o:['用标签标记','粘贴字画','写字临帖','请帖'],a:0},
-{id:'rhyme',q:'“每韵为一帖”中的“韵”指什么？',o:['韵部','韵律','声音的高低','诗歌'],a:0},
-{id:'rare-char',q:'“奇字”指什么？',o:['生僻字','写错的字','奇怪的字体','外族文字'],a:0},
-{id:'wood-grain',q:'“木理有疏密”中的“木理”指什么？',o:['木头的纹理','木头的道理','木制活字','木材的种类'],a:0},
-{id:'fan',q:'“燔土”中的“燔”是什么意思？',o:['烧','雕刻','浸泡','晾晒'],a:0},
-{id:'qi',q:'“用讫再火令药镕”中的“讫”是什么意思？',o:['完毕','停止用火','已经','立即'],a:0},
-{id:'shu',q:'“殊不沾污”中的“殊”表示什么程度？',o:['根本、完全','特别美丽','不同','稍微'],a:0},
-{id:'quncong',q:'“其印为余群从所得”中的“群从”指什么？',o:['堂兄弟及诸子侄','众多随从','同乡百姓','工匠学徒'],a:0},
-{id:'baocang',q:'“至今宝藏”中的“宝藏”应怎样理解？',o:['珍藏','贵重财宝','埋藏地下','秘密收藏'],a:0},
-{id:'inventor',q:'活字印刷术的发明者是？',o:['毕昇','沈括','冯道','蔡伦'],a:0},
-{id:'material',q:'毕昇制作活字主要使用什么材料？',o:['胶泥','木头','铜块','石料'],a:0},
-{id:'two-boards',q:'文中“常作二铁板”的主要作用是？',o:['一板印刷，一板布字，交替使用','一板备用，一板收藏','一板刻字，一板磨字','一板加热，一板冷却'],a:0},
-{id:'many-copies',q:'活字印刷在什么情况下更能体现“极为神速”？',o:['印数十百千本时','只印一两本时','不需要排版时','只使用一块铁板时'],a:0},
-{id:'store-type',q:'不用活字时，文中怎样分类贮存？',o:['按韵部分类，用木格贮存','按字形大小分类','按使用次数分类','按刻字时间分类'],a:0},
-{id:'rare-solution',q:'遇到平时没有准备的生僻字，文中怎样处理？',o:['马上刻制并用草火烧成','改用相近的字','暂时空缺','重新制作整版'],a:0},
-{id:'remove-type',q:'印刷结束后，活字为什么容易脱落？',o:['再次加热使药熔化，再用手轻拂','用水浸泡铁板','用刀逐字撬下','等待铁板自然裂开'],a:0},
-{id:'main-content',q:'《活板》主要介绍了什么？',o:['活字印刷的制作、使用及优点','雕版印刷的起源','造纸术的流程','古代书籍的收藏方法'],a:0},
-{id:'sequence',q:'下列工序顺序正确的是？',o:['制字—设板—排版—炀版—印刷—拆版','设板—制字—印刷—排版—拆版—炀版','制字—排版—设板—印刷—炀版—拆版','排版—制字—设板—炀版—拆版—印刷'],a:0}
+// language：字词解释、语句翻译、一词多义和语言迁移题。
+{id:'yi-tong',type:'language',q:'“已后典籍皆为板本”中的“已”同哪个字？',o:['以','己','亦','矣'],a:0},
+{id:'board-book',type:'language',q:'“已后典籍皆为板本”中的“板本”指什么？',o:['版印书籍','手抄书籍','木板原料','刻字模板'],a:0},
+{id:'commoner',type:'language',q:'“布衣毕昇”中的“布衣”指什么人？',o:['平民','官员','商人','僧人'],a:0},
+{id:'coin-edge',type:'language',q:'“薄如钱唇”中的“钱唇”指什么？',o:['铜钱的边缘','铜钱的正面','铜钱的方孔','铜钱上的文字'],a:0},
+{id:'jian',type:'language',q:'“火烧令坚”中的“坚”是什么意思？',o:['坚硬','坚持','牢固地站立','使人坚定'],a:0},
+{id:'huo',type:'language',q:'“松脂、蜡和纸灰”中的“和”是什么意思？',o:['混合','和睦','应和','温和'],a:0},
+{id:'mao',type:'language',q:'“其上以松脂、蜡和纸灰之类冒之”中的“冒”是什么意思？',o:['覆盖','冒险','升起','假充'],a:0},
+{id:'iron-frame',type:'language',q:'文中的“铁范”指什么？',o:['铁制模框','铁制字印','铁制刻刀','铁制书架'],a:0},
+{id:'jiu-fire',type:'language',q:'“持就火炀之”中的“就”是什么意思？',o:['靠近','完成','成就','立即'],a:0},
+{id:'yang',type:'language',q:'“炀”在文中的意思是？',o:['烘烤','燃烧','晒干','冷却'],a:0},
+{id:'medicine',type:'language',q:'文中的“药”指什么？',o:['松脂、蜡和纸灰等的混合物','治病的药材','用来染色的颜料','清洗铁板的液体'],a:0},
+{id:'rong',type:'language',q:'“药稍镕”中的“镕”是什么意思？',o:['同“熔”，熔化','雕刻','凝固','磨平'],a:0},
+{id:'di',type:'language',q:'“字平如砥”中的“砥”指什么？',o:['磨刀石','铁板','木板','石碑'],a:0},
+{id:'yizi',type:'language',q:'“一板已自布字”中的“已自”是什么意思？',o:['已经','自己','从此','停止'],a:0},
+{id:'ju',type:'language',q:'“则第二板已具”中的“具”是什么意思？',o:['准备好了','工具','具体','全部'],a:0},
+{id:'genghu',type:'language',q:'“更互用之”中的“更互”是什么意思？',o:['交替、轮流','互相更改','重新制作','彼此交换'],a:0},
+{id:'jiu-done',type:'language',q:'“瞬息可就”中的“就”是什么意思？',o:['完成','靠近','从事','迁就'],a:0},
+{id:'tie-label',type:'language',q:'“以纸帖之”中的“帖”在这里怎样理解？',o:['用标签标记','粘贴字画','写字临帖','请帖'],a:0},
+{id:'rhyme',type:'language',q:'“每韵为一帖”中的“韵”指什么？',o:['韵部','韵律','声音的高低','诗歌'],a:0},
+{id:'rare-char',type:'language',q:'“有奇字素无备者”中的“奇字”指什么？',o:['生僻字','写错的字','奇怪的字体','外族文字'],a:0},
+{id:'wood-grain',type:'language',q:'“木理有疏密”中的“木理”指什么？',o:['木头的纹理','木头的道理','木制活字','木材的种类'],a:0},
+{id:'fan',type:'language',q:'“不若燔土”中的“燔”是什么意思？',o:['烧','雕刻','浸泡','晾晒'],a:0},
+{id:'qi',type:'language',q:'“用讫再火令药镕”中的“讫”是什么意思？',o:['完毕','停止用火','已经','立即'],a:0},
+{id:'shu',type:'language',q:'“殊不沾污”中的“殊”表示什么？',o:['根本、完全','特别美丽','不同','稍微'],a:0},
+{id:'quncong',type:'language',q:'“其印为余群从所得”中的“群从”指什么？',o:['堂兄弟及诸子侄','众多随从','同乡百姓','工匠学徒'],a:0},
+{id:'baocang',type:'language',q:'“至今宝藏”中的“宝藏”应怎样理解？',o:['珍藏','贵重财宝','埋藏地下','秘密收藏'],a:0},
+{id:'translate-method',type:'language',q:'“其法：用胶泥刻字，薄如钱唇，每字为一印”翻译正确的是？',o:['他的方法是用胶泥刻字，薄得像铜钱边，每个字做一个字印','他依法把铜钱刻成字，每个字只印一次','他用泥封住铜钱边缘，再刻成整版','这种方法要把每个字刻在一枚铜钱上'],a:0},
+{id:'translate-cover',type:'language',q:'“其上以松脂、蜡和纸灰之类冒之”翻译正确的是？',o:['在铁板上用松脂、蜡和纸灰一类东西覆盖','在铁板上冒险点燃松脂和蜡','把铁板放进松脂、蜡和纸灰中','用纸盖住铁板，防止松脂熔化'],a:0},
+{id:'translate-many',type:'language',q:'“若印数十百千本，则极为神速”翻译正确的是？',o:['如果印几十、几百乃至上千本，就非常迅速','只要印十本，就必须很快完成','印数千本时，字印会像神一样移动','印书数量越少，速度越快'],a:0},
+{id:'translate-ready',type:'language',q:'“有奇字素无备者，旋刻之”翻译正确的是？',o:['遇到平时没有准备的生僻字，随即刻制','有奇怪的字，平时不要准备','所有生僻字都要提前旋转雕刻','发现错字后立即把整版重刻'],a:0},
+{id:'translate-brush',type:'language',q:'“以手拂之，其印自落，殊不沾污”翻译正确的是？',o:['用手轻拂，字印自行脱落，根本不被沾污','用手擦洗，字迹全部消失','用手推铁板，字印掉进污水','用手取字，字印会沾满松脂'],a:0},
+{id:'poly-jiu',type:'language',q:'下列“就”字的意义与“瞬息可就”相同的是？',o:['功成名就','持就火炀之','避重就轻','就地取材'],a:0},
+{id:'poly-tie',type:'language',q:'“以纸帖之”的“帖”与下列哪一项用法最接近？',o:['给药瓶贴上标签','临摹字帖','发出请帖','俯首帖耳'],a:0},
+{id:'poly-su',type:'language',q:'“有奇字素无备者”的“素”与下列哪一项意义最接近？',o:['素不相识','素色衣服','素食主义','银装素裹'],a:0},
+{id:'idiom-instant',type:'language',q:'与“瞬息可就”中的“瞬息”意思最接近的成语是？',o:['转瞬即逝','日积月累','旷日持久','来日方长'],a:0},
+{id:'idiom-no-stain',type:'language',q:'“殊不沾污”中的“殊不”可以替换为下列哪一项？',o:['完全不','偶尔不','或许不','暂时不'],a:0},
+{id:'other-text-yi',type:'language',q:'“以手拂之”的“以”，与《狼》“以刀劈狼首”的“以”意义相同，都是？',o:['用、拿','因为','来、用来','认为'],a:0},
+{id:'other-text-zhi',type:'language',q:'“持就火炀之”中的“之”指代什么？',o:['排好活字的铁板','毕昇','松脂和蜡','木活字'],a:0},
+
+// general：作者、文意与文化常识，不涉及后续展馆的工序排序操作。
+{id:'inventor',type:'general',q:'泥活字印刷术的发明者是？',o:['毕昇','沈括','冯道','蔡伦'],a:0},
+{id:'author',type:'general',q:'《活板》的作者是？',o:['沈括','毕昇','苏轼','欧阳修'],a:0},
+{id:'source',type:'general',q:'《活板》选自哪部著作？',o:['《梦溪笔谈》','《资治通鉴》','《天工开物》','《齐民要术》'],a:0},
+{id:'material',type:'general',q:'毕昇制作字印主要使用什么材料？',o:['胶泥','木头','铜块','石料'],a:0},
+{id:'main-content',type:'general',q:'《活板》主要介绍了什么？',o:['活字印刷的制作、使用及优点','雕版印刷的起源','造纸术的流程','古代书籍的收藏方法'],a:0},
+{id:'writing-order',type:'general',q:'《活板》介绍活字印刷时主要采用了哪种说明顺序？',o:['程序顺序','空间顺序','倒叙顺序','方位顺序'],a:0},
+{id:'why-record',type:'general',q:'沈括记录毕昇活字印刷术的重要价值是什么？',o:['保存了早期泥活字技术的重要史料','证明沈括本人发明了活字印刷','说明雕版印刷从未使用过','表明当时所有书籍都用活字印刷'],a:0},
+{id:'advantage',type:'general',q:'文章最突出活字印刷的哪一项优势？',o:['大量印刷时迅速且字印可复用','只适合印一两本书','字印永远不能拆下','完全不需要排版'],a:0}
 ];
 
 let Q=[];
@@ -1096,9 +1130,20 @@ function prepareQuestion(item){
 }
 
 function chooseQuestionSet(avoidIds=[]){
-  let pool=QUESTION_BANK.filter(x=>!avoidIds.includes(x.id));
-  if(pool.length<QUIZ_SIZE) pool=QUESTION_BANK.slice();
-  const selected=shuffled(pool).slice(0,QUIZ_SIZE);
+  const available=QUESTION_BANK.filter(x=>!avoidIds.includes(x.id));
+  let translationPool=available.filter(x=>x.type==='language'&&x.id.startsWith('translate-'));
+  let wordPool=available.filter(x=>x.type==='language'&&!x.id.startsWith('translate-'));
+  let generalPool=available.filter(x=>x.type!=='language');
+  // 每轮固定 7 道语言基础题：至少 2 道语句翻译，其余 5 道来自字词解释、一词多义、成语语境或课内迁移。
+  // 不设置工序排序类选择题，避免与研学探究馆的操作任务重复。
+  if(translationPool.length<2) translationPool=QUESTION_BANK.filter(x=>x.type==='language'&&x.id.startsWith('translate-'));
+  if(wordPool.length<5) wordPool=QUESTION_BANK.filter(x=>x.type==='language'&&!x.id.startsWith('translate-'));
+  if(generalPool.length<3) generalPool=QUESTION_BANK.filter(x=>x.type!=='language');
+  const selected=shuffled([
+    ...shuffled(translationPool).slice(0,2),
+    ...shuffled(wordPool).slice(0,5),
+    ...shuffled(generalPool).slice(0,3)
+  ]);
   currentQuestionIds=selected.map(x=>x.id);
   Q=selected.map(prepareQuestion);
 }
@@ -1220,6 +1265,26 @@ function renderLeaderboard(){
   box.innerHTML=head+rows;
 }
 
+function closeWrongModal(){
+  const modal=document.getElementById('wrongModal');if(modal)modal.classList.remove('open');
+}
+function showWrongAnswerModal(score,wrong){
+  if(!wrong.length)return;
+  const warm=document.getElementById('wrongWarm'),list=document.getElementById('wrongList'),modal=document.getElementById('wrongModal');
+  const msg=score>=90
+    ? `已经拿到${score}分啦，只差最后一小步。错题不是“失败”，而是课本悄悄递给你的线索。请再看看相关原文和课下注释；仍有不懂的地方，梦溪书童会陪你慢慢理清。`
+    : score>=70
+      ? `你已经闯过大半关卡，基础很扎实。先别急着重做，把下面几处和课文对一对；每弄懂一题，下一轮就会更从容。`
+      : `别着急，第一次没有全答对很正常。咱们把错题一题一题放回课文里找依据，读懂以后再闯一次。梦溪书童也在旁边等你提问。`;
+  warm.textContent=msg;
+  list.innerHTML=wrong.map(w=>`<div class="wrong-item"><strong>第${w.index}题：${esc(w.question)}</strong><div class="wrong-choice">你的答案：${esc(w.chosen)}</div><div class="correct-choice">正确答案：${esc(w.correct)}</div></div>`).join('');
+  modal.classList.add('open');
+}
+function reviewTextFromModal(){closeWrongModal();document.getElementById('readText')?.scrollIntoView({behavior:'smooth',block:'center'});}
+function askMengxiFromModal(){closeWrongModal();const btn=document.querySelector('.mengxi-float,.mx-float');if(btn)btn.click();else alert('梦溪书童正在准备中，请稍后点击页面右下角的小书童。');}
+function retryFromModal(){closeWrongModal();resetQuiz();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWrongModal();});
+
 function submitQuiz(){
 let sc=0;
 let wrong=[];
@@ -1238,7 +1303,7 @@ chosen:ans[i]!==undefined?q.o[ans[i]]:'未作答'
 });
 
 const duration=getAttemptDuration();
-const note=sc===100?'十题全部答对，通行证上的知识印章已点亮！':sc>=80?'基础掌握得很稳，再看看错题就更扎实了。':sc>=60?'已经闯过大半，建议对照课下注释订正错题。':'先别着急，翻回课文和注释，再试一次会更有把握。';
+const note=sc===100?'十题全部答对，通行证上的知识印章已点亮！':sc>=90?'知识闯关已通过，再看一眼错题就更扎实了。':sc>=70?'已经闯过大半，建议对照课文与课下注释订正错题。':'先别着急，翻回课文和注释，再试一次会更有把握。';
 quizResult.classList.add('has-result');
 quizResult.innerHTML=`<strong>${sc}分</strong> · 错题 ${wrong.length} 题<span class="result-note">本轮用时 ${formatDuration(duration)}。${note}</span>`;
 
@@ -1265,6 +1330,7 @@ wrongCount:wrong.length,
 duration,
 questionIds:currentQuestionIds.slice()
 });
+showWrongAnswerModal(sc,wrong);
 }
 
 function startNewQuiz(avoidPrevious=true){
@@ -1278,6 +1344,7 @@ function startNewQuiz(avoidPrevious=true){
 }
 
 function resetQuiz(){
+  closeWrongModal();
   startNewQuiz(true);
   window.scrollTo({top:document.querySelector('.quiz-panel').offsetTop-90,behavior:'smooth'});
 }
@@ -1296,9 +1363,9 @@ function renderStudentPass() {
     return;
   }
 
-  const b1 = localStorage.getItem('badge1') === 'unlocked';
-  const b2 = localStorage.getItem('badge2') === 'unlocked';
-  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : localStorage.getItem('badge3') === 'unlocked';
+  const b1 = window.MTP2 ? window.MTP2.getBadge(1) : false;
+  const b2 = window.MTP2 ? window.MTP2.getBadge(2) : false;
+  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : false;
   const thinkingStar = !!(window.MTP2 && window.MTP2.getThinkingStar && window.MTP2.getThinkingStar());
   const passNumber = st.passNumber || 'FX-2026-0001';
 
@@ -1318,5 +1385,5 @@ function renderStudentPass() {
 }
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.31"></script></body>
+<script src="mengxi-assistant.js?v=2.41"></script></body>
 </html>

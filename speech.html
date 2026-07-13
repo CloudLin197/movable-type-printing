@@ -136,17 +136,17 @@ function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;
 function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
 function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
 function studentKey(){let s=getStudent();return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';}
-function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';}
+function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，点击“未登录”领取研学探展证。';}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.35"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.43">
+<script src="platform-v2.js?v=2.43"></script>
 </head>
 <body>
 <script>renderHero('speech.html');</script>
 
-<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🎙️ 活字解说馆</h1><span class="sub">非遗讲解员创作中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">欢迎来到第三站——非遗解说馆！</div><p style="line-height:1.9;font-size:17px">作为展馆的“小小讲解员”，你需要为数字展馆创作一段约150字的解说词，向参观者介绍活字印刷的奥秘。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📜 任务要求</div><table class="table task-requirements-table"><tr><th>要素</th><th>具体要求</th></tr><tr><td>工序还原</td><td>须使用“设板”“布字”“炀版”“平版”“拆版”等课文原词</td></tr><tr><td>“活”的阐释</td><td>至少运用技术之活、设计之活、思维之活中的一个层次</td></tr><tr><td>精神评价</td><td>点明毕昇创新精神的价值</td></tr></table><label>小组名称</label><input id="groupName" placeholder="例如：第一小组"><label>解说词内容</label><textarea id="speechInput" maxlength="300" style="min-height:170px" placeholder="请输入150字左右解说词"></textarea><div class="muted" id="wordCount" style="text-align:right">当前字数：0/300</div><button class="btn btn-primary" id="submitBtn">提交解说词</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback"></div></section><section class="panel"><div class="panel-title">🏆 优秀讲解员作品榜</div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
+<div class="exhibit-hall"><header class="museum-header"><div class="museum-title"><h1>🎙️ 活字解说馆</h1><span class="sub">非遗讲解员创作中心</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header><section class="intro-box"><div class="panel-title">欢迎来到第三站——非遗解说馆！</div><p style="line-height:1.9;font-size:17px">作为展馆的“小小讲解员”，你需要为数字展馆创作一段约150字的解说词，向参观者介绍活字印刷的奥秘。</p></section><div class="grid-2"><section class="panel"><div class="panel-title">📜 任务要求</div><table class="table task-requirements-table"><tr><th>要素</th><th>具体要求</th></tr><tr><td>工序还原</td><td>须还原活字印刷的主要流程，按先后顺序描述制字、设板、排版、炀板、印刷、拆板等关键工序；可用自己的话表达，不必逐字照抄课文。</td></tr><tr><td>“活”的阐释</td><td>三选一，至少阐释一个层次，并用具体工序或原文依据说清楚：①“技术之活”——字印可拆、可换、可重复使用；②“设计之活”——按需制字、两板更互、分类贮字；③“思维之活”——由整版固定转向单字模块组合。</td></tr><tr><td>历史评价</td><td>联系课文开头的“雕版印刷”，说明从整版雕刻到单字组合的突破，以及它对印刷技术发展和知识传播的重要意义。</td></tr></table><label>小组名称</label><input id="groupName" placeholder="例如：第一小组"><label>解说词内容</label><textarea id="speechInput" maxlength="300" style="min-height:170px" placeholder="请输入150字左右解说词"></textarea><div class="muted" id="wordCount" style="text-align:right">当前字数：0/300</div><button class="btn btn-primary" id="submitBtn">提交解说词</button><button class="btn" id="clearBtn">清空</button><div id="feedback" class="feedback speech-feedback"></div></section><section class="panel"><div class="panel-title">🏆 优秀讲解员作品榜</div><div id="workList" class="work-list"></div></section></div><div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
 <script>
 startHero();
 
@@ -158,23 +158,48 @@ if(st)groupName.value=st.cls+' '+st.name;
 let works=JSON.parse(localStorage.getItem('speechWorks')||'[]');
 speechInput.addEventListener('input',()=>wordCount.textContent=`当前字数：${speechInput.value.length}/300`);
 clearBtn.onclick=()=>{speechInput.value='';wordCount.textContent='当前字数：0/300';feedback.textContent='';};
+let lastSpeechGuidePrompt='';
+function askMengxiForSpeech(){
+ const prompt=lastSpeechGuidePrompt||'请根据我的解说词草稿指出缺失的任务要素，并用追问引导我自己修改，不要直接代写。';
+ if(window.MengxiAssistant&&typeof window.MengxiAssistant.open==='function'){window.MengxiAssistant.open(prompt);return;}
+ document.querySelector('.mengxi-float')?.click();setTimeout(()=>{const input=document.querySelector('.mengxi-panel input');if(input){input.value=prompt;input.focus()}},120);
+}
+function showIssue(message,prompt){
+ lastSpeechGuidePrompt=prompt||message;
+ feedback.className='feedback error speech-feedback';
+ feedback.innerHTML=`<div class="speech-issue-copy">${esc(message)}</div><button class="btn speech-mengxi-btn" type="button">请梦溪陪我修改</button>`;
+ feedback.querySelector('.speech-mengxi-btn')?.addEventListener('click',askMengxiForSpeech);
+}
+function show(m,t){feedback.textContent=m;feedback.className='feedback '+t+' speech-feedback'}
 submitBtn.onclick=()=>{
-  let name=groupName.value.trim(),text=speechInput.value.trim();
-  if(!name||!text){show('❌ 请填写小组名称和解说词。','error');return;}
-  if(text.length<80){show('❌ 解说词偏短，建议接近150字。','error');return;}
-  let process=['设板','布字','炀版','平版','拆版'].filter(w=>text.includes(w)).length;
-  if(process<2){show('❌ 请至少使用两个课文工序原词。','error');return;}
-  if(!['技术之活','设计之活','思维之活','技术','设计','思维'].some(w=>text.includes(w))){show('❌ 请补充对“活”的解读。','error');return;}
-  if(!['毕昇','创新','创造','发明'].some(w=>text.includes(w))){show('❌ 请补充毕昇创新精神评价。','error');return;}
-  {const owner=getStudent();works.push({id:Date.now(),name,text,student:owner,studentKey:studentKey(),studentClass:owner?.cls||'',studentSeat:owner?.seat||'',studentName:owner?.name||'',likes:0,comments:[],time:new Date().toLocaleString()});}
-  save();
-  render();
-  window.MTP2&&MTP2.unlockBadge(2);saveProgress('活字解说馆',{action:'提交解说词',length:text.length});
-  show('✅ 提交成功！作品已进入展示栏。','success');
-  speechInput.value='';
-  wordCount.textContent='当前字数：0/300';
+ const isTeacher=!!(window.MTP2&&MTP2.isTeacher&&MTP2.isTeacher());
+ const owner=getStudent();
+ if(!owner&&!isTeacher){window.MTP2?.openLoginModal('登录后才能提交解说词并保存作品。先领取研学探展证吧。');return;}
+ let name=groupName.value.trim(),text=speechInput.value.trim();
+ if(!name||!text){showIssue('请先填写小组名称和解说词。','我还没有填写完整。请先问我小组名称和解说词分别准备写什么，再引导我开始。');return;}
+ if(text.length<80){showIssue('这段解说词还偏短。可以从工序还原、“活”的特点或历史意义中选一处补充。',`我的解说词只有${text.length}字。请先判断工序、“活”的阐释和历史意义哪一部分最薄弱，再用问题引导我补充，不要直接改写全文。草稿：${text}`);return;}
+ const processStages=[
+  {name:'制字',re:/制字|胶泥刻字|刻成单字|每字为一印|火烧令坚/},
+  {name:'设板',re:/设板|铁板.{0,20}(松脂|蜡|纸灰)|冒之|铺上松脂|准备铁板/},
+  {name:'排版',re:/排版|排字|布字|密布字印|把字印排在|排列字印/},
+  {name:'炀板',re:/炀板|炀版|持就火炀|炀之|靠近火|烘烤|加热使.*熔/},
+  {name:'印刷',re:/印刷|刷印|一板印刷|更互用之|交替印刷|用来印/},
+  {name:'拆板',re:/拆板|拆版|用讫再火|以手拂之|其印自落|取下字印|回收活字/}
+ ];
+ const found=processStages.map(stage=>{const m=text.match(stage.re);return m?{name:stage.name,pos:m.index} : null}).filter(Boolean);
+ const ordered=found.every((v,i)=>i===0||v.pos>found[i-1].pos);
+ if(found.length<processStages.length||!ordered){const missing=processStages.filter(s=>!found.some(x=>x.name===s.name)).map(s=>s.name);showIssue(`工序还原已经有基础了，再检查一下是否按先后写清制字、设板、排版、炀板、印刷、拆板。${missing.length?'目前还可重点补充：'+missing.join('、')+'。':''}`,`请根据《活板》原文，温和地引导我检查解说词中的六个主要工序是否完整、顺序是否合理：制字、设板、排版、炀板、印刷、拆板。允许我用自己的话表达，不要求逐字照抄；请先肯定已有内容，再一次只追问一个最需要补充的地方，不要直接替我重写。草稿：${text}`);return;}
+ const tech=/字印|可拆|可换|复用|重复使用|每字为一印/.test(text);
+ const design=/两板|更互|交替|按需|旋刻|贮字|分类|韵/.test(text);
+ const thinking=/模块|组合|整版|固定整体|化整为零|单字组合/.test(text);
+ if(!(tech||design||thinking)){showIssue('还需要选一个角度，把“活”说具体：它可以体现在字印可拆可换、工序按需组合，或由整版固定转向单字模块化。',`请从技术之活、设计之活、思维之活三个角度中，帮助我选择最适合这份草稿的一项，并用追问让我结合具体工序或原文说明，不要直接给完整答案。草稿：${text}`);return;}
+ const hasDiao=/雕版|整版|板印/.test(text),hasHistory=/历史|传播|知识|文明|发展|变革|意义|重要|推动|普及|流传/.test(text);
+ if(!(hasDiao&&hasHistory)){showIssue('请再联系课文开头的雕版印刷，说明从“整版固定”到“单字组合”的突破，以及它对印刷发展或知识传播的意义。',`请引导我把雕版印刷与活字印刷作比较，并思考这种变化在历史发展中的意义。先指出我的草稿缺了哪一层，再向我提问，不要替我写成稿。草稿：${text}`);return;}
+ const submitOwner=owner||{cls:'教师演示',seat:'—',name:'教师预览',key:'teacher-preview'};
+ works.push({id:Date.now(),name,text,student:submitOwner,studentKey:submitOwner.key||`${submitOwner.cls}-${submitOwner.seat}-${submitOwner.name}`,studentClass:submitOwner.cls||'',studentSeat:submitOwner.seat||'',studentName:submitOwner.name||'',likes:0,comments:[],time:new Date().toLocaleString()});
+ save();render();if(!isTeacher)window.MTP2&&MTP2.unlockBadge(2);saveProgress('活字解说馆',{action:'提交解说词',length:text.length});
+ show('✅ 提交成功！作品已进入展示栏。','success');speechInput.value='';wordCount.textContent='当前字数：0/300';
 };
-function show(m,t){feedback.textContent=m;feedback.className='feedback '+t}
 function save(){localStorage.setItem('speechWorks',JSON.stringify(works));window.MTP2&&MTP2.syncStudentSnapshot();}
 function render(){
   workList.innerHTML='';
@@ -204,9 +229,9 @@ function renderStudentPass() {
     return;
   }
 
-  const b1 = localStorage.getItem('badge1') === 'unlocked';
-  const b2 = localStorage.getItem('badge2') === 'unlocked';
-  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : localStorage.getItem('badge3') === 'unlocked';
+  const b1 = window.MTP2 ? window.MTP2.getBadge(1) : false;
+  const b2 = window.MTP2 ? window.MTP2.getBadge(2) : false;
+  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : false;
   const thinkingStar = !!(window.MTP2 && window.MTP2.getThinkingStar && window.MTP2.getThinkingStar());
   const passNumber = st.passNumber || 'FX-2026-0001';
 
@@ -226,5 +251,5 @@ function renderStudentPass() {
 }
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.29"></script></body>
+<script src="mengxi-assistant.js?v=2.41"></script></body>
 </html>

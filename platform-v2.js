@@ -1,6 +1,11 @@
 (function(){
 'use strict';
-const P={version:'2.35',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
+const P={version:'2.43',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
+const BADGE_META={
+  1:{name:'工艺探究徽章',desc:'完成工序排序与六项工序探微'},
+  2:{name:'云端解说徽章',desc:'完成并提交活字印刷解说词'},
+  3:{name:'非遗传承徽章',desc:'完成一项课后分层传承任务'}
+};
 const DATA_KEYS=['students','pretestRecords','progressRecords','studentActivity','speechWorks','heritageWorks','pretestQuizLeaderboardV2'];
 const SNAPSHOT_SCHEMA='mtp-share-snapshot-v2';
 const safeParse=(s,d=null)=>{try{return JSON.parse(s)}catch(e){return d}};
@@ -17,7 +22,7 @@ function recordStudentKey(item){
  if(item.key&&('cls'in item||'className'in item||'class'in item||'seat'in item||'name'in item))return String(item.key);
  const cls=item.cls||item.className||item.class||item.studentClass||'';
  const seat=item.seat||item.studentSeat||'';
- const name=item.studentName||((item.name&&!item.text)?item.name:'')||'';
+ const name=item.studentName||item.authorName||item.ownerName||((item.name&&!item.text&&!item.content&&!item.title)?item.name:'')||((item.author&&!item.content)?item.author:'')||'';
  return cls&&name?`${cls}-${seat}-${name}`:'';
 }
 function recordSignature(key,item){
@@ -43,10 +48,11 @@ function getStudentExtras(key){
  [`badge1:${key}`,`badge2:${key}`,`badge3:${key}`,`thinkingStar:${key}`].forEach(k=>{const v=localStorage.getItem(k);if(v!==null)extras[k]=v});
  return extras;
 }
-function collectTeacherSnapshot(){
+function collectTeacherSnapshot({includeImages=true}={}){
  const data={};DATA_KEYS.forEach(k=>data[k]=readDataKey(k));
+ if(!includeImages&&Array.isArray(data.heritageWorks))data.heritageWorks=data.heritageWorks.map(x=>({...x,image:''}));
  const extras={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^badge[123]:/.test(k)||/^thinkingStar:/.test(k))extras[k]=localStorage.getItem(k)}
- return{schema:SNAPSHOT_SCHEMA,kind:'teacher',version:P.version,generatedAt:new Date().toISOString(),source:location.origin+location.pathname,data,extras};
+ return{schema:SNAPSHOT_SCHEMA,kind:'teacher',version:P.version,generatedAt:new Date().toISOString(),source:location.origin+location.pathname,data,extras,imagesOmitted:!includeImages};
 }
 function collectStudentSnapshot(st,{includeImages=true}={}){
  const key=studentKey(st),data={};
@@ -87,7 +93,7 @@ async function applyUrlSharedSnapshot(){
  try{
   const snapshot=importSharedSnapshot(await decodeSnapshot(tok));
   hp.delete('snapshot');const cleanHash=hp.toString();history.replaceState({},'',location.pathname+location.search+(cleanHash?'#'+cleanHash:''));
-  sessionStorage.setItem('mtpSharedSnapshotNotice',JSON.stringify({kind:snapshot.kind||'teacher',generatedAt:snapshot.generatedAt||'',version:snapshot.version||'',imagesOmitted:!!snapshot.imagesOmitted}));
+  sessionStorage.removeItem('mtpSharedSnapshotNotice');
   location.reload();
  }catch(e){console.error(e);alert('分享数据读取失败：'+(e.message||'链接可能不完整，请重新复制分享链接。'))}
 }
@@ -136,22 +142,32 @@ window.MTP2={
    message=`已复制 ${st.cls||''} ${st.name||''} 的学生登录与作品链接。\n其他人打开后可以看到该账号已提交的解说词、非遗作品及学习记录。`;
   }
   let token=await encodeSnapshot(snapshot),hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();
-  if(url.href.length>750000&&s.role==='student'){
-   snapshot=collectStudentSnapshot(s.student||currentStudent(),{includeImages:false});token=await encodeSnapshot(snapshot);hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();message+='\n由于作品图片较大，分享链接中已保留文字内容并省略非遗作品图片。';
+  if(url.href.length>750000){
+   if(s.role==='teacher')snapshot=collectTeacherSnapshot({includeImages:false});
+   else snapshot=collectStudentSnapshot(s.student||currentStudent(),{includeImages:false});
+   token=await encodeSnapshot(snapshot);hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();message+='\n由于作品图片较大，分享链接中已保留全部文字、成绩和学习记录，并省略非遗作品图片。';
   }
-  if(url.href.length>1200000){alert('当前数据过多，分享链接可能被聊天软件截断。请先删除过大的作品图片，或使用教师数据中心的“导出全部数据 JSON”。');return}
+  if(url.href.length>1200000){alert('当前数据过多，分享链接可能被聊天软件截断。请先删除过大的作品图片，或使用教师数据中心的“导出全部数据 ZIP”。');return}
   try{await navigator.clipboard.writeText(url.href);alert(message)}catch(e){prompt('复制下面的分享链接：',url.href)}
  },
  logout(){clearSession();location.href='index.html'},
- badgeKey(n){const k=studentKey();return k?`badge${n}:${k}`:`badge${n}`},
- getBadge(n){return localStorage.getItem(this.badgeKey(n))==='unlocked'||localStorage.getItem(`badge${n}`)==='unlocked'},
- unlockBadge(n){localStorage.setItem(this.badgeKey(n),'unlocked');localStorage.setItem(`badge${n}`,'unlocked');this.syncStudentSnapshot()},
+ badgeKey(n){const k=studentKey();return k?`badge${n}:${k}`:''},
+ getBadge(n){const k=this.badgeKey(n);return !!k&&localStorage.getItem(k)==='unlocked'},
+ unlockBadge(n){const k=this.badgeKey(n);if(!k)return false;const isNew=localStorage.getItem(k)!=='unlocked';localStorage.setItem(k,'unlocked');this.syncStudentSnapshot();if(isNew)document.dispatchEvent(new CustomEvent('mtpBadgeUnlocked',{detail:{badge:n}}));return isNew},
  thinkingStarKey(){const k=studentKey();return k?`thinkingStar:${k}`:''},
  getThinkingStar(){const k=this.thinkingStarKey();return !!k&&localStorage.getItem(k)==='unlocked'},
  unlockThinkingStar(){const k=this.thinkingStarKey();if(!k)return false;localStorage.setItem(k,'unlocked');this.syncStudentSnapshot();document.dispatchEvent(new CustomEvent('mengxiThinkingStarUnlocked'));return true},
  syncStudentSnapshot(){const st=currentStudent();if(!st)return;const list=readDataKey('students'),key=studentKey(st),i=list.findIndex(x=>(x.key||recordStudentKey(x))===key);const snap={...st,key,badges:[1,2,3].map(n=>this.getBadge(n)),thinkingStar:this.getThinkingStar(),lastSeen:new Date().toLocaleString()};if(i>=0)list[i]={...list[i],...snap};else list.push(snap);localStorage.setItem('students',JSON.stringify(list))}
 };
-function restoreStudentBadges(){const st=currentStudent();if(!st)return;const key=studentKey(st),rec=readDataKey('students').find(x=>(x.key||recordStudentKey(x))===key);if(rec&&Array.isArray(rec.badges))rec.badges.forEach((v,i)=>{if(v){localStorage.setItem(`badge${i+1}:${key}`,'unlocked');localStorage.setItem(`badge${i+1}`,'unlocked')}else localStorage.removeItem(`badge${i+1}`)});if(rec&&rec.thinkingStar)localStorage.setItem(`thinkingStar:${key}`,'unlocked')}
+function migrateV237BadgeState(){
+ if(localStorage.getItem('mtpBadgeMigrationV237')==='done')return;
+ const students=readDataKey('students');
+ const completeFor=key=>{const data=safeParse(localStorage.getItem(`inquiryProgress_${key}`),null);if(!data||!data.stepUnlocked)return false;const u=data.stepUnlocked,map={布字:'排版',炀版:'炀板',拆版:'拆板'},done={};Object.entries(u).forEach(([k,v])=>{done[map[k]||k]=!!v});return ['制字','设板','排版','炀板','印刷','拆板'].every(k=>done[k])};
+ students.forEach(st=>{const key=st.key||recordStudentKey(st);if(!key)return;if(!completeFor(key)){if(Array.isArray(st.badges))st.badges[0]=false;localStorage.removeItem(`badge1:${key}`)}});
+ localStorage.setItem('students',JSON.stringify(students));localStorage.setItem('mtpBadgeMigrationV237','done');
+}
+function restoreStudentBadges(){['badge1','badge2','badge3'].forEach(k=>localStorage.removeItem(k));const st=currentStudent();if(!st)return;const key=studentKey(st),rec=readDataKey('students').find(x=>(x.key||recordStudentKey(x))===key);if(rec&&Array.isArray(rec.badges)){const data=safeParse(localStorage.getItem(`inquiryProgress_${key}`),null),u=data&&data.stepUnlocked?data.stepUnlocked:{},map={布字:'排版',炀版:'炀板',拆版:'拆板'},done={};Object.entries(u).forEach(([k,v])=>{done[map[k]||k]=!!v});const processComplete=['制字','设板','排版','炀板','印刷','拆板'].every(k=>done[k]);if(!processComplete){rec.badges[0]=false;localStorage.removeItem(`badge1:${key}`);const all=readDataKey('students'),i=all.findIndex(x=>(x.key||recordStudentKey(x))===key);if(i>=0){all[i]={...all[i],badges:rec.badges};localStorage.setItem('students',JSON.stringify(all))}}rec.badges.forEach((v,i)=>{const k=`badge${i+1}:${key}`;if(v)localStorage.setItem(k,'unlocked');else localStorage.removeItem(k)})}if(rec&&rec.thinkingStar)localStorage.setItem(`thinkingStar:${key}`,'unlocked')}
+migrateV237BadgeState();
 restoreStudentBadges();
 function patchFunctions(){
  if(typeof window.saveStudentEverywhere==='function'){const old=window.saveStudentEverywhere;window.saveStudentEverywhere=function(st){st=upsertStudent(st);old(st);setSession({role:'student',student:st,loginAt:new Date().toISOString()});restoreStudentBadges();return st}}
@@ -160,11 +176,59 @@ function patchFunctions(){
  if(typeof window.logout==='function')window.logout=function(){MTP2.logout()};
 }
 function moveNavIntoHero(){const hero=document.querySelector('.hero'),nav=document.querySelector('.site-nav-shell');if(hero&&nav&&nav.parentElement!==hero)hero.appendChild(nav)}
-function addUserBar(){if(location.pathname.endsWith('index.html')||location.pathname.endsWith('/')||document.querySelector('.v2-userbar'))return;const s=getSession();const bar=document.createElement('div');bar.className='v2-userbar';let left='尚未登录';if(s?.role==='teacher')left='<span class="v2-teacher-flag">教师模式：全部展馆已解锁</span>';else if(s?.role==='student'&&s.student)left=`已登录：<b>${escapeHtml(s.student.cls)} ${escapeHtml(s.student.seat)}号 ${escapeHtml(s.student.name)}</b>　探展编号：<b>${escapeHtml(s.student.passNumber||'')}</b>${MTP2.getThinkingStar()?'<span class="v2-thinking-star" title="思辨之星">★ 思辨之星</span>':''}`;bar.innerHTML=`<div>${left}</div><div class="v2-userbar-actions"><button class="v2-mini-btn" onclick="MTP2.shareLink()">${s?.role==='teacher'?'分享教师数据链接':'分享本账号与作品'}</button>${s?'<button class="v2-mini-btn" onclick="MTP2.logout()">退出登录</button>':''}</div>`;const hero=document.querySelector('.hero');hero?.insertAdjacentElement('afterend',bar)}
+function createLoginModal(){
+ if(document.getElementById('v2LoginModal'))return document.getElementById('v2LoginModal');
+ const modal=document.createElement('div');modal.id='v2LoginModal';modal.className='v2-login-modal';modal.setAttribute('aria-hidden','true');
+ modal.innerHTML=`<div class="v2-login-backdrop" data-login-close></div><section class="v2-login-card" role="dialog" aria-modal="true" aria-labelledby="v2LoginTitle"><button class="v2-login-close" type="button" data-login-close aria-label="关闭">×</button><header class="v2-login-pass-header"><div class="v2-pass-kicker">📜 福州活字印刷云展馆</div><h2 id="v2LoginTitle">研学探展证</h2><div class="v2-login-pass-en">Expedition Pass</div></header><p class="v2-login-lead" id="v2LoginReason">请先领取探展证，再继续完成学习任务。</p><div class="v2-login-grid"><label>班级<input id="v2LoginClass" autocomplete="organization" placeholder="例如：七年级1班"></label><label>座号<input id="v2LoginSeat" inputmode="numeric" placeholder="例如：08"></label><label class="v2-login-full">姓名<input id="v2LoginName" autocomplete="name" placeholder="请输入姓名"></label></div><div class="v2-login-pass"><div class="v2-login-pass-row"><span>探展编号</span><strong id="v2LoginPass">填写信息后自动生成</strong></div><div class="v2-login-pass-row v2-login-badge-row"><span>匠心徽章</span><span class="v2-login-badge-preview" aria-label="三枚待解锁徽章"><i><img src="${P.badgeFiles[0]}" alt="工艺探究徽章"></i><i><img src="${P.badgeFiles[1]}" alt="云端解说徽章"></i><i><img src="${P.badgeFiles[2]}" alt="非遗传承徽章"></i></span></div></div><div class="v2-login-msg" id="v2LoginMsg"></div><button class="v2-login-submit" id="v2LoginSubmit" type="button">🔍 领取证件，继续当前任务</button><p class="v2-login-note">学习成果仅保存在当前浏览器中</p></section>`;
+ document.body.appendChild(modal);
+ const cls=modal.querySelector('#v2LoginClass'),seat=modal.querySelector('#v2LoginSeat'),name=modal.querySelector('#v2LoginName'),pass=modal.querySelector('#v2LoginPass'),msg=modal.querySelector('#v2LoginMsg');
+ const updatePass=()=>{const c=cls.value.trim(),s=seat.value.trim(),n=name.value.trim();pass.textContent=(c&&s&&n)?genPass({cls:c,seat:s,name:n}):'填写信息后自动生成'};
+ [cls,seat,name].forEach(x=>x.addEventListener('input',updatePass));
+ modal.querySelectorAll('[data-login-close]').forEach(x=>x.addEventListener('click',()=>closeLoginModal()));
+ modal.querySelector('#v2LoginSubmit').addEventListener('click',()=>{
+  const st={cls:cls.value.trim(),seat:seat.value.trim(),name:name.value.trim()};
+  if(!st.cls||!st.seat||!st.name){msg.textContent='请把班级、座号和姓名填写完整。';msg.className='v2-login-msg error';return}
+  st.passNumber=genPass(st);const saved=upsertStudent(st);setSession({role:'student',student:saved,loginAt:new Date().toISOString()});restoreStudentBadges();MTP2.syncStudentSnapshot();msg.textContent='探展证已生效，正在回到当前任务……';msg.className='v2-login-msg success';
+  setTimeout(()=>location.reload(),360);
+ });
+ modal.addEventListener('keydown',e=>{if(e.key==='Escape')closeLoginModal();if(e.key==='Enter'&&!e.target.matches('textarea'))modal.querySelector('#v2LoginSubmit').click()});
+ return modal;
+}
+function openLoginModal(reason='请先领取探展证，再继续完成学习任务。'){
+ if(getSession())return false;const modal=createLoginModal();modal.querySelector('#v2LoginReason').textContent=reason;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.classList.add('v2-modal-open');setTimeout(()=>modal.querySelector('#v2LoginClass')?.focus(),40);return true;
+}
+function closeLoginModal(){const modal=document.getElementById('v2LoginModal');if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.classList.remove('v2-modal-open')}
+MTP2.openLoginModal=openLoginModal;MTP2.closeLoginModal=closeLoginModal;
+function addUserBar(){
+ if(/(?:^|\/)index(?:\(\d+\))?\.html$/.test(location.pathname)||location.pathname.endsWith('/')||document.querySelector('.v2-userbar'))return;
+ const s=getSession(),bar=document.createElement('div');bar.className='v2-userbar';
+ let left='<button class="v2-login-link" type="button" data-open-student-login>尚未登录 · 点击领取研学探展证</button>';
+ if(s?.role==='teacher')left='<span class="v2-teacher-flag">教师模式：全部展馆已解锁，可使用全部功能</span>';
+ else if(s?.role==='student'&&s.student)left=`已登录：<b>${escapeHtml(s.student.cls)} ${escapeHtml(s.student.seat)}号 ${escapeHtml(s.student.name)}</b>　探展编号：<b>${escapeHtml(s.student.passNumber||'')}</b>${MTP2.getThinkingStar()?'<span class="v2-thinking-star" title="思辨之星">★ 思辨之星</span>':''}`;
+ const actions=s?`<button class="v2-mini-btn" onclick="MTP2.shareLink()">${s.role==='teacher'?'分享教师数据链接':'分享本账号与作品'}</button><button class="v2-mini-btn" onclick="MTP2.logout()">退出登录</button>`:'';
+ bar.innerHTML=`<div>${left}</div><div class="v2-userbar-actions">${actions}</div>`;
+ bar.querySelector('[data-open-student-login]')?.addEventListener('click',()=>openLoginModal('请先领取研学探展证，再继续浏览和作答。'));
+ const hero=document.querySelector('.hero');hero?.insertAdjacentElement('afterend',bar);
+}
+function wireLoginPrompts(){
+ if(getSession())return;
+ document.querySelectorAll('#studentBadge').forEach(el=>{
+  el.classList.add('v2-login-prompt');el.setAttribute('role','button');el.setAttribute('tabindex','0');el.title='点击领取研学探展证';
+  const go=()=>openLoginModal('请先填写研学探展证，登录后会留在当前展馆继续学习。');el.addEventListener('click',go);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+ });
+}
+function wireProtectedInteractions(){
+ if(getSession()||MTP2.isTeacher()||/(?:^|\/)index(?:\(\d+\))?\.html$/.test(location.pathname)||location.pathname.endsWith('/')||location.pathname.endsWith('help.html')||location.pathname.endsWith('teacher.html'))return;
+ const protectedSelector='.exhibit-hall input,.exhibit-hall textarea,.exhibit-hall select,.exhibit-hall button,.exhibit-hall [role="button"],.exhibit-hall .option,.exhibit-hall .step-card,.exhibit-hall [data-answer],.exhibit-hall [data-choice]';
+ const blockGuest=e=>{const target=e.target.closest?.(protectedSelector);if(!target||target.closest('#v2LoginModal')||target.closest('.site-nav')||target.closest('.help-button')||target.closest('#studentBadge')||target.dataset.guestAllowed==='true')return false;e.preventDefault();e.stopImmediatePropagation?.();e.stopPropagation();openLoginModal('登录后才能记录这次作答。先领取研学探展证吧。');return true};
+ document.addEventListener('pointerdown',blockGuest,true);
+ document.addEventListener('click',blockGuest,true);
+ document.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;blockGuest(e)},true);
+}
 function unlockTeacherView(){if(!MTP2.isTeacher())return;document.documentElement.classList.add('teacher-mode');document.querySelectorAll('.locked').forEach(el=>{el.classList.remove('locked');el.classList.add('unlocked')});document.querySelectorAll('.lock-cover').forEach(el=>el.style.display='none');document.querySelectorAll('button:disabled').forEach(b=>b.disabled=false);try{if(typeof window.unlockInquiryForTeacher==='function')window.unlockInquiryForTeacher();else{if(typeof window.unlockGallery==='function')window.unlockGallery();if(typeof window.unlockActiveInquiry==='function')window.unlockActiveInquiry()}}catch(e){}
 }
-function replaceBadgeEmoji(){document.querySelectorAll('.pass-badge-icon').forEach((el,i)=>{const n=(i%3)+1;if(!el.querySelector('img'))el.innerHTML=`<img src="${P.badgeFiles[n-1]}" alt="徽章${n}">`;if(MTP2.isTeacher()||MTP2.getBadge(n))el.classList.add('unlocked')});const old=document.querySelectorAll('#badge1Icon,#badge2Icon,#badge3Icon');old.forEach((el,i)=>{el.innerHTML=`<img src="${P.badgeFiles[i]}" alt="徽章${i+1}" style="width:100%;height:100%;object-fit:contain">`;if(MTP2.getBadge(i+1)||MTP2.isTeacher())el.classList.add('unlocked')})}
-function addIndexSessionUI(){if(!location.pathname.endsWith('index.html')&&!location.pathname.endsWith('/'))return;const s=getSession();if(s?.role==='teacher'){const msg=document.getElementById('loginMsg');if(msg){msg.textContent='教师模式已登录：所有展馆均已解锁。';msg.style.color='#d9f2c4'}const target=document.querySelector('.teacher-link');if(target){const b=document.createElement('button');b.className='logout-btn';b.textContent='退出教师登录';b.onclick=()=>MTP2.logout();target.insertAdjacentElement('afterend',b)}}}
+function replaceBadgeEmoji(){document.querySelectorAll('.pass-badge-icon').forEach((el,i)=>{const n=(i%3)+1;if(!el.querySelector('img'))el.innerHTML=`<img src="${P.badgeFiles[n-1]}" alt="徽章${n}">`;el.classList.toggle('unlocked',MTP2.isTeacher()||MTP2.getBadge(n))});const old=document.querySelectorAll('#badge1Icon,#badge2Icon,#badge3Icon');old.forEach((el,i)=>{el.innerHTML=`<img src="${P.badgeFiles[i]}" alt="徽章${i+1}" style="width:100%;height:100%;object-fit:contain">`;el.classList.toggle('unlocked',MTP2.isTeacher()||MTP2.getBadge(i+1))})}
+function addIndexSessionUI(){if(!/(?:^|\/)index(?:\(\d+\))?\.html$/.test(location.pathname)&&!location.pathname.endsWith('/'))return;const s=getSession();if(s?.role==='teacher'){const msg=document.getElementById('loginMsg');if(msg){msg.textContent='教师模式已登录：所有展馆均已解锁。';msg.style.color='#d9f2c4'}const target=document.querySelector('.teacher-link');if(target){const b=document.createElement('button');b.className='logout-btn';b.textContent='退出教师登录';b.onclick=()=>MTP2.logout();target.insertAdjacentElement('afterend',b)}}}
 function escapeHtml(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function patchTeacherLogin(){if(!location.pathname.endsWith('teacher.html'))return;const session=getSession();if(typeof window.checkCode==='function'){window.checkCode=function(){const input=document.getElementById('teacherCode');if(input&&input.value===P.teacherCode){setSession({role:'teacher',loginAt:new Date().toISOString()});document.getElementById('loginPanel').style.display='none';document.getElementById('dash').style.display='block';window.renderDashboard?.();addTeacherActions()}else{const m=document.getElementById('codeMsg');if(m){m.textContent='❌ 教师码错误';m.className='feedback error'}}}}
  if(session?.role==='teacher'){const lp=document.getElementById('loginPanel'),d=document.getElementById('dash');if(lp&&d){lp.style.display='none';d.style.display='block';window.renderDashboard?.();addTeacherActions()}}
@@ -176,13 +240,28 @@ function enrichTeacherDashboard(){if(!location.pathname.endsWith('teacher.html')
 };window.renderDashboard.__v2=true}
 function sortEnhance(){if(!location.pathname.endsWith('inquiry.html'))return;const grid=document.getElementById('stepGrid');if(!grid)return;let drag=null;const prepare=()=>{[...grid.children].forEach(card=>{card.draggable=true;card.ondragstart=e=>{drag=card;card.classList.add('v2-dragging');e.dataTransfer.effectAllowed='move'};card.ondragend=()=>{card.classList.remove('v2-dragging');drag=null};card.ondragover=e=>e.preventDefault();card.ondrop=e=>{e.preventDefault();if(!drag||drag===card)return;const arr=[...grid.children],a=arr.indexOf(drag),b=arr.indexOf(card);if(a<b)grid.insertBefore(drag,card.nextSibling);else grid.insertBefore(drag,card);syncOrder()}})};const syncOrder=()=>{try{if(Array.isArray(window.currentOrder))window.currentOrder=[...grid.children].map(c=>c.dataset.id||c.getAttribute('data-id')||c.textContent.trim()).map(v=>isNaN(v)?v:Number(v))}catch(e){}};new MutationObserver(prepare).observe(grid,{childList:true});prepare();const hint=grid.parentElement?.querySelector('.muted');if(hint)hint.textContent='点击一张卡片，再点击另一张可交换位置；也可以直接拖动卡片完成排序。'}
 
+
+function showBadgeCelebration(n){
+ const meta=BADGE_META[n];if(!meta||MTP2.isTeacher())return;
+ document.querySelector('.v2-badge-celebration')?.remove();
+ const wrap=document.createElement('div');wrap.className='v2-badge-celebration';wrap.setAttribute('role','dialog');wrap.setAttribute('aria-modal','true');wrap.setAttribute('aria-label',`恭喜解锁${meta.name}`);
+ wrap.innerHTML=`<div class="v2-badge-glow" aria-hidden="true"></div><section class="v2-badge-award-card"><button class="v2-badge-award-close" type="button" aria-label="关闭">×</button><div class="v2-badge-award-kicker">研学成就达成</div><div class="v2-badge-award-image"><span class="v2-badge-rays" aria-hidden="true"></span><img src="${P.badgeFiles[n-1]}" alt="${meta.name}"></div><h2>恭喜解锁</h2><h3>${meta.name}</h3><p>${meta.desc}</p><button class="v2-badge-award-ok" type="button">收下徽章</button></section>`;
+ document.body.appendChild(wrap);requestAnimationFrame(()=>wrap.classList.add('show'));
+ let timer=setTimeout(close,6200);
+ function close(){clearTimeout(timer);wrap.classList.remove('show');setTimeout(()=>wrap.remove(),260)}
+ wrap.querySelector('.v2-badge-award-close').addEventListener('click',close);
+ wrap.querySelector('.v2-badge-award-ok').addEventListener('click',close);
+ wrap.addEventListener('click',e=>{if(e.target===wrap)close()});
+}
+
 function refreshThinkingStarUI(){
  const old=document.querySelector('.v2-userbar');if(old){old.remove();addUserBar()}
  try{if(typeof window.renderStudentPass==='function')window.renderStudentPass()}catch(e){}
  document.querySelectorAll('.thinking-star-mark').forEach(el=>el.classList.add('unlocked'));
 }
 document.addEventListener('mengxiThinkingStarUnlocked',()=>setTimeout(refreshThinkingStarUI,0));
+document.addEventListener('mtpBadgeUnlocked',e=>setTimeout(()=>{replaceBadgeEmoji();try{if(typeof window.renderStudentPass==='function')window.renderStudentPass();if(typeof window.updateBadgeDisplay==='function')window.updateBadgeDisplay()}catch(err){}showBadgeCelebration(Number(e.detail&&e.detail.badge));},0));
 
 function mediaCheck(){document.querySelectorAll('video source').forEach(s=>{if(!s.src&&s.dataset.src)s.src=s.dataset.src});}
-document.addEventListener('DOMContentLoaded',()=>{patchFunctions();moveNavIntoHero();addUserBar();addIndexSessionUI();patchTeacherLogin();enrichTeacherDashboard();unlockTeacherView();replaceBadgeEmoji();sortEnhance();mediaCheck();const notice=sessionStorage.getItem('mtpSharedSnapshotNotice');if(notice){sessionStorage.removeItem('mtpSharedSnapshotNotice');setTimeout(()=>{const n=safeParse(notice,{})||{};alert((n.kind==='student'?'已载入学生账号与作品数据':'已载入教师登录与全部数据')+(n.generatedAt?'（生成时间：'+new Date(n.generatedAt).toLocaleString()+'）':'')+'。\n当前显示的是生成链接时的数据副本，之后新增的提交需要重新生成分享链接。'+(n.imagesOmitted?'\n因图片过大，非遗作品图片未写入链接。':''))},250)}setTimeout(()=>{unlockTeacherView();replaceBadgeEmoji()},350)});
+document.addEventListener('DOMContentLoaded',()=>{patchFunctions();moveNavIntoHero();createLoginModal();addUserBar();addIndexSessionUI();patchTeacherLogin();enrichTeacherDashboard();unlockTeacherView();replaceBadgeEmoji();sortEnhance();mediaCheck();wireLoginPrompts();wireProtectedInteractions();sessionStorage.removeItem('mtpSharedSnapshotNotice');setTimeout(()=>{unlockTeacherView();replaceBadgeEmoji();wireLoginPrompts()},350)});
 })();

@@ -175,6 +175,40 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
   .nav-icon{width:28px;height:28px;flex-basis:28px;}
 }
 
+
+/* V2.36 研学步骤引导 */
+.inquiry-workspace{display:grid;grid-template-columns:215px minmax(0,1fr);gap:20px;align-items:start}.inquiry-main{min-width:0}.journey-guide{position:sticky;top:14px;display:flex;flex-direction:column;gap:12px}.journey-step{position:relative;border:1px solid #d7c2a3;border-radius:22px;padding:15px 13px;background:linear-gradient(180deg,#fffaf1,#efe2cf);box-shadow:0 6px 0 #d2bea0;text-align:center;transition:.2s}.journey-step:not(:last-child)::after{content:"↓";position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);color:#9a6a3b;font-size:18px;font-weight:bold}.journey-step .journey-no{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#8b5a2b;color:white;font-family:Georgia,serif;font-size:20px;font-weight:bold;box-shadow:0 3px 0 #5f391d}.journey-step .journey-icon{display:block;font-size:34px;margin:8px 0}.journey-step h3{font-size:19px;color:#56361f;margin:0 0 7px}.journey-step p{font-size:14px;line-height:1.55;color:#755a40;margin-bottom:8px}.journey-step button{border:0;border-radius:18px;background:#8c5b2c;color:#fff6e8;font-family:inherit;font-weight:bold;padding:7px 15px;cursor:pointer}.journey-step.is-active{border-color:#9b6635;box-shadow:0 7px 0 #bc8d58,0 10px 20px rgba(91,56,28,.13)}.journey-step.is-done{background:linear-gradient(180deg,#f9f1df,#e4ead8);border-color:#a4b38c}.journey-step.is-locked{filter:grayscale(.55);opacity:.7}.timeline-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:10px;padding:11px 13px;border:1px solid #ddc8aa;border-radius:16px;background:linear-gradient(135deg,#fffaf1,#f0e2cf);box-shadow:0 5px 14px rgba(87,52,25,.08)}.timeline-head h3{display:flex;align-items:center;gap:9px;margin:0!important;font-size:1.28rem!important}.timeline-head h3::before{content:"";width:5px;height:28px;border-radius:999px;background:linear-gradient(#9a6736,#d1a267)}.timeline-instruction{display:inline-flex;align-items:center;gap:7px;margin:0;padding:7px 11px;border:1px solid #d8c1a0;border-radius:999px;background:rgba(255,252,245,.9);color:#76573a;font-size:14px;font-weight:bold;letter-spacing:.3px;box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}.timeline-instruction::before{content:"☝";font-size:16px}.timeline-instruction .timeline-arrow{color:#9a6736;font-family:Arial,sans-serif;font-size:17px}.journey-target{scroll-margin-top:95px}
+.timeline-title-group{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.timeline-title-group>span{color:#8a6a49;font-size:13px;letter-spacing:.5px}.timeline-click-icon{display:inline-flex;align-items:center;justify-content:center;min-width:38px;padding:3px 7px;border-radius:999px;background:#8f6238;color:#fff8eb;font-size:12px;box-shadow:0 2px 0 #65401f}.timeline-instruction{background:linear-gradient(135deg,#fffdf8,#f5e7d1)!important;border-color:#cda978!important;box-shadow:0 4px 12px rgba(91,56,28,.10)!important}.timeline-arrow{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:#ead2ae;color:#75491f!important}.timeline-head{padding:13px 15px!important;border-radius:18px!important}
+
+@media(max-width:980px){.inquiry-workspace{grid-template-columns:1fr}.journey-guide{position:static;display:grid;grid-template-columns:repeat(3,1fr)}.journey-step:not(:last-child)::after{content:"→";left:auto;right:-15px;bottom:50%;transform:translateY(50%)} }
+@media(max-width:660px){.journey-guide{grid-template-columns:1fr}.journey-step:not(:last-child)::after{content:"↓";left:50%;right:auto;bottom:-18px;transform:translateX(-50%)}}
+
+/* V2.41 印刷术发展时间轴提示条 */
+.timeline-instruction{display:grid!important;grid-template-columns:auto minmax(0,1fr) 28px;align-items:center;column-gap:10px;min-width:min(360px,100%);padding:8px 10px 8px 9px!important;border-radius:16px!important;text-align:left}
+.timeline-click-icon{min-width:58px!important;padding:4px 9px!important;letter-spacing:.7px}
+.timeline-tip-copy{display:flex;flex-direction:column;gap:1px;min-width:0;line-height:1.35}.timeline-tip-copy b{font-size:14px;color:#5f3c21;letter-spacing:.5px}.timeline-tip-copy em{font-style:normal;font-size:12px;font-weight:500;color:#8a6d50;white-space:nowrap}.timeline-arrow{justify-self:end;box-shadow:inset 0 0 0 1px rgba(120,76,34,.12)}
+@media(max-width:620px){.timeline-head{align-items:stretch!important}.timeline-title-group{display:block}.timeline-title-group>span{display:block;margin:5px 0 0 14px}.timeline-instruction{width:100%;min-width:0}.timeline-tip-copy em{white-space:normal}}
+/* V2.43 时间轴操作提示：仅保留文字 */
+.timeline-head .timeline-instruction{
+  display:block!important;
+  min-width:0!important;
+  width:auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  color:#76583d;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.7;
+  letter-spacing:.8px;
+  text-align:right;
+  white-space:nowrap;
+}
+.timeline-head .timeline-instruction::before,.timeline-head .timeline-instruction::after{content:none!important;display:none!important}
+@media(max-width:620px){.timeline-head .timeline-instruction{margin:7px 0 0 14px!important;text-align:left;white-space:normal}}
 </style>
 <script>
 const SITE_PAGES=[["index.html", "首页", "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"></path><path d=\"M5.5 9.5V20h13V9.5\"></path><path d=\"M9.5 20v-6h5v6\"></path></svg>"], ["pretest.html", "活板初探馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5h7.5A2.5 2.5 0 0 1 14 8v10.5H6.5A2.5 2.5 0 0 0 4 21V5.5Z\"></path><path d=\"M20 5.5h-7.5A2.5 2.5 0 0 0 10 8v10.5h7.5A2.5 2.5 0 0 1 20 21V5.5Z\"></path></svg>"], ["inquiry.html", "研学探究馆", "<svg viewBox=\"0 0 24 24\"><circle cx=\"10.5\" cy=\"10.5\" r=\"5.5\"></circle><path d=\"M15 15 21 21\"></path><path d=\"M10.5 8v5\"></path><path d=\"M8 10.5h5\"></path></svg>"], ["speech.html", "活字解说馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z\"></path><path d=\"M7 11a5 5 0 0 0 10 0\"></path><path d=\"M12 16v4\"></path><path d=\"M9 20h6\"></path></svg>"], ["heritage.html", "非遗传承馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3c3.5 0 6 2.2 6 5.3 0 2.2-1.4 3.8-3.2 5.1-.8.6-1.3 1.4-1.3 2.3V19h-3v-3.3c0-.9-.5-1.7-1.3-2.3C7.4 12.1 6 10.5 6 8.3 6 5.2 8.5 3 12 3Z\"></path><path d=\"M9.5 22h5\"></path><path d=\"M9.5 19h5\"></path></svg>"], ["teacher.html", "教师数据中心", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 6h16v10H4z\"></path><path d=\"M8 20h8\"></path><path d=\"M12 16v4\"></path><path d=\"M7.5 10.5h3\"></path><path d=\"M13.5 10.5h3\"></path></svg>"]];
@@ -189,23 +223,30 @@ function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;
 function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
 function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
 function studentKey(){let s=getStudent();return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';}
-function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';}
+function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，点击“未登录”领取研学探展证。';}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.35"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.43">
+<script src="platform-v2.js?v=2.43"></script>
 </head>
 <body>
 <script>renderHero('inquiry.html');</script>
 
 <div class="exhibit-hall">
 <header class="museum-header"><div class="museum-title"><h1>🪵 研学探究馆</h1><span class="sub">工序排序 · 视频解锁 · 活字探究</span></div><div class="badge-fujian" id="studentBadge">学生信息</div></header>
-<section class="section-box"><div class="panel-title">欢迎成为“活字印刷云展馆”的建设者！</div><p style="line-height:1.9;font-size:17px;color:#4d3422;">请在认真阅读课文《活板》的基础上，完成以下三个学习任务。</p><p style="line-height:1.9;font-size:17px;color:#4d3422;margin-top:8px;">1. 排列活字印刷完整工序，解锁云展馆。</p><p style="line-height:1.9;font-size:17px;color:#4d3422;">2. 工序探微，撰写操作要领。</p><p style="line-height:1.9;font-size:17px;color:#4d3422;">3. 活字探究，沿时间轴追问“活”的意义。</p></section>
-<section class="section-box"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div class="panel-title" style="margin-bottom:0">🔖 工序 · 正序六艺</div><div class="status" id="orderStatus">⏳ 排列中</div></div><div class="step-grid" id="stepGrid"></div><button class="btn" id="resetBtn">重新洗牌</button><button class="btn btn-primary" id="checkBtn">验证顺序</button><p class="muted" style="margin-top:12px">点击卡片选中，再点击另一张交换位置。排成正确工序后解锁下方展馆。</p></section>
-<section class="section-box locked" id="gallerySection"><div class="lock-cover" id="lockCover"><div style="font-size:68px">🔒</div><h2>未解锁</h2><p>请先完成上方工序排序</p></div><div class="panel-title">🪷 工序探微 <small class="muted">点击步骤 → 输入操作描述 → 自动播放视频</small></div><div class="step-tabs" id="stepTabs"></div><div class="step-detail"><div class="video-wrap"><canvas id="stepCanvas" width="640" height="360"></canvas><video id="stepVideo" controls autoplay muted playsinline style="display:none"><source id="stepVideoSource" src="" type="video/mp4">您的浏览器不支持视频播放。</video></div><div class="step-desc"><span class="step-number" id="stepNumber">①</span><h3 id="stepTitle">制字</h3><p id="stepText">请输入该步骤的操作描述以解锁视频。</p><div id="stepInputArea"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><input style="flex:1;min-width:180px" id="stepInput" placeholder="请描述该步骤的操作要领"><button class="btn btn-primary" id="stepInputBtn">确认</button></div><div class="feedback" id="stepInputFeedback"></div></div></div></div></section>
+<section class="section-box"><div class="panel-title">欢迎成为“活字印刷云展馆”的建设者！</div><p style="line-height:1.9;font-size:17px;color:#4d3422;">请在认真阅读课文《活板》的基础上，沿左侧研学路线依次完成三个学习任务。</p></section>
+<div class="inquiry-workspace">
+<aside class="journey-guide" aria-label="研学步骤引导">
+  <div class="journey-step is-active" id="guideStep1"><span class="journey-no">1</span><span class="journey-icon">序</span><h3>工序排序</h3><p>使用课文原词，还原活字印刷工序。</p><button type="button" onclick="goJourney('orderSection')">进入排序</button></div>
+  <div class="journey-step is-locked" id="guideStep2"><span class="journey-no">2</span><span class="journey-icon">研</span><h3>工序探微</h3><p>研读原文，解锁六个工序的操作智慧。</p><button type="button" onclick="goJourney('gallerySection')">进入探究</button></div>
+  <div class="journey-step is-locked" id="guideStep3"><span class="journey-no">3</span><span class="journey-icon">悟</span><h3>活字探究</h3><p>联系雕版印刷，思考技术革新的历史意义。</p><button type="button" onclick="goJourney('activeInquirySection')">进入探究</button></div>
+</aside>
+<main class="inquiry-main">
+<section class="section-box journey-target" id="orderSection"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div class="panel-title" style="margin-bottom:0">🔖 工序 · 正序六艺</div><div class="status" id="orderStatus">⏳ 排列中</div></div><div class="step-grid" id="stepGrid"></div><button class="btn" id="resetBtn">重新洗牌</button><button class="btn btn-primary" id="checkBtn">验证顺序</button><p class="muted" style="margin-top:12px">点击卡片选中，再点击另一张交换位置。排成正确工序后解锁下方展馆。</p></section>
+<section class="section-box locked journey-target" id="gallerySection"><div class="lock-cover" id="lockCover"><div style="font-size:68px">🔒</div><h2>未解锁</h2><p>请先完成上方工序排序</p></div><div class="panel-title">🪷 工序探微 <small class="muted">点击步骤 → 输入操作描述 → 自动播放视频</small></div><div class="step-tabs" id="stepTabs"></div><div class="step-detail"><div class="video-wrap"><canvas id="stepCanvas" width="640" height="360"></canvas><video id="stepVideo" controls autoplay muted playsinline style="display:none"><source id="stepVideoSource" src="" type="video/mp4">您的浏览器不支持视频播放。</video></div><div class="step-desc"><span class="step-number" id="stepNumber">①</span><h3 id="stepTitle">制字</h3><p id="stepText">请输入该步骤的操作描述以解锁视频。</p><div id="stepInputArea"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><input style="flex:1;min-width:180px" id="stepInput" placeholder="请描述该步骤的操作要领"><button class="btn btn-primary" id="stepInputBtn">确认</button></div><div class="feedback" id="stepInputFeedback"></div></div></div></div></section>
 
-<section class="section-box locked" id="activeInquirySection">
+<section class="section-box locked journey-target" id="activeInquirySection">
   <div class="lock-cover" id="activeLockCover"><div style="font-size:68px">🔒</div><h2>活字探究</h2><p>请先完成“工序探微”六个步骤</p></div>
   <div class="panel-title">🧠 活字探究</div>
   <div class="inquiry-layout">
@@ -234,7 +275,13 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
       </div>
     </div>
     <div class="timeline-card">
-      <h3>📜 资料时间轴</h3>
+      <div class="timeline-head">
+        <div class="timeline-title-group">
+          <h3>印刷术发展时间轴</h3>
+          <p>从雕版、活字到数字传播</p>
+        </div>
+        <p class="timeline-instruction" role="note">点击时间节点，查看史料与思考问题</p>
+      </div>
       <div class="timeline-wrapper" id="timelineWrapper">
         <div class="timeline-track" id="timelineTrack"></div>
       </div>
@@ -245,6 +292,8 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
     </div>
   </div>
 </section>
+</main>
+</div>
 
 <div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div></div>
 
@@ -267,7 +316,14 @@ startHero();
 renderStudentPass();
 
 const CORRECT_ORDER=['制字','设板','排版','炀板','印刷','拆板'];const ICON_MAP={'制字':'✍️','设板':'🪚','排版':'📐','炀板':'🔥','印刷':'🖨️','拆板':'🧹'};
-const stepData=[{id:'制字',icon:'✍️',title:'制字',desc:'工匠用胶泥雕刻活字，每字为一印。雕刻完成后，用火烧泥活字，使其变硬定型。',keywords:['胶泥','每字为一印','用火烧'],video:'videos/制字.mp4'},{id:'设板',icon:'🪚',title:'设板',desc:'在平整铁板表面，均匀涂抹松脂、黄蜡与纸灰混合而成的粘连辅料，覆盖铁板，为排版做准备。',keywords:['铁板','混合','覆盖'],video:'videos/设板.mp4'},{id:'排版',icon:'📐',title:'排版',desc:'将一块铁模子放在铁板之上，人工往框内紧密摆放泥活字，最终让所有活字横向纵向整齐排布。',keywords:['铁模','密'],video:'videos/排版.mp4'},{id:'炀板',icon:'🔥',title:'炀板',desc:'把排好活字的铁板靠近火源烘烤，让板面混合辅料微微熔化；随后用平整木板按压，使字面平整如砥。',keywords:['靠近','熔化','平','像磨刀石'],video:'videos/炀板.mp4'},{id:'印刷',icon:'🖨️',title:'印刷',desc:'两块铁板轮流交替使用，一板印刷，一板布字，提高效率。',keywords:['轮流','交替'],video:'videos/印刷.mp4'},{id:'拆板',icon:'🧹',title:'拆板',desc:'用完再次烘烤铁板软化辅料，徒手轻轻拂动板面活字，泥活字自动脱落并回收。',keywords:['完','拂动'],video:'videos/拆板.mp4'}];
+const stepData=[
+{id:'制字',icon:'✍️',title:'制字',desc:'工匠用胶泥雕刻活字，每字为一印。雕刻完成后，用火烧泥活字，使其变硬定型。',keywords:['胶泥','每字为一印','用火烧'],video:'videos/制字.mp4'},
+{id:'设板',icon:'🪚',title:'设板',desc:'在平整铁板表面，均匀涂抹松脂、黄蜡与纸灰混合而成的黏连辅料，覆盖铁板，为排版做准备。',keywords:['铁板','混合','覆盖'],video:'videos/设板.mp4'},
+{id:'排版',icon:'📐',title:'排版',desc:'将一块铁模子放在铁板之上，人工往框内紧密摆放泥活字，最终让所有活字横向纵向整齐排布。',keywords:['铁模','密'],video:'videos/排版.mp4'},
+{id:'炀板',icon:'🔥',title:'炀板',desc:'把排好活字的铁板靠近火源烘烤，让板面混合辅料微微熔化；随后用平整木板按压，使字面平整如砥。',keywords:['靠近','熔化','平','像磨刀石'],video:'videos/炀板.mp4'},
+{id:'印刷',icon:'🖨️',title:'印刷',desc:'两块铁板轮流交替使用，一板印刷，一板布字，提高效率。',keywords:['轮流','交替'],video:'videos/印刷.mp4'},
+{id:'拆板',icon:'🧹',title:'拆板',desc:'用完再次烘烤铁板软化辅料，徒手轻轻拂动板面活字，泥活字自动脱落并回收。',keywords:['完','拂动'],video:'videos/拆板.mp4'}
+];
 let currentSteps=[],selectedIndex=null,isUnlocked=false,currentStepIndex=0,stepUnlocked={};stepData.forEach(s=>stepUnlocked[s.id]=false);const ctx=stepCanvas.getContext('2d');
 
 // 学生进度相关
@@ -304,10 +360,10 @@ function loadProgressData() {
       currentSteps = [...CORRECT_ORDER];
       renderSteps();
       if (data.stepUnlocked) {
-        stepData.forEach(s => {
-          if (data.stepUnlocked[s.id]) {
-            stepUnlocked[s.id] = true;
-          }
+        const oldKeyMap={'布字':'排版','炀版':'炀板','拆版':'拆板'};
+        Object.entries(data.stepUnlocked).forEach(([oldKey,value])=>{
+          const newKey=oldKeyMap[oldKey]||oldKey;
+          if(value && newKey in stepUnlocked)stepUnlocked[newKey]=true;
         });
       }
       renderTabs();
@@ -346,6 +402,17 @@ function init(){
   } else {
     renderTimeline(activeInquirySection.classList.contains('unlocked'));
   }
+  updateJourneyGuide();
+}
+
+function goJourney(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});}
+function updateJourneyGuide(){
+ const g1=document.getElementById('guideStep1'),g2=document.getElementById('guideStep2'),g3=document.getElementById('guideStep3');
+ [g1,g2,g3].forEach(g=>g&&g.classList.remove('is-active','is-done','is-locked'));
+ if(!isUnlocked){g1?.classList.add('is-active');g2?.classList.add('is-locked');g3?.classList.add('is-locked');return;}
+ g1?.classList.add('is-done');
+ if(!stepData.every(s=>stepUnlocked[s.id])){g2?.classList.add('is-active');g3?.classList.add('is-locked');return;}
+ g2?.classList.add('is-done');g3?.classList.add('is-active');
 }
 
 function renderSteps(){
@@ -434,12 +501,12 @@ function validateOrder(){
 
 checkBtn.onclick = validateOrder;
 
-function unlockGallery(){isUnlocked=true;gallerySection.classList.remove('locked');gallerySection.classList.add('unlocked');orderStatus.textContent='✅ 正确！展馆已解锁';orderStatus.className='status success';checkBtn.disabled=true;renderSteps();setStep(0);window.MTP2&&MTP2.unlockBadge(1);saveProgress('研学探究馆',{action:'完成工序排序'});saveProgressData();}
+function unlockGallery(){isUnlocked=true;gallerySection.classList.remove('locked');gallerySection.classList.add('unlocked');orderStatus.textContent='✅ 正确！展馆已解锁';orderStatus.className='status success';checkBtn.disabled=true;renderSteps();setStep(0);saveProgress('研学探究馆',{action:'完成工序排序'});saveProgressData();updateJourneyGuide();}
 function renderTabs(){stepTabs.innerHTML='';stepData.forEach((s,i)=>{let b=document.createElement('button');b.className='step-tab';b.innerHTML=`${s.icon} ${s.title}${stepUnlocked[s.id]?' ✅':''}`;b.onclick=()=>{if(isUnlocked)setStep(i)};stepTabs.appendChild(b);});}
 function setStep(i){currentStepIndex=i;document.querySelectorAll('.step-tab').forEach((t,j)=>{t.classList.toggle('active',j===i);t.innerHTML=`${stepData[j].icon} ${stepData[j].title}${stepUnlocked[stepData[j].id]?' ✅':''}`});let d=stepData[i];stepNumber.textContent=['①','②','③','④','⑤','⑥'][i];stepTitle.textContent=d.icon+' '+d.title;if(stepUnlocked[d.id]){stepInputArea.style.display='none';stepText.textContent=d.desc;playVideo(d.video);}else{stepInputArea.style.display='block';stepText.textContent='请描述该步骤的操作要领，输入关键词后解锁视频。';stepInput.value='';stepInputFeedback.textContent='';showCanvas('🔒 输入描述解锁视频');}}
 function checkInput(){let d=stepData[currentStepIndex],v=stepInput.value.trim();if(!v){stepInputFeedback.textContent='⚠️ 请先输入操作描述';stepInputFeedback.className='feedback error';return;}let miss=d.keywords.find(k=>!v.includes(k));if(!miss){stepUnlocked[d.id]=true;stepInputFeedback.textContent='✅ 描述正确，视频已解锁';stepInputFeedback.className='feedback success';saveProgress('研学探究馆',{action:'解锁工序视频',step:d.title});saveProgressData();setStep(currentStepIndex);checkAllStepUnlocked();}else{stepInputFeedback.textContent=`❌ 请补充关键操作细节（提示：需包含“${miss}”）`;stepInputFeedback.className='feedback error';}}
 stepInputBtn.onclick=checkInput;stepInput.addEventListener('keydown',e=>{if(e.key==='Enter')checkInput()});
-const videoFallbackMap={'videos/制字.mp4':['videos/制字.mp4','videos/刻字.mp4'],'videos/刻字.mp4':['videos/刻字.mp4','videos/制字.mp4'],'videos/设板.mp4':['videos/设板.mp4','videos/设版.mp4'],'videos/拆板.mp4':['videos/拆板.mp4','videos/拆版.mp4']};let currentVideoList=[],currentVideoTry=0;
+const videoFallbackMap={'videos/制字.mp4':['videos/制字.mp4','videos/刻字.mp4'],'videos/刻字.mp4':['videos/刻字.mp4','videos/制字.mp4'],'videos/设板.mp4':['videos/设板.mp4','videos/设版.mp4'],'videos/拆板.mp4':['videos/拆板.mp4','videos/拆版.mp4'],'videos/炀板.mp4':['videos/炀板.mp4','videos/炀版.mp4']};let currentVideoList=[],currentVideoTry=0;
 stepVideo.addEventListener('error',()=>{if(currentVideoList.length&&currentVideoTry<currentVideoList.length-1){currentVideoTry++;loadAndPlayVideo(currentVideoList[currentVideoTry]);}});
 function loadAndPlayVideo(src){stepVideoSource.setAttribute('src',src);stepVideo.load();stepVideo.currentTime=0;stepVideo.muted=true;stepVideo.play().catch(()=>{});}
 function playVideo(src){stepCanvas.style.display='none';stepVideo.style.display='block';stepVideo.pause();currentVideoList=videoFallbackMap[src]||[src];currentVideoTry=0;loadAndPlayVideo(currentVideoList[0]);}
@@ -449,8 +516,10 @@ function unlockActiveInquiry(save = true){
   activeInquirySection.classList.remove('locked');
   activeInquirySection.classList.add('unlocked');
   renderTimeline(true);
-  saveProgress('研学探究馆',{action:'解锁活字探究'});
+  if(window.MTP2&&!window.MTP2.isTeacher())window.MTP2.unlockBadge(1);
+  saveProgress('研学探究馆',{action:'完成六项工序探微并解锁活字探究'});
   if (save) saveProgressData();
+  updateJourneyGuide();
 }
 
 const nodeData=[
@@ -696,6 +765,7 @@ function unlockInquiryForTeacher(){
   renderTabs();
   setStep(Math.max(0, Math.min(currentStepIndex, stepData.length - 1)));
   renderTimeline(true);
+  updateJourneyGuide();
 }
 window.unlockInquiryForTeacher = unlockInquiryForTeacher;
 
@@ -717,9 +787,9 @@ function renderStudentPass() {
     return;
   }
 
-  const b1 = localStorage.getItem('badge1') === 'unlocked';
-  const b2 = localStorage.getItem('badge2') === 'unlocked';
-  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : localStorage.getItem('badge3') === 'unlocked';
+  const b1 = window.MTP2 ? window.MTP2.getBadge(1) : false;
+  const b2 = window.MTP2 ? window.MTP2.getBadge(2) : false;
+  const b3 = window.MTP2 ? window.MTP2.getBadge(3) : false;
   const thinkingStar = !!(window.MTP2 && window.MTP2.getThinkingStar && window.MTP2.getThinkingStar());
   const passNumber = st.passNumber || 'FX-2026-0001';
 
@@ -742,5 +812,5 @@ function renderStudentPass() {
 
 <!-- 引入梦溪助手 -->
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.29"></script></body>
+<script src="mengxi-assistant.js?v=2.41"></script></body>
 </html>

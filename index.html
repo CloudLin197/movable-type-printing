@@ -479,14 +479,14 @@ margin:18px auto;
 .footer-note{position:relative;padding:10px 0 22px;}
 }
 
-.home-help-button{position:absolute;z-index:8;top:18px;right:18px;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 15px 8px 10px;border-radius:24px;border:1px solid rgba(107,68,31,.38);background:linear-gradient(#fff9ed,#ead7b7);color:#5a3518;text-decoration:none;font-size:16px;font-weight:700;box-shadow:0 5px 14px rgba(0,0,0,.28);}
-.home-help-button:hover,.home-help-button:focus-visible{transform:translateY(-1px);filter:brightness(1.04);outline:2px solid #e2b66e;outline-offset:2px;}
-.home-help-button .help-q{width:27px;height:27px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid #7a4a21;background:#fffaf0;font-family:Arial,sans-serif;font-weight:900;}
+.home-help-button{position:absolute;z-index:8;top:18px;right:18px;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:7px 14px 7px 9px;border-radius:22px;border:1px solid rgba(255,235,204,.22);background:linear-gradient(180deg,rgba(48,33,24,.62),rgba(28,18,13,.72));color:rgba(255,246,231,.88);text-decoration:none;font-size:15px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.20);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+.home-help-button:hover,.home-help-button:focus-visible{transform:translateY(-1px);background:linear-gradient(180deg,rgba(64,43,29,.76),rgba(37,24,17,.82));color:#fffaf1;outline:1px solid rgba(238,205,151,.55);outline-offset:2px;}
+.home-help-button .help-q{width:25px;height:25px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,237,205,.48);background:rgba(255,250,240,.08);color:#f2d8ad;font-family:Arial,sans-serif;font-weight:900;}
 @media(max-width:560px){.home-help-button{top:10px;right:10px;padding:7px 10px;font-size:15px}.home-help-button .help-text-full{display:none}}
 
 </style>
-<link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.35"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.43">
+<script src="platform-v2.js?v=2.43"></script>
 </head>
 
 <body>
@@ -519,7 +519,7 @@ margin:18px auto;
 <p>挑战，现在开始！</p>
 </section>
 
-<section class="side-card left-card">
+<section class="side-card left-card" id="student-login">
 <div class="card-handle">研学探展证</div>
 
 <div class="card-content">
@@ -615,7 +615,7 @@ margin:18px auto;
 <div class="badge-box">
 <h4>三枚匠心徽章</h4>
 <p>
-① 工艺探究徽章：完成工序排序，并解锁工序探微任务。<br>
+① 工艺探究徽章：完成工序排序与六项工序探微。<br>
 ② 云端解说徽章：提交符合要求的展馆解说词。<br>
 ③ 非遗传承徽章：完成一项课后分层作业。<br>
 集齐三枚，即可登榜<strong>研学荣誉墙</strong>，成为活字文化小小传承人。
@@ -716,9 +716,9 @@ return "FX-2026-"+nextNum;
 
 // 更新徽章显示
 function updateBadgeDisplay(){
-let b1=localStorage.getItem('badge1')==='unlocked';
-let b2=localStorage.getItem('badge2')==='unlocked';
-let b3=window.MTP2?window.MTP2.getBadge(3):localStorage.getItem('badge3')==='unlocked';
+let b1=window.MTP2?window.MTP2.getBadge(1):false;
+let b2=window.MTP2?window.MTP2.getBadge(2):false;
+let b3=window.MTP2?window.MTP2.getBadge(3):false;
 document.getElementById('badge1Icon').className='badge-icon'+(b1?' unlocked':'');
 document.getElementById('badge2Icon').className='badge-icon'+(b2?' unlocked':'');
 document.getElementById('badge3Icon').className='badge-icon'+(b3?' unlocked':'');
@@ -815,6 +815,6 @@ refreshLogin();
 
 <!-- 引入梦溪助手 -->
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.29"></script>
+<script src="mengxi-assistant.js?v=2.41"></script>
 </body>
 </html>

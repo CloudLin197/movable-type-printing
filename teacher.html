@@ -135,6 +135,23 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
 /* 教师数据中心精简：隐藏旧版动态注入模块 */
 .v2-teacher-actions{display:none!important;}
 
+
+.radar-wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:center}.radar-svg{width:min(520px,100%);height:auto;overflow:visible}.radar-grid{fill:none;stroke:#d9c6aa;stroke-width:1}.radar-axis{stroke:#d8c6ac;stroke-width:1}.radar-shape{fill:rgba(155,101,52,.18);stroke:#8c5a2d;stroke-width:2.4}.radar-dot{fill:#8c5a2d}.radar-label{font-size:12px;fill:#5d432d}.radar-side{display:grid;gap:8px;min-width:210px;flex:1}.radar-row{display:flex;justify-content:space-between;gap:14px;padding:9px 11px;border-radius:13px;background:#fffaf3;border:1px solid #e0cfb7}.donut-grid{display:grid;grid-template-columns:repeat(2,minmax(140px,1fr));gap:14px}.donut-card{text-align:center;padding:14px;border-radius:20px;background:#fffaf3;border:1px solid #dfccb2}.donut{--p:0;width:112px;height:112px;margin:0 auto 9px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#9a693b calc(var(--p)*1%),#eadfce 0);position:relative}.donut:before{content:"";position:absolute;inset:13px;border-radius:50%;background:#fffaf3}.donut strong{position:relative;z-index:1;font-size:21px;color:#5b3a20}.dot-dist{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end;min-height:230px;padding:16px 8px 4px}.dot-bin{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:210px}.dot-stack{display:flex;flex-direction:column-reverse;gap:5px;min-height:150px;justify-content:flex-start}.score-dot{width:17px;height:17px;border-radius:50%;background:linear-gradient(145deg,#b98650,#78502e);box-shadow:0 2px 4px rgba(74,42,18,.2)}.dot-count{font-weight:bold;color:#68472b;margin-bottom:7px}.dot-label{font-size:13px;color:#765d45;margin-top:8px;text-align:center}.export-note{margin-top:10px;padding:11px 14px;border:1px dashed #c5a77e;border-radius:14px;background:#fff8ec;color:#725438;line-height:1.7}
+@media(max-width:620px){.donut-grid{grid-template-columns:1fr 1fr}.radar-wrap{display:block}.radar-side{margin-top:14px}.dot-dist{gap:5px}.score-dot{width:13px;height:13px}}
+/* V2.43 年级学习能力矩阵 */
+.grade-matrix-scroll{overflow-x:auto;padding-bottom:4px}
+.grade-matrix{min-width:860px;display:grid;gap:9px}
+.grade-matrix-head,.grade-matrix-row{display:grid;grid-template-columns:150px repeat(5,minmax(112px,1fr)) 104px;gap:9px;align-items:stretch}
+.grade-matrix-head{padding:0 4px;color:#785b40;font-size:13px;font-weight:800;text-align:center}
+.grade-matrix-head span:first-child{text-align:left;padding-left:10px}
+.grade-matrix-row{padding:9px;border:1px solid #dfcdb3;border-radius:19px;background:#fffaf3;box-shadow:0 5px 12px rgba(86,51,24,.06);transition:.2s}
+.grade-matrix-row.is-selected{border-color:#9b6a3c;box-shadow:0 0 0 3px rgba(155,106,60,.13),0 7px 16px rgba(86,51,24,.10)}
+.grade-name-cell{display:flex;flex-direction:column;justify-content:center;padding:8px 10px;text-align:left}
+.grade-name-cell b{font-size:17px;color:#50321d}.grade-name-cell small{margin-top:4px;color:#856b52;font-size:12px}
+.grade-metric-cell{min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(139,91,45,.13);border-radius:15px;text-align:center}
+.grade-metric-cell strong{font-size:20px;color:#4d301c}.grade-metric-cell small{margin-top:3px;color:#73583e;font-size:12px}
+.grade-overall{background:linear-gradient(145deg,#7e5532,#a97849)!important;border-color:#704726!important}.grade-overall strong,.grade-overall small{color:#fff7e8!important}
+@media(max-width:620px){.grade-matrix{min-width:780px}.grade-matrix-head,.grade-matrix-row{grid-template-columns:132px repeat(5,104px) 94px}.grade-metric-cell{min-height:66px}}
 </style>
 <script>
 const SITE_PAGES=[["index.html", "首页", "<svg viewBox=\"0 0 24 24\"><path d=\"M3 10.5 12 3l9 7.5\"></path><path d=\"M5.5 9.5V20h13V9.5\"></path><path d=\"M9.5 20v-6h5v6\"></path></svg>"], ["pretest.html", "活板初探馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 5.5h7.5A2.5 2.5 0 0 1 14 8v10.5H6.5A2.5 2.5 0 0 0 4 21V5.5Z\"></path><path d=\"M20 5.5h-7.5A2.5 2.5 0 0 0 10 8v10.5h7.5A2.5 2.5 0 0 1 20 21V5.5Z\"></path></svg>"], ["inquiry.html", "研学探究馆", "<svg viewBox=\"0 0 24 24\"><circle cx=\"10.5\" cy=\"10.5\" r=\"5.5\"></circle><path d=\"M15 15 21 21\"></path><path d=\"M10.5 8v5\"></path><path d=\"M8 10.5h5\"></path></svg>"], ["speech.html", "活字解说馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 4a3 3 0 0 1 3 3v4a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3Z\"></path><path d=\"M7 11a5 5 0 0 0 10 0\"></path><path d=\"M12 16v4\"></path><path d=\"M9 20h6\"></path></svg>"], ["heritage.html", "非遗传承馆", "<svg viewBox=\"0 0 24 24\"><path d=\"M12 3c3.5 0 6 2.2 6 5.3 0 2.2-1.4 3.8-3.2 5.1-.8.6-1.3 1.4-1.3 2.3V19h-3v-3.3c0-.9-.5-1.7-1.3-2.3C7.4 12.1 6 10.5 6 8.3 6 5.2 8.5 3 12 3Z\"></path><path d=\"M9.5 22h5\"></path><path d=\"M9.5 19h5\"></path></svg>"], ["teacher.html", "教师数据中心", "<svg viewBox=\"0 0 24 24\"><path d=\"M4 6h16v10H4z\"></path><path d=\"M8 20h8\"></path><path d=\"M12 16v4\"></path><path d=\"M7.5 10.5h3\"></path><path d=\"M13.5 10.5h3\"></path></svg>"]];
@@ -149,12 +166,12 @@ function startHero(){let imgs=document.querySelectorAll('.hero-bg img');let i=0;
 function getStudent(){return JSON.parse(localStorage.getItem('currentStudent')||'null');}
 function setStudent(st){localStorage.setItem('currentStudent',JSON.stringify(st));let all=JSON.parse(localStorage.getItem('students')||'[]');let key=st.cls+'-'+st.seat+'-'+st.name;let idx=all.findIndex(x=>x.key===key);let item={...st,key,time:new Date().toLocaleString()};if(idx>=0)all[idx]=item;else all.push(item);localStorage.setItem('students',JSON.stringify(all));}
 function studentKey(){let s=getStudent();return s?`${s.cls}-${s.seat}-${s.name}`:'未登录学生';}
-function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，请先回首页填写班级、座号、姓名。';}
+function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls} ${s.seat}号 ${s.name}`:'尚未登录，点击“未登录”领取研学探展证。';}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css">
-<script src="platform-v2.js?v=2.35"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.43">
+<script src="platform-v2.js?v=2.43"></script>
 </head>
 <body>
 <script>renderHero('teacher.html');</script>
@@ -204,14 +221,9 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
 <div class="grid-3" id="cards"></div>
 
 <section class="panel">
-  <div class="panel-title">📊 年级整体对比</div>
-  <div class="chart-desc">比较各年级的预习平均分、四个学习模块的平均完成率和思辨之星点亮率。</div>
-  <div class="chart-legend">
-    <span><i class="legend-dot legend-score"></i>预习平均分</span>
-    <span><i class="legend-dot legend-rate"></i>模块完成率</span>
-    <span><i class="legend-dot legend-star"></i>思辨之星率</span>
-  </div>
-  <div class="chart-scroll"><div id="gradeChart"></div></div>
+  <div class="panel-title">📚 年级学习表现矩阵</div>
+  <div class="chart-desc">每一格直接显示该年级的具体数值和达成水平，便于横向比较优势与需要关注的环节。</div>
+  <div class="grade-matrix-scroll"><div id="gradeChart"></div></div>
 </section>
 
 <section class="panel">
@@ -222,11 +234,11 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
 
 <div class="grid-2">
   <section class="panel module-chart">
-    <div class="panel-title">🧭 当前范围学习进程</div>
+    <div class="panel-title">⭕ 当前范围学习完成环</div>
     <div id="moduleChart"></div>
   </section>
   <section class="panel">
-    <div class="panel-title">📚 当前范围成绩分布</div>
+    <div class="panel-title">🔵 当前范围成绩点阵</div>
     <div id="scoreChart"></div>
   </section>
 </div>
@@ -250,9 +262,10 @@ function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&l
 </section>
 
 <button class="btn btn-primary" id="shareSnapshotBtn" type="button">分享教师登录与全部本机数据</button>
-<button class="btn" id="exportBtn" type="button">导出全部数据 JSON</button>
-<button class="btn" id="exportSummaryBtn" type="button">导出班级汇总 CSV</button>
+<button class="btn" id="exportBtn" type="button">导出全部数据 ZIP</button>
+<button class="btn" id="exportSummaryBtn" type="button">导出班级情况汇总 Excel</button>
 <button class="btn" id="clearBtn" type="button">清空全部本地数据</button>
+<div class="export-note">ZIP 备份包含学习数据总表、各分类 JSON、班级汇总 CSV 和说明文件；班级汇总表可直接使用 Excel 打开。</div>
 <div class="muted" style="margin-top:10px;line-height:1.8">本页显示当前浏览器中保存的全部学生数据。点击“分享教师登录与全部本机数据”，其他设备打开链接后即可载入生成链接时的教师状态、学生名单、测评记录、学习进程、解说词和非遗作品。</div>
 <div class="footer-note">🏛️ 福建非遗博物院 · 云展馆 · 木字活字印刷</div>
 </div>
@@ -324,10 +337,17 @@ function studentDisplay(student,key){
   return `${info.classLabel} ${seat}${name}`.trim();
 }
 function recordStudentKey(record){
-  if(record&&record.studentKey)return String(record.studentKey);
-  const s=record&&record.student;
-  if(s)return `${s.cls||s.className||s.class||'未标注班级'}-${s.seat||''}-${s.name||'未命名'}`;
-  return '未识别学生';
+  if(!record||typeof record!=='object')return '';
+  if(record.studentKey)return String(record.studentKey);
+  if(record.student&&typeof record.student==='object'){
+    const s=record.student;if(s.key)return String(s.key);
+    const cls=s.cls||s.className||s.class||'',seat=s.seat||'',name=s.name||'';
+    if(cls&&name)return `${cls}-${seat}-${name}`;
+  }
+  const cls=record.studentClass||record.cls||record.className||record.class||'';
+  const seat=record.studentSeat||record.seat||'';
+  const name=record.studentName||record.ownerName||record.authorName||((record.name&&!record.text&&!record.content&&!record.title)?record.name:'')||'';
+  return cls&&name?`${cls}-${seat}-${name}`:'';
 }
 function hasThinkingStarFromStorage(key){
   const directKeys=[`thinkingStar:${key}`,`socraticStar:${key}`,`thinking-star:${key}`];
@@ -445,18 +465,14 @@ function renderCards(rows){
     <div class="card metric"><h2>${s.full}%</h2><p>全流程完成率</p><small>四个模块均完成</small></div>
     <div class="card metric"><h2>${s.starCount}</h2><p>思辨之星</p><small>点亮率 ${s.star}%</small></div>`;
 }
+function matrixLevelText(value){if(value>=90)return '表现突出';if(value>=75)return '稳步达成';if(value>=60)return '基本达成';if(value>=40)return '仍可提升';return '需要关注';}
+function matrixCell(label,value,overall=false){const v=Math.max(0,Math.min(100,Number(value)||0));const alpha=(.08+v*.0034).toFixed(3);return `<div class="grade-metric-cell ${overall?'grade-overall':''}" style="${overall?'':`background:rgba(166,123,92,${alpha})`}" title="${label} ${v}%"><strong>${v}%</strong><small>${overall?'综合水平':matrixLevelText(v)}</small></div>`;}
 function renderGradeChart(){
   const groups=groupedStats(dashboardModel.students,'grade');
   if(!groups.length){byId('gradeChart').innerHTML='<div class="empty">暂无年级数据。</div>';return;}
-  byId('gradeChart').innerHTML=`<div class="column-chart">${groups.map(g=>`
-    <div class="column-group">
-      <div class="column-bars">
-        <div class="column score" style="height:${Math.max(g.avg,2)}%"><span>${g.avg}</span></div>
-        <div class="column rate" style="height:${Math.max(g.moduleRate,2)}%"><span>${g.moduleRate}%</span></div>
-        <div class="column star" style="height:${Math.max(g.star,2)}%"><span>${g.star}%</span></div>
-      </div>
-      <div class="column-label">${esc(g.name)}<br>${g.total}人</div>
-    </div>`).join('')}</div>`;
+  const selected=byId('gradeFilter').value;
+  const head=['年级','预习平均分','及格率','模块完成率','全流程完成率','思辨之星率','综合'];
+  byId('gradeChart').innerHTML=`<div class="grade-matrix"><div class="grade-matrix-head">${head.map(x=>`<span>${x}</span>`).join('')}</div>${groups.map(g=>{const values=[g.avg,g.pass,g.moduleRate,g.full,g.star];const overall=Math.round(values.reduce((a,b)=>a+Number(b||0),0)/values.length);return `<div class="grade-matrix-row ${selected===g.name?'is-selected':''}"><div class="grade-name-cell"><b>${esc(g.name)}</b><small>${g.total}名学生 · ${g.scored}人有成绩</small></div>${matrixCell('预习平均分',g.avg)}${matrixCell('及格率',g.pass)}${matrixCell('模块完成率',g.moduleRate)}${matrixCell('全流程完成率',g.full)}${matrixCell('思辨之星率',g.star)}${matrixCell('综合水平',overall,true)}</div>`;}).join('')}</div>`;
 }
 function renderClassChart(){
   const grade=byId('gradeFilter').value,selected=byId('classFilter').value;
@@ -478,15 +494,13 @@ function miniBar(label,value,kind){
 function renderModuleChart(rows){
   const s=stats(rows),max=Math.max(s.total,1);
   const items=[['预习检测',s.moduleTotals.pretest],['研学探究',s.moduleTotals.inquiry],['活字解说',s.moduleTotals.speech],['非遗传承',s.moduleTotals.heritage]];
-  byId('moduleChart').innerHTML=rows.length?items.map(x=>`<div class="bar-row"><b>${x[0]}</b><div class="bar-bg"><div class="bar-fill" style="width:${percent(x[1],max)}%"></div></div><span>${x[1]}/${s.total}</span></div>`).join(''):'<div class="empty">当前范围暂无学生数据。</div>';
+  byId('moduleChart').innerHTML=rows.length?`<div class="donut-grid">${items.map(x=>{const p=percent(x[1],max);return `<div class="donut-card"><div class="donut" style="--p:${p}"><strong>${p}%</strong></div><b>${x[0]}</b><div class="muted">${x[1]}/${s.total}人完成</div></div>`}).join('')}</div>`:'<div class="empty">当前范围暂无学生数据。</div>';
 }
 function renderScoreChart(rows){
   const bins=[{label:'0—59',min:0,max:59,count:0},{label:'60—69',min:60,max:69,count:0},{label:'70—79',min:70,max:79,count:0},{label:'80—89',min:80,max:89,count:0},{label:'90—100',min:90,max:100,count:0}];
   rows.forEach(r=>{if(r.bestScore!==null){const b=bins.find(x=>r.bestScore>=x.min&&r.bestScore<=x.max);if(b)b.count++;}});
-  const max=Math.max(...bins.map(x=>x.count),1);
   if(!rows.some(r=>r.bestScore!==null)){byId('scoreChart').innerHTML='<div class="empty">当前范围暂无成绩数据。</div>';return;}
-  byId('scoreChart').innerHTML=`<div class="score-dist">${bins.map(b=>`
-    <div class="dist-group"><div class="dist-bar" style="height:${Math.max(3,b.count/max*100)}%"><span>${b.count}人</span></div><div class="dist-label">${b.label}</div></div>`).join('')}</div>`;
+  byId('scoreChart').innerHTML=`<div class="dot-dist">${bins.map(b=>`<div class="dot-bin"><div class="dot-count">${b.count}人</div><div class="dot-stack">${Array.from({length:b.count},()=>'<i class="score-dot"></i>').join('')}</div><div class="dot-label">${b.label}</div></div>`).join('')}</div>`;
 }
 function renderWrongList(rows){
   const keys=new Set(rows.map(r=>r.key)),map={};
@@ -523,7 +537,7 @@ function renderWorks(rows){
     const info=parseClassInfo(w.student||{cls:w.studentClass||w.cls||'',seat:w.studentSeat||w.seat||'',name:w.studentName||''},k);
     return (!gradeValue||info.grade===gradeValue)&&(!classValue||info.classLabel===classValue);
   }
-  function owner(w){const s=w.student||{};const cls=s.cls||w.studentClass||'',seat=s.seat||w.studentSeat||'',name=s.name||w.studentName||'';return [cls,seat?seat+'号':'',name].filter(Boolean).join(' ')||workKey(w)||w.name||w.author||'未标注学生';}
+  function owner(w){const s=w.student||{};const cls=s.cls||w.studentClass||'',seat=s.seat||w.studentSeat||'',name=s.name||w.studentName||'';return [cls,seat?seat+'号':'',name].filter(Boolean).join(' ')||workKey(w)||w.author||w.name||'未标注学生';}
   const speech=dashboardModel.data.speechWorks.filter(inScope).sort((a,b)=>String(b.time||'').localeCompare(String(a.time||''),'zh-CN'));
   const heritage=dashboardModel.data.heritageWorks.filter(inScope).sort((a,b)=>String(b.time||'').localeCompare(String(a.time||''),'zh-CN'));
   byId('speechList').innerHTML=speech.length?`<div class="muted" style="margin-bottom:8px">共 ${speech.length} 份解说词</div>`+speech.map(w=>`<div class="mini-card"><b>${esc(owner(w))}</b>　小组：${esc(w.name||'—')}　${esc(w.time||'')}　👍${w.likes||0}<br><span style="white-space:pre-wrap">${esc(w.text||'')}</span></div>`).join(''):'<div class="empty">当前范围暂无提交</div>';
@@ -561,19 +575,49 @@ function logoutTeacher(){
   localStorage.removeItem('platformSession');
   byId('dash').style.display='none';byId('loginPanel').style.display='block';byId('teacherCode').value='';
 }
-function exportData(){
-  const data=Object.fromEntries(DATA_KEYS.map(k=>[k,readList(k)]));
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='活字印刷云展馆学习数据.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
-}
-function csvCell(value){const s=String(value??'');return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;}
-function exportSummaryCsv(){
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1200);}
+function u16(n){return new Uint8Array([n&255,(n>>>8)&255]);}
+function u32(n){return new Uint8Array([n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255]);}
+function joinBytes(parts){const len=parts.reduce((n,p)=>n+p.length,0),out=new Uint8Array(len);let at=0;parts.forEach(p=>{out.set(p,at);at+=p.length});return out;}
+function crc32(bytes){let c=0xffffffff;for(const b of bytes){c^=b;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0);}return (c^0xffffffff)>>>0;}
+function makeZipBytes(files){const enc=new TextEncoder(),locals=[],centrals=[];let offset=0;for(const f of files){const name=enc.encode(f.name),data=typeof f.data==='string'?enc.encode(f.data):f.data,crc=crc32(data);const local=joinBytes([u32(0x04034b50),u16(20),u16(0x0800),u16(0),u16(0),u16(0),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),name,data]);locals.push(local);const central=joinBytes([u32(0x02014b50),u16(20),u16(20),u16(0x0800),u16(0),u16(0),u16(0),u32(crc),u32(data.length),u32(data.length),u16(name.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(offset),name]);centrals.push(central);offset+=local.length;}const centralSize=centrals.reduce((n,p)=>n+p.length,0);return joinBytes([...locals,...centrals,joinBytes([u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(centralSize),u32(offset),u16(0)])]);}
+function makeZip(files,type='application/zip'){return new Blob([makeZipBytes(files)],{type});}
+function summaryRows(){
   const rows=groupedStats(dashboardModel.students,'classLabel');
-  const header=['班级','学生人数','有成绩人数','预习平均分','及格率','模块完成率','全流程完成率','思辨之星人数','思辨之星率'];
-  const lines=[header,...rows.map(r=>[r.name,r.total,r.scored,r.avg,`${r.pass}%`,`${r.moduleRate}%`,`${r.full}%`,r.starCount,`${r.star}%`])];
-  const blob=new Blob(['\uFEFF'+lines.map(row=>row.map(csvCell).join(',')).join('\n')],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='活字印刷云展馆班级汇总.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  return [['班级','学生人数','有成绩人数','预习平均分','及格率','模块完成率','全流程完成率','思辨之星人数','思辨之星率'],...rows.map(r=>[r.name,r.total,r.scored,r.avg,r.pass/100,r.moduleRate/100,r.full/100,r.starCount,r.star/100])];
 }
+function summaryCsvText(){const lines=summaryRows().map((row,ri)=>row.map((v,ci)=>ri>0&&[4,5,6,8].includes(ci)?`${Math.round(Number(v)*100)}%`:v));return '\uFEFF'+lines.map(row=>row.map(csvCell).join(',')).join('\n');}
+function xmlEsc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));}
+function excelCol(n){let out='';for(n++;n>0;n=Math.floor((n-1)/26))out=String.fromCharCode(65+(n-1)%26)+out;return out;}
+function xlsxCell(value,row,col,style=0){const ref=excelCol(col)+row;if(typeof value==='number'&&Number.isFinite(value))return `<c r="${ref}" s="${style}"><v>${value}</v></c>`;return `<c r="${ref}" s="${style}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(value)}</t></is></c>`;}
+function buildSummaryXlsxBytes(){
+  const rows=summaryRows(),sheetRows=rows.map((row,i)=>`<row r="${i+1}" ht="${i===0?26:22}" customHeight="1">${row.map((v,j)=>xlsxCell(v,i+1,j,i===0?1:([4,5,6,8].includes(j)?2:0))).join('')}</row>`).join('');
+  const lastRow=Math.max(1,rows.length),now=new Date().toISOString();
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols><col min="1" max="1" width="22" customWidth="1"/><col min="2" max="4" width="14" customWidth="1"/><col min="5" max="9" width="17" customWidth="1"/></cols><sheetData>${sheetRows}</sheetData><autoFilter ref="A1:I${lastRow}"/><pageMargins left="0.4" right="0.4" top="0.6" bottom="0.6" header="0.2" footer="0.2"/></worksheet>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Microsoft YaHei"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Microsoft YaHei"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF9A6A3A"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="2"><border/><border><left style="thin"><color rgb="FFD8C5AA"/></left><right style="thin"><color rgb="FFD8C5AA"/></right><top style="thin"><color rgb="FFD8C5AA"/></top><bottom style="thin"><color rgb="FFD8C5AA"/></bottom><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="1" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="10" fontId="0" fillId="0" borderId="1" xfId="0" applyNumberFormat="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf></cellXfs><cellStyles count="1"><cellStyle name="常规" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+  const files=[
+    {name:'[Content_Types].xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>`},
+    {name:'_rels/.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>`},
+    {name:'xl/workbook.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView/></bookViews><sheets><sheet name="班级情况汇总" sheetId="1" r:id="rId1"/></sheets></workbook>`},
+    {name:'xl/_rels/workbook.xml.rels',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:'xl/worksheets/sheet1.xml',data:sheet},{name:'xl/styles.xml',data:styles},
+    {name:'docProps/core.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>活字印刷云展馆班级情况汇总</dc:title><dc:creator>活字印刷云展馆</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">${now}</dcterms:modified></cp:coreProperties>`},
+    {name:'docProps/app.xml',data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>活字印刷云展馆</Application><AppVersion>2.41</AppVersion></Properties>`}
+  ];
+  return makeZipBytes(files);
+}
+function exportData(){
+  const stamp=new Date().toISOString().slice(0,10),files=[];
+  const all=Object.fromEntries(DATA_KEYS.map(k=>[k,readList(k)]));
+  files.push({name:'全部数据/学习数据总表.json',data:JSON.stringify(all,null,2)});
+  DATA_KEYS.forEach(k=>files.push({name:`全部数据/分类数据/${k}.json`,data:JSON.stringify(all[k],null,2)}));
+  files.push({name:'汇总报表/班级情况汇总.xlsx',data:buildSummaryXlsxBytes()});
+  files.push({name:'汇总报表/班级情况汇总.csv',data:summaryCsvText()});
+  files.push({name:'README.txt',data:'活字印刷云展馆教师数据备份\n导出日期：'+new Date().toLocaleString()+'\n“学习数据总表.json”可用于重新导入；“分类数据”便于单独查看；“班级情况汇总.xlsx”是正式Excel汇总表，CSV作为兼容备份。'});
+  downloadBlob(makeZip(files),`活字印刷云展馆全部数据-${stamp}.zip`);
+}
+function csvCell(value){const str=String(value??'');return /[",\n]/.test(str)?`"${str.replace(/"/g,'""')}"`:str;}
+function downloadSummaryExcel(){const bytes=buildSummaryXlsxBytes();downloadBlob(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),'活字印刷云展馆班级情况汇总.xlsx');}
 function mergeArrays(key,incoming){
   const current=readList(key),map=new Map();
   function signature(item){
@@ -614,8 +658,16 @@ byId('importBtn').addEventListener('click',()=>byId('importFile').click());
 byId('importFile').addEventListener('change',e=>{const file=e.target.files&&e.target.files[0];if(file)importData(file);e.target.value='';});
 byId('shareSnapshotBtn').addEventListener('click',()=>window.MTP2?MTP2.shareLink():alert('分享组件尚未加载，请刷新页面后重试。'));
 byId('exportBtn').addEventListener('click',exportData);
-byId('exportSummaryBtn').addEventListener('click',exportSummaryCsv);
+byId('exportSummaryBtn').addEventListener('click',downloadSummaryExcel);
 byId('clearBtn').addEventListener('click',clearAll);
+
+function refreshTeacherDataIfVisible(){
+  const dash=byId('dash');if(dash&&dash.style.display!=='none')renderDashboard();
+}
+window.addEventListener('storage',e=>{if(!e.key||DATA_KEYS.includes(e.key)||e.key==='mtpLastDataUpdate')refreshTeacherDataIfVisible();});
+window.addEventListener('focus',refreshTeacherDataIfVisible);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshTeacherDataIfVisible();});
+window.addEventListener('mtp-data-updated',refreshTeacherDataIfVisible);
 
 let savedTeacherSession=null;
 try{savedTeacherSession=JSON.parse(localStorage.getItem('platformSession')||'null');}catch(e){}
@@ -641,5 +693,5 @@ if(localStorage.getItem('teacherLoggedIn')==='true'||localStorage.getItem('teach
 })();
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.29"></script></body>
+<script src="mengxi-assistant.js?v=2.41"></script></body>
 </html>
