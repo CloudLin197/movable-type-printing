@@ -1,0 +1,9 @@
+{
+  "name": "fujian-movable-type-cloud-museum",
+  "version": "2.46.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^10.7.9"
+  }
+}

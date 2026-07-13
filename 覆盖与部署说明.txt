@@ -1,0 +1,42 @@
+梦溪活字印刷云展馆 V2.46｜完整数据短链接修复
+
+一、这次修复了什么
+1. 分享链接始终收集完整数据：学生名单、测评、进度、解说词、传承馆作业文字、作品图片、徽章等。
+2. 不再在链接过长时自动删除图片。
+3. 完整数据先上传到 Netlify Blobs，再生成短链接：
+   teacher?session=...#share=随机编号
+4. 接收端通过 /api/share-snapshot 读取完整快照并导入浏览器。
+5. 旧版 #snapshot=g... 链接仍保留兼容读取，但不建议继续生成超长链接。
+
+二、覆盖文件
+把补丁内文件和 netlify 文件夹覆盖到项目根目录。
+正式首页仍是 index.html。
+
+三、重要：不能只用拖拽静态文件更新
+短链接依赖 Netlify Functions 与 Netlify Blobs。单纯把 HTML 文件拖入 Netlify Drop，不会运行 npm 安装和函数构建。
+
+推荐方式 A：项目已连接 Git
+1. 把本补丁覆盖到仓库根目录。
+2. 提交并推送。
+3. Netlify 会安装 package.json 中的 @netlify/blobs，并部署 netlify/functions/share-snapshot.mjs。
+
+方式 B：使用 Netlify CLI 手动部署
+在项目根目录执行：
+  npm install
+  npx netlify login
+  npx netlify link
+  npx netlify deploy --prod
+
+四、部署后验证
+浏览器打开：
+  https://你的域名/api/share-snapshot?id=test
+若返回“分享编号格式不正确”的 JSON，说明函数已经生效。
+
+然后进入教师数据中心，点击“复制教师登录与全部数据链接”。
+新版链接应很短，末尾类似：
+  #share=AbCdEf123...
+不应再出现几十万字符的 #snapshot=g.H4sIA...
+
+五、容量
+Netlify Functions 的同步请求上限为 6 MB，本项目在前端和函数端设置为 5.5 MB 安全上限。
+本次用户提供的实际数据只有约 0.60 MB，完全在范围内。
