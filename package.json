@@ -5,8 +5,5 @@
   "type": "module",
   "dependencies": {
     "@netlify/blobs": "^10.7.9"
-  },
-  "devDependencies": {
-    "netlify-shortener": "^2.4.0"
   }
 }

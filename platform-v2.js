@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const P={version:'2.46',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
+const P={version:'2.41',teacherCode:'123456',badgeFiles:['assets/badges/badge-process.png','assets/badges/badge-speech.png','assets/badges/badge-heritage.png']};
 const BADGE_META={
   1:{name:'工艺探究徽章',desc:'完成工序排序与六项工序探微'},
   2:{name:'云端解说徽章',desc:'完成并提交活字印刷解说词'},
@@ -8,9 +8,6 @@ const BADGE_META={
 };
 const DATA_KEYS=['students','pretestRecords','progressRecords','studentActivity','speechWorks','heritageWorks','pretestQuizLeaderboardV2'];
 const SNAPSHOT_SCHEMA='mtp-share-snapshot-v2';
-const SHARE_API='/api/share-snapshot';
-const SHARE_ID_RE=/^[A-Za-z0-9_-]{20,80}$/;
-const MAX_FUNCTION_PAYLOAD_BYTES=5_500_000;
 const safeParse=(s,d=null)=>{try{return JSON.parse(s)}catch(e){return d}};
 const b64e=o=>{const s=encodeURIComponent(JSON.stringify(o)).replace(/%([0-9A-F]{2})/g,(_,p)=>String.fromCharCode('0x'+p));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
 const b64d=s=>{try{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s);let pct='';for(let i=0;i<raw.length;i++)pct+='%'+raw.charCodeAt(i).toString(16).padStart(2,'0');return JSON.parse(decodeURIComponent(pct))}catch(e){return null}};
@@ -75,34 +72,8 @@ async function encodeSnapshot(snapshot){
  return'j.'+b64e(snapshot);
 }
 async function decodeSnapshot(token){
- if(token.startsWith('g.')){
-  if(!('DecompressionStream'in window))throw new Error('当前浏览器不支持解压旧版数据链接，请重新生成新版短链接。');
-  const bytes=b64ToBytes(token.slice(2));
-  try{
-   const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-   return JSON.parse(await new Response(stream).text());
-  }catch(e){
-   throw new Error('旧版分享链接中的压缩数据无法解开，链接可能被转发工具截断。请在原设备重新生成新版短链接。');
-  }
- }
+ if(token.startsWith('g.')){if(!('DecompressionStream'in window))throw new Error('当前浏览器不支持解压数据快照');const bytes=b64ToBytes(token.slice(2));const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));return JSON.parse(await new Response(stream).text())}
  if(token.startsWith('j.'))return b64d(token.slice(2));return b64d(token);
-}
-function jsonByteLength(value){return new TextEncoder().encode(typeof value==='string'?value:JSON.stringify(value)).byteLength}
-async function uploadSharedSnapshot(snapshot){
- const body=JSON.stringify(snapshot),bytes=jsonByteLength(body);
- if(bytes>MAX_FUNCTION_PAYLOAD_BYTES)throw new Error(`完整数据约 ${(bytes/1024/1024).toFixed(2)} MB，超过当前云端分享上限。请先压缩过大的原图，或使用“导出全部数据 ZIP”。`);
- const res=await fetch(SHARE_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body,cache:'no-store'});
- let data=null;try{data=await res.json()}catch(e){}
- if(!res.ok)throw new Error((data&&data.error)||`云端分享服务返回 ${res.status}`);
- if(!data||!SHARE_ID_RE.test(String(data.id||'')))throw new Error('云端分享服务没有返回有效编号');
- return data;
-}
-async function fetchSharedSnapshot(id){
- if(!SHARE_ID_RE.test(String(id||'')))throw new Error('分享编号格式不正确');
- const res=await fetch(`${SHARE_API}?id=${encodeURIComponent(id)}`,{headers:{'Accept':'application/json'},cache:'no-store'});
- let data=null;try{data=await res.json()}catch(e){}
- if(!res.ok)throw new Error((data&&data.error)||`云端分享数据读取失败（${res.status}）`);
- return data;
 }
 function importSharedSnapshot(snapshot){
  // 兼容 V2.33 的教师快照。
@@ -117,25 +88,14 @@ function importSharedSnapshot(snapshot){
  return snapshot;
 }
 async function applyUrlSharedSnapshot(){
- const raw=location.hash.startsWith('#')?location.hash.slice(1):location.hash;
- const hp=new URLSearchParams(raw);
- const pageUrl=new URL(location.href);
- const shareId=pageUrl.searchParams.get('share')||hp.get('share');
- const tok=hp.get('snapshot');
- if(!shareId&&!tok)return;
+ const raw=location.hash.startsWith('#')?location.hash.slice(1):location.hash;if(!raw)return;
+ const hp=new URLSearchParams(raw),tok=hp.get('snapshot');if(!tok)return;
  try{
-  const incoming=shareId?await fetchSharedSnapshot(shareId):await decodeSnapshot(tok);
-  importSharedSnapshot(incoming);
-  if(shareId){pageUrl.searchParams.delete('share');hp.delete('share')}
-  if(tok)hp.delete('snapshot');
-  const cleanHash=hp.toString();
-  history.replaceState({},'',pageUrl.pathname+(pageUrl.searchParams.toString()?('?'+pageUrl.searchParams.toString()):'')+(cleanHash?'#'+cleanHash:''));
+  const snapshot=importSharedSnapshot(await decodeSnapshot(tok));
+  hp.delete('snapshot');const cleanHash=hp.toString();history.replaceState({},'',location.pathname+location.search+(cleanHash?'#'+cleanHash:''));
   sessionStorage.removeItem('mtpSharedSnapshotNotice');
   location.reload();
- }catch(e){
-  console.error(e);
-  alert('分享数据读取失败：'+(e.message||'请返回原设备重新生成分享链接。'));
- }
+ }catch(e){console.error(e);alert('分享数据读取失败：'+(e.message||'链接可能不完整，请重新复制分享链接。'))}
 }
 function getSession(){return safeParse(localStorage.getItem('platformSession'),null)}
 function setSession(s){
@@ -170,27 +130,24 @@ window.MTP2={
  isTeacher:()=>getSession()?.role==='teacher'||localStorage.getItem('teacherMode')==='true'||localStorage.getItem('teacherLoggedIn')==='true',
  async shareLink(){
   const s=getSession();if(!s)return alert('请先登录后再生成分享链接。');
-  const url=new URL(location.origin+location.pathname);
-  url.searchParams.set('session',b64e(s));
+  const url=new URL(location.href);url.searchParams.set('session',b64e(s));
   let snapshot,message;
   if(s.role==='teacher'){
-   snapshot=collectTeacherSnapshot({includeImages:true});
+   snapshot=collectTeacherSnapshot();
    const counts={students:(snapshot.data.students||[]).length,speech:(snapshot.data.speechWorks||[]).length,heritage:(snapshot.data.heritageWorks||[]).length};
-   message=`已复制教师登录与完整数据短链接。\n包含 ${counts.students} 名学生记录、${counts.speech} 份解说词、${counts.heritage} 份非遗作品，以及全部测评、进度、作业文字和作品图片。`;
+   message=`已复制教师登录与全部本机数据链接。\n链接包含 ${counts.students} 名学生记录、${counts.speech} 份解说词、${counts.heritage} 份非遗作品及测评、进度等数据。\n其他人打开后会进入教师状态，并看到生成链接这一刻的全部数据副本。`;
   }else{
    const st=s.student||currentStudent();if(!st)return alert('没有找到当前学生信息，请重新登录。');
    snapshot=collectStudentSnapshot(st,{includeImages:true});
-   message=`已复制 ${st.cls||''} ${st.name||''} 的完整作品短链接。\n链接包含该账号的测评、进度、解说词、非遗作品文字和作品图片。`;
+   message=`已复制 ${st.cls||''} ${st.name||''} 的学生登录与作品链接。\n其他人打开后可以看到该账号已提交的解说词、非遗作品及学习记录。`;
   }
-  try{
-   const saved=await uploadSharedSnapshot(snapshot);
-   const hp=new URLSearchParams();hp.set('share',saved.id);url.hash=hp.toString();
-   message+=`\n云端快照大小：${(Number(saved.bytes||jsonByteLength(snapshot))/1024).toFixed(0)} KB。`;
-  }catch(apiError){
-   console.warn('云端短链接不可用，退回完整内嵌链接：',apiError);
-   const token=await encodeSnapshot(snapshot),hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();
-   message+=`\n云端短链接服务尚未启用，现已生成包含全部图片的内嵌链接（约 ${(url.href.length/1024).toFixed(0)} KB）。此类超长链接可能被聊天软件截断，建议按补丁说明启用 Netlify Functions。`;
+  let token=await encodeSnapshot(snapshot),hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();
+  if(url.href.length>750000){
+   if(s.role==='teacher')snapshot=collectTeacherSnapshot({includeImages:false});
+   else snapshot=collectStudentSnapshot(s.student||currentStudent(),{includeImages:false});
+   token=await encodeSnapshot(snapshot);hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();message+='\n由于作品图片较大，分享链接中已保留全部文字、成绩和学习记录，并省略非遗作品图片。';
   }
+  if(url.href.length>1200000){alert('当前数据过多，分享链接可能被聊天软件截断。请先删除过大的作品图片，或使用教师数据中心的“导出全部数据 ZIP”。');return}
   try{await navigator.clipboard.writeText(url.href);alert(message)}catch(e){prompt('复制下面的分享链接：',url.href)}
  },
  logout(){clearSession();location.href='index.html'},
@@ -222,7 +179,7 @@ function moveNavIntoHero(){const hero=document.querySelector('.hero'),nav=docume
 function createLoginModal(){
  if(document.getElementById('v2LoginModal'))return document.getElementById('v2LoginModal');
  const modal=document.createElement('div');modal.id='v2LoginModal';modal.className='v2-login-modal';modal.setAttribute('aria-hidden','true');
- modal.innerHTML=`<div class="v2-login-backdrop" data-login-close></div><section class="v2-login-card" role="dialog" aria-modal="true" aria-labelledby="v2LoginTitle"><button class="v2-login-close" type="button" data-login-close aria-label="关闭">×</button><div class="v2-pass-kicker">福建活字印刷云展馆</div><h2 id="v2LoginTitle">研学探展证</h2><p class="v2-login-lead" id="v2LoginReason">请先领取探展证，再继续完成学习任务。</p><div class="v2-login-grid"><label>班级<input id="v2LoginClass" autocomplete="organization" placeholder="例如：七年级1班"></label><label>座号<input id="v2LoginSeat" inputmode="numeric" placeholder="例如：08"></label><label class="v2-login-full">姓名<input id="v2LoginName" autocomplete="name" placeholder="请输入姓名"></label></div><div class="v2-login-pass"><span>探展编号</span><strong id="v2LoginPass">填写信息后自动生成</strong></div><div class="v2-login-msg" id="v2LoginMsg"></div><button class="v2-login-submit" id="v2LoginSubmit" type="button">领取探展证，继续当前任务</button><p class="v2-login-note">登录只用于记录本机学习成果，不会离开当前展馆。</p></section>`;
+ modal.innerHTML=`<div class="v2-login-backdrop" data-login-close></div><section class="v2-login-card" role="dialog" aria-modal="true" aria-labelledby="v2LoginTitle"><button class="v2-login-close" type="button" data-login-close aria-label="关闭">×</button><div class="v2-pass-kicker">福州活字印刷云展馆</div><h2 id="v2LoginTitle">研学探展证</h2><p class="v2-login-lead" id="v2LoginReason">请先领取探展证，再继续完成学习任务。</p><div class="v2-login-grid"><label>班级<input id="v2LoginClass" autocomplete="organization" placeholder="例如：七年级1班"></label><label>座号<input id="v2LoginSeat" inputmode="numeric" placeholder="例如：08"></label><label class="v2-login-full">姓名<input id="v2LoginName" autocomplete="name" placeholder="请输入姓名"></label></div><div class="v2-login-pass"><span>探展编号</span><strong id="v2LoginPass">填写信息后自动生成</strong></div><div class="v2-login-msg" id="v2LoginMsg"></div><button class="v2-login-submit" id="v2LoginSubmit" type="button">领取探展证，继续当前任务</button><p class="v2-login-note">登录只用于记录本机学习成果，不会离开当前展馆。</p></section>`;
  document.body.appendChild(modal);
  const cls=modal.querySelector('#v2LoginClass'),seat=modal.querySelector('#v2LoginSeat'),name=modal.querySelector('#v2LoginName'),pass=modal.querySelector('#v2LoginPass'),msg=modal.querySelector('#v2LoginMsg');
  const updatePass=()=>{const c=cls.value.trim(),s=seat.value.trim(),n=name.value.trim();pass.textContent=(c&&s&&n)?genPass({cls:c,seat:s,name:n}):'填写信息后自动生成'};
@@ -277,7 +234,7 @@ function patchTeacherLogin(){if(!location.pathname.endsWith('teacher.html'))retu
  if(session?.role==='teacher'){const lp=document.getElementById('loginPanel'),d=document.getElementById('dash');if(lp&&d){lp.style.display='none';d.style.display='block';window.renderDashboard?.();addTeacherActions()}}
 }
 function addTeacherActions(){const dash=document.getElementById('dash');if(!dash||dash.querySelector('.v2-teacher-actions'))return;const box=document.createElement('section');box.className='panel v2-teacher-actions';box.innerHTML='<div class="panel-title">🔐 教师模式与数据分享</div><p class="v2-cloud-note">学生在本机提交的测评、解说词和非遗作品会保存在当前浏览器。教师登录后可查看本机全部学生数据；复制教师数据链接后，其他设备打开即可载入生成链接时的完整数据副本。</p><button class="btn" onclick="MTP2.shareLink()">复制教师登录与全部数据链接</button><button class="btn" onclick="MTP2.logout()">退出教师登录</button><button class="btn" onclick="MTP2ImportData()">导入数据JSON</button>';dash.insertBefore(box,dash.children[1]||null)}
-window.MTP2ImportData=function(){const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=()=>{const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d&&d.data&&(d.schema===SNAPSHOT_SCHEMA||d.schema==='mtp-teacher-snapshot-v1'))importSharedSnapshot(d);else Object.entries(d).forEach(([k,v])=>localStorage.setItem(k,JSON.stringify(v)));alert('完整数据导入成功，页面将刷新。');location.reload()}catch(e){console.error(e);alert('导入失败：'+(e.message||'JSON格式错误'))}};r.readAsText(f)};input.click()}
+window.MTP2ImportData=function(){const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=()=>{const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);Object.entries(d).forEach(([k,v])=>localStorage.setItem(k,JSON.stringify(v)));alert('导入成功，页面将刷新。');location.reload()}catch(e){alert('导入失败：JSON格式错误')}};r.readAsText(f)};input.click()}
 function enrichTeacherDashboard(){if(!location.pathname.endsWith('teacher.html'))return;const old=window.renderDashboard;if(typeof old!=='function'||old.__v2)return;window.renderDashboard=function(){old();const students=safeParse(localStorage.getItem('students'),'[]')||[];const activity=safeParse(localStorage.getItem('studentActivity'),'[]')||[];const holder=document.getElementById('studentTable');if(holder){holder.innerHTML='<tr><th>年段</th><th>班级</th><th>座号</th><th>姓名</th><th>探展编号</th><th>最近登录</th><th>徽章</th><th>思辨之星</th><th>活动记录</th></tr>'+students.map(s=>{const count=activity.filter(a=>a.studentKey===s.key).length;const badges=(s.badges||[]).filter(Boolean).length;return `<tr><td>${escapeHtml(s.grade||extractGrade(s.cls))}</td><td>${escapeHtml(s.cls)}</td><td>${escapeHtml(s.seat)}</td><td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.passNumber||'')}</td><td>${escapeHtml(s.lastLogin||s.time||'')}</td><td>${badges}/3</td><td>${s.thinkingStar?'已点亮':'—'}</td><td>${count}</td></tr>`}).join('')||'<tr><td colspan="9">暂无学生记录</td></tr>'}
  const panels=document.querySelectorAll('#dash .panel');if(!document.getElementById('gradeSummary')){const p=document.createElement('section');p.className='panel';p.id='gradeSummary';p.innerHTML='<div class="panel-title">🏫 年段与班级情况</div><div id="gradeSummaryBody"></div>';const studentPanel=[...panels].find(x=>x.textContent.includes('学生学习记录'));studentPanel?.insertAdjacentElement('beforebegin',p)}const body=document.getElementById('gradeSummaryBody');if(body){const groups={};students.forEach(s=>{const g=s.grade||extractGrade(s.cls),c=s.cls||'未分班';groups[g]??={};groups[g][c]=(groups[g][c]||0)+1});body.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([g,cs])=>`<div class="card" style="margin-bottom:12px"><b>${escapeHtml(g)}</b>：${Object.entries(cs).map(([c,n])=>`${escapeHtml(c)}（${n}人）`).join('　')}</div>`).join(''):'<div class="empty">暂无年段与班级数据</div>'}
 };window.renderDashboard.__v2=true}

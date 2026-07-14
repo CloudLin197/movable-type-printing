@@ -145,8 +145,8 @@ function ensureStudentTip(){let s=getStudent();return s?`当前学生：${s.cls}
 function saveProgress(page,detail={}){let list=JSON.parse(localStorage.getItem('progressRecords')||'[]');list.push({id:Date.now(),studentKey:studentKey(),student:getStudent(),page,detail,time:new Date().toLocaleString()});localStorage.setItem('progressRecords',JSON.stringify(list));}
 function esc(s){return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 </script>
-<link rel="stylesheet" href="platform-v2.css?v=2.45">
-<script src="platform-v2.js?v=2.46"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.47">
+<script src="platform-v2.js?v=2.47"></script>
 </head>
 <body>
 <script>renderHero('heritage.html');</script>
@@ -217,5 +217,5 @@ function renderStudentPass() {
 }
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.44"></script></body>
+<script src="mengxi-assistant.js?v=2.47"></script></body>
 </html>

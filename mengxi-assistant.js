@@ -21,6 +21,64 @@
     }
     .mengxi-float:hover,
     .mengxi-float:focus-within { transform: scale(1.035); }
+    .mengxi-float.is-dragging {
+      cursor: grabbing;
+      transition: none;
+      transform: none !important;
+    }
+    .mengxi-float.is-dragging .mengxi-avatar img { animation-play-state: paused; }
+    .mengxi-float.mx-assistant-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(.72);
+    }
+    .mengxi-avatar-wrap { width: 100%; position: relative; outline:none; }
+    .mengxi-avatar { touch-action:none; cursor:grab; }
+    .mengxi-float.is-dragging .mengxi-avatar { cursor:grabbing; }
+    .mx-float-tools {
+      position:absolute;
+      z-index:6;
+      top:2px;
+      right:2px;
+      display:flex;
+      align-items:center;
+      gap:5px;
+    }
+    .mx-drag-hint,.mx-hide-assistant {
+      width:27px;height:27px;
+      display:inline-flex;align-items:center;justify-content:center;
+      border-radius:50%;
+      border:1px solid rgba(132,87,43,.58);
+      background:rgba(255,249,237,.92);
+      color:#65411f;
+      box-shadow:0 3px 9px rgba(64,35,14,.16);
+      font-family:Arial,sans-serif;
+      font-size:15px;
+      line-height:1;
+    }
+    .mx-drag-hint{pointer-events:none;font-size:14px;}
+    .mx-hide-assistant{cursor:pointer;padding:0;}
+    .mx-hide-assistant:hover{background:#ead8bb;transform:translateY(-1px)}
+    .mx-show-assistant {
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:9998;
+      width:50px;height:50px;
+      display:none;
+      align-items:center;justify-content:center;
+      padding:3px;
+      border-radius:50%;
+      border:1px solid #b68b58;
+      background:#fff8ea;
+      box-shadow:0 8px 22px rgba(65,35,14,.25);
+      cursor:pointer;
+    }
+    .mx-show-assistant.visible{display:inline-flex;}
+    .mx-show-assistant img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .mx-show-assistant:hover{transform:translateY(-2px);box-shadow:0 11px 25px rgba(65,35,14,.30)}
+    .mengxi-float.mx-callout-right .mengxi-callout{right:auto;left:136px;}
+    .mengxi-float.mx-callout-right .mengxi-callout::after{right:auto;left:-20px;transform:scaleX(-1);}
     .mengxi-avatar-wrap { width: 100%; position: relative; }
     .mengxi-callout {
       position: absolute;
@@ -351,6 +409,10 @@
         border-radius:20px;
       }
       .mengxi-float { width: 108px; right: 6px; bottom: 8px; }
+      .mx-float-tools{top:-1px;right:-1px;gap:3px;}
+      .mx-drag-hint,.mx-hide-assistant{width:24px;height:24px;font-size:13px;}
+      .mx-show-assistant{width:45px;height:45px;right:9px;bottom:9px;}
+      .mengxi-float.mx-callout-right .mengxi-callout{left:82px;}
       .mengxi-callout {
         top: -18px;
         right: 74px;
@@ -1851,6 +1913,78 @@
     saveGuidedDialogue();
   }
 
+  const DISCUSSION_MEMORY_PREFIX = 'mengxiDiscussionMemoryV247:';
+
+  function discussionMemoryStorageKey() {
+    return DISCUSSION_MEMORY_PREFIX + encodeURIComponent(guidedStudentKey());
+  }
+
+  function loadDiscussionMemory() {
+    try {
+      const data = JSON.parse(localStorage.getItem(discussionMemoryStorageKey()) || '{}');
+      return data && typeof data === 'object' ? data : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function normalizeDiscussionQuestion(text) {
+    return normalizePresetQuestion(text || '').slice(0, 140);
+  }
+
+  function discussionKeyForTopic(topic) {
+    return topic && topic.id ? `topic:${topic.id}` : '';
+  }
+
+  function discussionKeyForGeneric(text) {
+    return `generic:${normalizeDiscussionQuestion(text)}`;
+  }
+
+  function rememberDiscussion(key, originalQuestion, studentAnswer, summary) {
+    if (!key) return;
+    try {
+      const memory = loadDiscussionMemory();
+      memory[key] = {
+        originalQuestion: String(originalQuestion || '').slice(0, 240),
+        studentAnswer: String(studentAnswer || '').slice(0, 800),
+        summary: String(summary || '').slice(0, 1200),
+        completedAt: Date.now()
+      };
+      const entries = Object.entries(memory).sort((a,b)=>Number(b[1]?.completedAt||0)-Number(a[1]?.completedAt||0)).slice(0,60);
+      localStorage.setItem(discussionMemoryStorageKey(), JSON.stringify(Object.fromEntries(entries)));
+    } catch (_) {}
+  }
+
+  function recalledDiscussion(key) {
+    if (!key) return null;
+    return loadDiscussionMemory()[key] || null;
+  }
+
+  function escapeDiscussionText(text) {
+    return String(text || '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  }
+
+  function hasThinkingStarUnlocked() {
+    try {
+      if (window.MTP2 && typeof window.MTP2.getThinkingStar === 'function') return !!window.MTP2.getThinkingStar();
+      const st = currentStudentForInquiry();
+      return !!(st && localStorage.getItem(`thinkingStar:${st.cls}-${st.seat}-${st.name}`) === 'unlocked');
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function livingInquiryDirectSummary() {
+    return '刚刚我们已经讨论过这个问题啦，让我为你整理下我们的讨论结果吧。<br>《活板》的“活”主要体现在四个方面：①<strong>字印可活</strong>——“每字为一印”，单字可以移动、替换和重新组合；②<strong>字库可活</strong>——常用字准备“数印”，没有的生僻字还能“旋刻之”；③<strong>工序可活</strong>——两块铁板“一板印刷，一板已自布字”，能够交替衔接；④<strong>拆用可活</strong>——印完后“其印自落”，字印可以分类保存并重复使用。核心突破是把雕版的整版固定，变成单字模块的灵活组合。';
+  }
+
+  function recalledDiscussionReply(record, topic) {
+    if (topic && topic.id === 'livingEye') return livingInquiryDirectSummary();
+    const summary = record?.summary || topic?.done || '我们已经从原文证据、工艺动作和实际作用三个角度形成了结论。';
+    const student = record?.studentAnswer ? `<br><strong>你当时形成的结论：</strong>${escapeDiscussionText(record.studentAnswer)}` : '';
+    return `刚刚我们已经讨论过这个问题啦，让我为你整理下我们的讨论结果吧。<br>${summary}${student}`;
+  }
+
   function guideProgress(percent, label) {
     const p = Math.max(8, Math.min(100, Math.round(percent || 0)));
     return `<div class="mx-guide-progress" aria-label="${label || '思考进度'} ${p}%"><div class="mx-guide-label"><span>${label || '思考正在展开'}</span><b>${p}%</b></div><div class="mx-guide-track"><i style="width:${p}%"></i></div></div>`;
@@ -2221,13 +2355,14 @@
     return '这个问题值得从原文中推出来。我先不替你下结论：你觉得与这个问题最相关的是哪一句原文、哪一个动作，或者哪一种材料？先指出一个，我们从那里往下追。';
   }
 
-  function startGuidedTopic(topic) {
+  function startGuidedTopic(topic, originalQuestion='') {
     if (topic && topic.awardStar && !isInquiryFullyUnlocked()) {
       resetGuidedDialogue();
       return incompleteInquiryMessage();
     }
     guidedDialogue = {
       mode:'huoban', topicId:topic.id, matched:[], turns:0, awaitingSummary:false,
+      originalQuestion:String(originalQuestion||''),
       studentKey:guidedStudentKey(), updatedAt:Date.now()
     };
     saveGuidedDialogue();
@@ -2236,7 +2371,7 @@
 
   function startGenericGuidance(text) {
     guidedDialogue = {
-      mode:'generic', topicId:'generic', originalQuestion:text, turns:0, evidence:false, keyWord:false,
+      mode:'generic', topicId:'generic', originalQuestion:text, discussionKey:discussionKeyForGeneric(text), turns:0, evidence:false, keyWord:false,
       studentKey:guidedStudentKey(), updatedAt:Date.now()
     };
     saveGuidedDialogue();
@@ -2296,6 +2431,7 @@
       const award = topic.awardStar && matched.size >= 3;
       const warmTurn = guidedDialogue.turns || 0;
       if (award) awardThinkingStar();
+      rememberDiscussion(discussionKeyForTopic(topic), guidedDialogue.originalQuestion || '', q, topic.done);
       resetGuidedDialogue();
       return `${mengxiWarm('finish', warmTurn)}${topic.done}${award ? ' 小生已经为你点亮了<strong>“思辨之星”</strong>，快去登录信息里瞧瞧吧。' : ''}${guideProgress(100,'形成自己的结论')}`;
     }
@@ -2349,6 +2485,7 @@
     }
     if (q.length >= 16 && /因为|所以|说明|体现|可见|意味着|不是.*而是/.test(q)) {
       const warmTurn = guidedDialogue.turns || 0;
+      rememberDiscussion(guidedDialogue.discussionKey || discussionKeyForGeneric(guidedDialogue.originalQuestion || ''), guidedDialogue.originalQuestion || '', q, '我们已经用“观点—理由—文本证据”的方式把这个问题讨论完整了。');
       resetGuidedDialogue();
       return `${mengxiWarm('finish', warmTurn)}你的回答已经形成“观点—理由—文本证据”的完整链条。若要交作业，再看看原词引用得准不准，就很稳当了。${guideProgress(100,'结论由你自己完成')}`;
     }
@@ -2570,10 +2707,28 @@
     if (guidedDialogue && guidedDialogue.studentKey && guidedDialogue.studentKey !== currentKey) resetGuidedDialogue();
     const freshTopic = findGuidedTopic(q);
     const explicitSpeechRequest = isSpeechWritingTrigger(q);
+
+    // 已完成过的探究题再次提问时，不再重复走步骤，直接整理上次结论。
+    // “活在哪里”只要已经点亮思辨之星，也直接给出完整归纳。
+    if (freshTopic) {
+      const recalled = recalledDiscussion(discussionKeyForTopic(freshTopic));
+      if ((freshTopic.id === 'livingEye' && hasThinkingStarUnlocked()) || recalled) {
+        resetGuidedDialogue();
+        return recalledDiscussionReply(recalled, freshTopic);
+      }
+    }
+    if (!freshTopic && isGeneralHuobanUnderstanding(q)) {
+      const recalled = recalledDiscussion(discussionKeyForGeneric(q));
+      if (recalled) {
+        resetGuidedDialogue();
+        return recalledDiscussionReply(recalled, null);
+      }
+    }
+
     // 在解说词写作过程中，学生若临时提出明确的《活板》理解题，先暂停写作教练，正常进入课文引导。
     if (freshTopic && !explicitSpeechRequest && (!guidedDialogue || guidedDialogue.topicId !== freshTopic.id)) {
       resetGuidedDialogue();
-      return startGuidedTopic(freshTopic);
+      return startGuidedTopic(freshTopic, q);
     }
 
     const speech = handleSpeechCoach(q);
@@ -2581,7 +2736,7 @@
 
     if (freshTopic && (!guidedDialogue || guidedDialogue.topicId !== freshTopic.id)) {
       resetGuidedDialogue();
-      return startGuidedTopic(freshTopic);
+      return startGuidedTopic(freshTopic, q);
     }
 
     if (guidedDialogue && guidedDialogue.mode === 'huoban') {
@@ -2591,7 +2746,7 @@
     }
     if (guidedDialogue && guidedDialogue.mode === 'generic') return handleGenericTurn(q);
 
-    if (freshTopic) return startGuidedTopic(freshTopic);
+    if (freshTopic) return startGuidedTopic(freshTopic, q);
     if (isGeneralHuobanUnderstanding(q)) return startGenericGuidance(q);
     return '';
   }
@@ -2750,19 +2905,28 @@
     document.body.appendChild(panel);
 
     const float = el('div', 'mengxi-float');
-    float.setAttribute('role', 'button');
-    float.setAttribute('tabindex', '0');
-    float.setAttribute('aria-label', '点击梦溪开始交流');
+    float.setAttribute('aria-label', '梦溪数字助教');
     float.innerHTML = `
-      <div class="mengxi-avatar-wrap" title="点击梦溪，开始交流">
+      <div class="mx-float-tools">
+        <span class="mx-drag-hint" title="按住梦溪拖动" aria-hidden="true">✥</span>
+        <button class="mx-hide-assistant" type="button" title="隐藏梦溪" aria-label="隐藏梦溪">−</button>
+      </div>
+      <div class="mengxi-avatar-wrap" role="button" tabindex="0" aria-label="点击梦溪开始交流，按住小人可以拖动" title="点击交流；按住小人可拖到任务旁">
         <div class="mengxi-callout" aria-hidden="true">
           <span class="mx-call-icon"><svg viewBox="0 0 24 24"><path d="M5 6.5h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-7l-4.2 3v-3H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Z"></path><path d="M8 10h8"></path><path d="M8 13h5"></path></svg></span>
-          <span class="mx-call-copy"><strong class="mx-call-main">点我交流</strong><small class="mx-call-sub">文字 · 语音都可以</small></span>
+          <span class="mx-call-copy"><strong class="mx-call-main">点我交流</strong><small class="mx-call-sub">按住小人还可拖动</small></span>
         </div>
         <div class="mengxi-avatar"><img src="assets/mengxi-ip.png" alt="梦溪数字助教"></div>
       </div>
     `;
     document.body.appendChild(float);
+
+    const showAssistantBtn = el('button', 'mx-show-assistant');
+    showAssistantBtn.type = 'button';
+    showAssistantBtn.title = '显示梦溪';
+    showAssistantBtn.setAttribute('aria-label', '显示梦溪');
+    showAssistantBtn.innerHTML = '<img src="assets/mengxi-ip.png" alt="">';
+    document.body.appendChild(showAssistantBtn);
 
     const chat = panel.querySelector('.mx-chat');
     const chips = panel.querySelector('.mx-chips');
@@ -2772,6 +2936,125 @@
     const micBtn = panel.querySelector('.mx-mic');
     const speakerBtn = panel.querySelector('.mx-speaker');
     const voiceStatus = panel.querySelector('.mx-voice-status');
+    const avatarWrap = float.querySelector('.mengxi-avatar-wrap');
+    const avatarDragSurface = float.querySelector('.mengxi-avatar');
+    const hideAssistantBtn = float.querySelector('.mx-hide-assistant');
+
+    const FLOAT_POSITION_KEY = 'mengxiFloatPositionV247';
+    const ASSISTANT_HIDDEN_KEY = 'mengxiAssistantHiddenV247';
+    let suppressFloatClickUntil = 0;
+
+    function clampNumber(value, min, max) {
+      return Math.min(Math.max(value, min), Math.max(min, max));
+    }
+
+    function updateCalloutDirection() {
+      const rect = float.getBoundingClientRect();
+      float.classList.toggle('mx-callout-right', rect.left < 230);
+    }
+
+    function clampFloatToViewport(save=false) {
+      const rect = float.getBoundingClientRect();
+      if (!float.style.left && !float.style.top) {
+        updateCalloutDirection();
+        return;
+      }
+      const left = clampNumber(parseFloat(float.style.left) || rect.left, 6, window.innerWidth - rect.width - 6);
+      const top = clampNumber(parseFloat(float.style.top) || rect.top, 6, window.innerHeight - rect.height - 6);
+      float.style.left = `${left}px`;
+      float.style.top = `${top}px`;
+      float.style.right = 'auto';
+      float.style.bottom = 'auto';
+      updateCalloutDirection();
+      if (save) {
+        try { localStorage.setItem(FLOAT_POSITION_KEY, JSON.stringify({left,top})); } catch (_) {}
+      }
+    }
+
+    function restoreFloatPosition() {
+      try {
+        const pos = JSON.parse(localStorage.getItem(FLOAT_POSITION_KEY) || 'null');
+        if (pos && Number.isFinite(Number(pos.left)) && Number.isFinite(Number(pos.top))) {
+          float.style.left = `${Number(pos.left)}px`;
+          float.style.top = `${Number(pos.top)}px`;
+          float.style.right = 'auto';
+          float.style.bottom = 'auto';
+          requestAnimationFrame(() => clampFloatToViewport(false));
+          return;
+        }
+      } catch (_) {}
+      requestAnimationFrame(updateCalloutDirection);
+    }
+
+    function positionPanelNearFloat() {
+      const fr = float.getBoundingClientRect();
+      const pw = panel.offsetWidth || Math.min(388, window.innerWidth - 20);
+      const ph = panel.offsetHeight || Math.min(610, window.innerHeight - 20);
+      let left = fr.right - pw;
+      let top = fr.top - ph - 12;
+      left = clampNumber(left, 10, window.innerWidth - pw - 10);
+      if (top < 10) top = fr.bottom + 10;
+      top = clampNumber(top, 10, window.innerHeight - ph - 10);
+      panel.style.left = `${left}px`;
+      panel.style.top = `${top}px`;
+      panel.style.right = 'auto';
+      panel.style.bottom = 'auto';
+    }
+
+    function setAssistantHidden(hidden) {
+      float.classList.toggle('mx-assistant-hidden', !!hidden);
+      showAssistantBtn.classList.toggle('visible', !!hidden);
+      try { localStorage.setItem(ASSISTANT_HIDDEN_KEY, hidden ? '1' : '0'); } catch (_) {}
+      if (hidden) {
+        panel.classList.remove('open');
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      } else {
+        requestAnimationFrame(() => { clampFloatToViewport(false); updateCalloutDirection(); });
+      }
+    }
+
+    function setupFloatDragging() {
+      let drag = null;
+      avatarDragSurface.addEventListener('pointerdown', e => {
+        if (e.button !== undefined && e.button !== 0) return;
+        const rect = float.getBoundingClientRect();
+        drag = {
+          pointerId:e.pointerId, startX:e.clientX, startY:e.clientY,
+          left:rect.left, top:rect.top, moved:false
+        };
+        float.style.left = `${rect.left}px`;
+        float.style.top = `${rect.top}px`;
+        float.style.right = 'auto';
+        float.style.bottom = 'auto';
+        float.classList.add('is-dragging');
+        try { avatarDragSurface.setPointerCapture(e.pointerId); } catch (_) {}
+        e.preventDefault();
+      });
+      avatarDragSurface.addEventListener('pointermove', e => {
+        if (!drag || e.pointerId !== drag.pointerId) return;
+        const dx=e.clientX-drag.startX, dy=e.clientY-drag.startY;
+        if (Math.hypot(dx,dy) > 5) drag.moved=true;
+        float.style.left = `${clampNumber(drag.left+dx,6,window.innerWidth-float.offsetWidth-6)}px`;
+        float.style.top = `${clampNumber(drag.top+dy,6,window.innerHeight-float.offsetHeight-6)}px`;
+        updateCalloutDirection();
+        if (panel.classList.contains('open')) positionPanelNearFloat();
+      });
+      const finish = e => {
+        if (!drag || (e.pointerId !== undefined && e.pointerId !== drag.pointerId)) return;
+        const moved=drag.moved;
+        drag=null;
+        float.classList.remove('is-dragging');
+        clampFloatToViewport(true);
+        if (moved) suppressFloatClickUntil=Date.now()+420;
+        try { avatarDragSurface.releasePointerCapture(e.pointerId); } catch (_) {}
+      };
+      avatarDragSurface.addEventListener('pointerup', finish);
+      avatarDragSurface.addEventListener('pointercancel', finish);
+    }
+
+    restoreFloatPosition();
+    setupFloatDragging();
+    setAssistantHidden(localStorage.getItem(ASSISTANT_HIDDEN_KEY) === '1');
 
     let voiceReplyEnabled = localStorage.getItem('mengxiVoiceReply') !== 'off';
     let listening = false;
@@ -2917,6 +3200,8 @@
     }
 
     function openPanel(focusInput) {
+      if (float.classList.contains('mx-assistant-hidden')) setAssistantHidden(false);
+      positionPanelNearFloat();
       panel.classList.add('open');
       if (focusInput) setTimeout(() => input.focus(), 80);
     }
@@ -3201,14 +3486,32 @@
         panel.classList.remove('open');
         if (recognition) cancelVoiceSession();
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      }
+      },
+      hide() { setAssistantHidden(true); },
+      show() { setAssistantHidden(false); }
     };
-    float.onclick = togglePanel;
-    float.addEventListener('keydown', e => {
+    float.onclick = e => {
+      if (e.target.closest('.mx-hide-assistant')) return;
+      if (Date.now() < suppressFloatClickUntil) return;
+      if (float.classList.contains('mx-assistant-hidden')) setAssistantHidden(false);
+      positionPanelNearFloat();
+      togglePanel();
+    };
+    avatarWrap.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
+        positionPanelNearFloat();
         togglePanel();
       }
+    });
+    hideAssistantBtn.onclick = e => {
+      e.stopPropagation();
+      setAssistantHidden(true);
+    };
+    showAssistantBtn.onclick = () => setAssistantHidden(false);
+    window.addEventListener('resize', () => {
+      clampFloatToViewport(false);
+      if (panel.classList.contains('open')) positionPanelNearFloat();
     });
     panel.querySelector('.mx-close').onclick = () => {
       panel.classList.remove('open');

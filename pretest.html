@@ -158,7 +158,22 @@ label{display:block;margin:12px 0 6px;font-weight:bold;color:#4d3422;}
   font-family:Georgia,serif;font-weight:bold;font-size:15px;
   box-shadow:0 3px 0 #5e341b;
 }
-.question-text{font-weight:bold;color:#442a19;font-size:16px;padding-top:2px;}
+.question-kind{
+  flex:0 0 auto;
+  margin-top:3px;
+  padding:2px 7px;
+  border-radius:999px;
+  font-size:11px;
+  line-height:1.6;
+  font-weight:bold;
+  letter-spacing:.5px;
+  color:#765332;
+  background:#efe1cc;
+  border:1px solid #dcc4a3;
+}
+.question-kind.translate{color:#6c4b25;background:#f3dfbd;border-color:#d9b77d;}
+.question-kind.content{color:#4f5f43;background:#e4ead8;border-color:#bdc9aa;}
+.question-text{flex:1;min-width:0;font-weight:bold;color:#442a19;font-size:16px;padding-top:2px;}
 .option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
 .option{
   min-width:0;
@@ -481,8 +496,8 @@ function esc(s){
 return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 }
 </script>
-<link rel="stylesheet" href="platform-v2.css?v=2.45">
-<script src="platform-v2.js?v=2.46"></script>
+<link rel="stylesheet" href="platform-v2.css?v=2.47">
+<script src="platform-v2.js?v=2.47"></script>
 </head>
 
 <body>
@@ -577,7 +592,7 @@ return String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"
     <div class="quiz-seal" aria-hidden="true">卷</div>
     <div class="quiz-copy">
       <strong>课文知识小闯关</strong>
-      <span>每轮随机抽取10题并打乱选项，90分通过；重新作答会更换题目与选项。</span>
+      <span>按“字词理解 → 语句翻译 → 内容理解”的顺序完成10题；90分通过，重新作答会更换题目与选项。</span>
     </div>
   </div>
   <div class="quiz-progress" aria-live="polite"><strong id="quizAnswered">0</strong><span>/10 已作答</span></div>
@@ -1119,9 +1134,11 @@ function shuffled(list){
 
 function prepareQuestion(item){
   const mixed=shuffled(item.o.map((text,index)=>({text,correct:index===item.a})));
+  const kind=item.type==='general'?'content':(item.id.startsWith('translate-')?'translate':'word');
   return {
     id:item.id,
     q:item.q,
+    kind,
     o:mixed.map(x=>x.text),
     a:mixed.findIndex(x=>x.correct)
   };
@@ -1137,11 +1154,13 @@ function chooseQuestionSet(avoidIds=[]){
   if(translationPool.length<2) translationPool=QUESTION_BANK.filter(x=>x.type==='language'&&x.id.startsWith('translate-'));
   if(wordPool.length<5) wordPool=QUESTION_BANK.filter(x=>x.type==='language'&&!x.id.startsWith('translate-'));
   if(generalPool.length<3) generalPool=QUESTION_BANK.filter(x=>x.type!=='language');
-  const selected=shuffled([
-    ...shuffled(translationPool).slice(0,2),
+  // 题面顺序固定为：字词理解（1—5）→语句翻译（6—7）→内容理解（8—10）。
+  // 各组内部仍随机抽题，选项仍会打乱。
+  const selected=[
     ...shuffled(wordPool).slice(0,5),
+    ...shuffled(translationPool).slice(0,2),
     ...shuffled(generalPool).slice(0,3)
-  ]);
+  ];
   currentQuestionIds=selected.map(x=>x.id);
   Q=selected.map(prepareQuestion);
 }
@@ -1158,7 +1177,7 @@ quiz.innerHTML='';
 Q.forEach((q,i)=>{
 let div=document.createElement('div');
 div.className='qitem';
-div.innerHTML=`<div class="question-head"><span class="question-no">${i+1}</span><span class="question-text">${q.q}</span></div>`;
+div.innerHTML=`<div class="question-head"><span class="question-no">${i+1}</span><span class="question-kind ${q.kind}">${q.kind==='word'?'字词':q.kind==='translate'?'翻译':'内容'}</span><span class="question-text">${q.q}</span></div>`;
 
 let optionGrid=document.createElement('div');
 optionGrid.className='option-grid';
@@ -1383,5 +1402,5 @@ function renderStudentPass() {
 }
 </script>
 <script src="assets/hanzi-pinyin.js"></script>
-<script src="mengxi-assistant.js?v=2.44"></script></body>
+<script src="mengxi-assistant.js?v=2.47"></script></body>
 </html>
