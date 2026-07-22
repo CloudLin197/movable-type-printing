@@ -94,6 +94,7 @@ async function applyUrlSharedSnapshot(){
             const result = await response.json();
 
             if (response.ok && result.data) {
+                // 构建快照对象（注意 result 本身就是快照）
                 const snapshot = {
                     schema: result.schema || SNAPSHOT_SCHEMA,
                     kind: result.kind || 'teacher',
@@ -104,9 +105,21 @@ async function applyUrlSharedSnapshot(){
                     source: result.source || location.origin + location.pathname
                 };
 
+                // 导入数据到 localStorage
                 importSharedSnapshot(snapshot);
+
+                // ✅ 关键修复：根据快照类型自动设置会话，实现免登录
+                if (snapshot.kind === 'teacher') {
+                    // 设置教师模式
+                    setSession({ role: 'teacher', loginAt: new Date().toISOString() });
+                } else if (snapshot.kind === 'student' && snapshot.student) {
+                    // 设置学生身份
+                    setSession({ role: 'student', student: snapshot.student, loginAt: new Date().toISOString() });
+                }
+
+                // 清除 URL 中的 shareId 参数，避免刷新后重复加载
                 history.replaceState({}, document.title, location.pathname + location.hash);
-                alert('✅ 已成功载入分享的数据！页面将刷新。');
+                alert('✅ 已成功载入分享的数据，并自动登录！页面将刷新。');
                 location.reload();
                 return;
             } else {
@@ -116,6 +129,7 @@ async function applyUrlSharedSnapshot(){
             console.error('加载分享数据失败:', error);
             alert('❌ 无法加载分享数据，请检查网络');
         }
+        // 如果加载失败，也清除参数避免反复尝试
         history.replaceState({}, document.title, location.pathname + location.hash);
         return;
     }
@@ -130,11 +144,17 @@ async function applyUrlSharedSnapshot(){
 
     try {
         const snapshot = importSharedSnapshot(await decodeSnapshot(tok));
+        // 旧链接也尽量自动登录
+        if (snapshot && snapshot.kind === 'teacher') {
+            setSession({ role: 'teacher', loginAt: new Date().toISOString() });
+        } else if (snapshot && snapshot.kind === 'student' && snapshot.student) {
+            setSession({ role: 'student', student: snapshot.student, loginAt: new Date().toISOString() });
+        }
         hp.delete('snapshot');
         const cleanHash = hp.toString();
         history.replaceState({}, '', location.pathname + location.search + (cleanHash ? '#' + cleanHash : ''));
         sessionStorage.removeItem('mtpSharedSnapshotNotice');
-        alert('✅ 已从旧链接载入数据，页面将刷新。');
+        alert('✅ 已从旧链接载入数据，并自动登录！页面将刷新。');
         location.reload();
     } catch (e) {
         console.error(e);
@@ -151,6 +171,7 @@ function setSession(s){
  }
  if(s&&s.role==='teacher'){
   localStorage.setItem('teacherMode','true');localStorage.setItem('teacherLoggedIn','true');
+  // 只清除“当前正在操作的学生身份”，不删除任何学生名单、成绩和作品。
   ['currentStudent','studentInfo','activeStudent','loginStudent'].forEach(k=>localStorage.removeItem(k));
  }
 }
