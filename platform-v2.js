@@ -9,10 +9,14 @@ const BADGE_META={
 const DATA_KEYS=['students','pretestRecords','progressRecords','studentActivity','speechWorks','heritageWorks','pretestQuizLeaderboardV2'];
 const SNAPSHOT_SCHEMA='mtp-share-snapshot-v2';
 const safeParse=(s,d=null)=>{try{return JSON.parse(s)}catch(e){return d}};
-const b64e=o=>{const s=encodeURIComponent(JSON.stringify(o)).replace(/%([0-9A-F]{2})/g,(_,p)=>String.fromCharCode('0x'+p));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+// 保留 b64d 和 b64ToBytes 用于解码旧链接（兼容），删除 b64e 和 bytesToB64
 const b64d=s=>{try{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s);let pct='';for(let i=0;i<raw.length;i++)pct+='%'+raw.charCodeAt(i).toString(16).padStart(2,'0');return JSON.parse(decodeURIComponent(pct))}catch(e){return null}};
-const bytesToB64=bytes=>{let out='';const step=0x8000;for(let i=0;i<bytes.length;i+=step)out+=String.fromCharCode(...bytes.subarray(i,i+step));return btoa(out).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
 const b64ToBytes=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const raw=atob(s),out=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)out[i]=raw.charCodeAt(i);return out};
+// 保留 decodeSnapshot 用于旧链接解码
+async function decodeSnapshot(token){
+ if(token.startsWith('g.')){if(!('DecompressionStream'in window))throw new Error('当前浏览器不支持解压数据快照');const bytes=b64ToBytes(token.slice(2));const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));return JSON.parse(await new Response(stream).text())}
+ if(token.startsWith('j.'))return b64d(token.slice(2));return b64d(token);
+}
 function currentStudent(){return safeParse(localStorage.getItem('currentStudent'),null)}
 function studentKey(st=currentStudent()){return st?`${st.cls||st.className||''}-${st.seat||''}-${st.name||''}`:''}
 function recordStudentKey(item){
@@ -66,15 +70,6 @@ function collectStudentSnapshot(st,{includeImages=true}={}){
  });
  return{schema:SNAPSHOT_SCHEMA,kind:'student',studentKey:key,student:st,version:P.version,generatedAt:new Date().toISOString(),source:location.origin+location.pathname,data,extras:getStudentExtras(key),imagesOmitted:!includeImages};
 }
-async function encodeSnapshot(snapshot){
- const text=JSON.stringify(snapshot);
- if('CompressionStream'in window){const stream=new Blob([text]).stream().pipeThrough(new CompressionStream('gzip'));const buf=await new Response(stream).arrayBuffer();return'g.'+bytesToB64(new Uint8Array(buf))}
- return'j.'+b64e(snapshot);
-}
-async function decodeSnapshot(token){
- if(token.startsWith('g.')){if(!('DecompressionStream'in window))throw new Error('当前浏览器不支持解压数据快照');const bytes=b64ToBytes(token.slice(2));const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));return JSON.parse(await new Response(stream).text())}
- if(token.startsWith('j.'))return b64d(token.slice(2));return b64d(token);
-}
 function importSharedSnapshot(snapshot){
  // 兼容 V2.33 的教师快照。
  if(snapshot&&snapshot.schema==='mtp-teacher-snapshot-v1')snapshot={...snapshot,schema:SNAPSHOT_SCHEMA,kind:'teacher'};
@@ -87,15 +82,64 @@ function importSharedSnapshot(snapshot){
  }
  return snapshot;
 }
+// ========== 新版的 applyUrlSharedSnapshot：支持短链接 ?shareId= 并兼容旧 hash ==========
 async function applyUrlSharedSnapshot(){
- const raw=location.hash.startsWith('#')?location.hash.slice(1):location.hash;if(!raw)return;
- const hp=new URLSearchParams(raw),tok=hp.get('snapshot');if(!tok)return;
- try{
-  const snapshot=importSharedSnapshot(await decodeSnapshot(tok));
-  hp.delete('snapshot');const cleanHash=hp.toString();history.replaceState({},'',location.pathname+location.search+(cleanHash?'#'+cleanHash:''));
-  sessionStorage.removeItem('mtpSharedSnapshotNotice');
-  location.reload();
- }catch(e){console.error(e);alert('分享数据读取失败：'+(e.message||'链接可能不完整，请重新复制分享链接。'))}
+    // 新方案：从 ?shareId= 读取
+    const params = new URLSearchParams(location.search);
+    const shareId = params.get('shareId');
+
+    if (shareId) {
+        try {
+            const response = await fetch('/api/share-snapshot?id=' + encodeURIComponent(shareId));
+            const result = await response.json();
+
+            if (response.ok && result.data) {
+                const snapshot = {
+                    schema: result.schema || SNAPSHOT_SCHEMA,
+                    kind: result.kind || 'teacher',
+                    data: result.data,
+                    extras: result.extras || {},
+                    version: result.version || P.version,
+                    generatedAt: result.generatedAt || new Date().toISOString(),
+                    source: result.source || location.origin + location.pathname
+                };
+
+                importSharedSnapshot(snapshot);
+                history.replaceState({}, document.title, location.pathname + location.hash);
+                alert('✅ 已成功载入分享的数据！页面将刷新。');
+                location.reload();
+                return;
+            } else {
+                alert('❌ 链接无效或已过期：' + (result.error || ''));
+            }
+        } catch (error) {
+            console.error('加载分享数据失败:', error);
+            alert('❌ 无法加载分享数据，请检查网络');
+        }
+        history.replaceState({}, document.title, location.pathname + location.hash);
+        return;
+    }
+
+    // 旧方案降级：从 URL Hash 读取（兼容旧链接）
+    const raw = location.hash.startsWith('#') ? location.hash.slice(1) : location.hash;
+    if (!raw) return;
+
+    const hp = new URLSearchParams(raw);
+    const tok = hp.get('snapshot');
+    if (!tok) return;
+
+    try {
+        const snapshot = importSharedSnapshot(await decodeSnapshot(tok));
+        hp.delete('snapshot');
+        const cleanHash = hp.toString();
+        history.replaceState({}, '', location.pathname + location.search + (cleanHash ? '#' + cleanHash : ''));
+        sessionStorage.removeItem('mtpSharedSnapshotNotice');
+        alert('✅ 已从旧链接载入数据，页面将刷新。');
+        location.reload();
+    } catch (e) {
+        console.error(e);
+        alert('分享数据读取失败：' + (e.message || '链接可能不完整，请重新复制分享链接。'));
+    }
 }
 function getSession(){return safeParse(localStorage.getItem('platformSession'),null)}
 function setSession(s){
@@ -107,7 +151,6 @@ function setSession(s){
  }
  if(s&&s.role==='teacher'){
   localStorage.setItem('teacherMode','true');localStorage.setItem('teacherLoggedIn','true');
-  // 只清除“当前正在操作的学生身份”，不删除任何学生名单、成绩和作品。
   ['currentStudent','studentInfo','activeStudent','loginStudent'].forEach(k=>localStorage.removeItem(k));
  }
 }
@@ -128,27 +171,92 @@ if(!getSession()&&localStorage.getItem('teacherLoggedIn')==='true')setSession({r
 window.MTP2={
  getSession,setSession,clearSession,currentStudent,studentKey,genPass,upsertStudent,recordStudentKey,
  isTeacher:()=>getSession()?.role==='teacher'||localStorage.getItem('teacherMode')==='true'||localStorage.getItem('teacherLoggedIn')==='true',
- async shareLink(){
-  const s=getSession();if(!s)return alert('请先登录后再生成分享链接。');
-  const url=new URL(location.href);url.searchParams.set('session',b64e(s));
-  let snapshot,message;
-  if(s.role==='teacher'){
-   snapshot=collectTeacherSnapshot();
-   const counts={students:(snapshot.data.students||[]).length,speech:(snapshot.data.speechWorks||[]).length,heritage:(snapshot.data.heritageWorks||[]).length};
-   message=`已复制教师登录与全部本机数据链接。\n链接包含 ${counts.students} 名学生记录、${counts.speech} 份解说词、${counts.heritage} 份非遗作品及测评、进度等数据。\n其他人打开后会进入教师状态，并看到生成链接这一刻的全部数据副本。`;
-  }else{
-   const st=s.student||currentStudent();if(!st)return alert('没有找到当前学生信息，请重新登录。');
-   snapshot=collectStudentSnapshot(st,{includeImages:true});
-   message=`已复制 ${st.cls||''} ${st.name||''} 的学生登录与作品链接。\n其他人打开后可以看到该账号已提交的解说词、非遗作品及学习记录。`;
-  }
-  let token=await encodeSnapshot(snapshot),hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();
-  if(url.href.length>750000){
-   if(s.role==='teacher')snapshot=collectTeacherSnapshot({includeImages:false});
-   else snapshot=collectStudentSnapshot(s.student||currentStudent(),{includeImages:false});
-   token=await encodeSnapshot(snapshot);hp=new URLSearchParams();hp.set('snapshot',token);url.hash=hp.toString();message+='\n由于作品图片较大，分享链接中已保留全部文字、成绩和学习记录，并省略非遗作品图片。';
-  }
-  if(url.href.length>1200000){alert('当前数据过多，分享链接可能被聊天软件截断。请先删除过大的作品图片，或使用教师数据中心的“导出全部数据 ZIP”。');return}
-  try{await navigator.clipboard.writeText(url.href);alert(message)}catch(e){prompt('复制下面的分享链接：',url.href)}
+ // ========== 新版的 shareLink：调用后端 API 生成短链接 ==========
+ async shareLink() {
+     const s = getSession();
+     if (!s) return alert('请先登录后再生成分享链接。');
+
+     let snapshot, displayInfo;
+     if (s.role === 'teacher') {
+         snapshot = collectTeacherSnapshot({ includeImages: true });
+         const counts = {
+             students: (snapshot.data.students || []).length,
+             speech: (snapshot.data.speechWorks || []).length,
+             heritage: (snapshot.data.heritageWorks || []).length
+         };
+         displayInfo = `教师数据：${counts.students} 名学生、${counts.speech} 份解说词、${counts.heritage} 份非遗作品`;
+     } else {
+         const st = s.student || currentStudent();
+         if (!st) return alert('没有找到当前学生信息，请重新登录。');
+         snapshot = collectStudentSnapshot(st, { includeImages: true });
+         displayInfo = `${st.cls || ''} ${st.name || ''} 的学习数据`;
+     }
+
+     const payload = {
+         schema: SNAPSHOT_SCHEMA,
+         kind: s.role === 'teacher' ? 'teacher' : 'student',
+         data: snapshot.data,
+         extras: snapshot.extras || {},
+         version: P.version,
+         generatedAt: new Date().toISOString(),
+         source: location.origin + location.pathname
+     };
+
+     // 如果数据太大，先省略图片再试
+     let currentPayload = payload;
+     let imagesOmitted = false;
+     let estimatedSize = JSON.stringify(currentPayload).length;
+
+     if (estimatedSize > 4_500_000) {
+         if (currentPayload.data.heritageWorks) {
+             currentPayload = {
+                 ...currentPayload,
+                 data: {
+                     ...currentPayload.data,
+                     heritageWorks: currentPayload.data.heritageWorks.map(w => {
+                         const copy = { ...w };
+                         if (copy.image) copy.image = '';
+                         return copy;
+                     })
+                 },
+                 imagesOmitted: true
+             };
+             imagesOmitted = true;
+             estimatedSize = JSON.stringify(currentPayload).length;
+         }
+     }
+
+     if (estimatedSize > 5_000_000) {
+         alert('数据过大（超过 5MB），无法分享。请先删除过大的作品图片。');
+         return;
+     }
+
+     try {
+         const response = await fetch('/api/share-snapshot', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(currentPayload)
+         });
+
+         const result = await response.json();
+
+         if (response.ok && result.id) {
+             const shortUrl = window.location.origin + '?shareId=' + result.id;
+             await navigator.clipboard.writeText(shortUrl);
+
+             let message = `✅ 短链接已复制！\n\n📋 包含：${displayInfo}`;
+             if (imagesOmitted) {
+                 message += '\n⚠️ 作品图片已省略（保留文字、成绩和学习记录）';
+             }
+             message += `\n\n🔗 链接长度：${shortUrl.length} 字符`;
+             alert(message);
+         } else {
+             alert('❌ 分享失败：' + (result.error || '未知错误，请重试'));
+         }
+     } catch (error) {
+         console.error('分享请求失败:', error);
+         alert('❌ 网络连接失败，请检查网络后重试');
+     }
  },
  logout(){clearSession();location.href='index.html'},
  badgeKey(n){const k=studentKey();return k?`badge${n}:${k}`:''},
